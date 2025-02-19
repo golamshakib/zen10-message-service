@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -20,20 +21,42 @@ class LoginScreen extends StatelessWidget {
             SizedBox(
                 height: 20.h), // Add some spacing between the logo and text
             Container(
-
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(38.h),
               ),
               child: TextFormField(
-
                 decoration: InputDecoration(
                   hintText: 'Enter your phone number/ email',
-
                 ),
               ),
             ),
-            ElevatedButton(onPressed: () {}, child: Text('Log In'))
+            SizedBox(height: 20.h),
+            Container(
+              alignment: Alignment.center,
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                vertical: 13.h,
+              ),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF736DF8),
+                    Color(0xFF4F4BF7)
+                  ], // Colors from Figma
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(38.h),
+              ),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+            )
           ],
         ),
       ),
