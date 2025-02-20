@@ -1,19 +1,24 @@
-
-
 import 'package:get/get.dart';
+import 'package:traveling/features/authentication/controllers/login_controller.dart';
+import 'package:traveling/features/authentication/controllers/sing_up_controller.dart';
 
 import '../../features/splash_screen/controllers/splash_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-    // Get.lazyPut<LogInController>(
-    //       () => LogInController(),
-    //   fenix: true,
-    // );
+    Get.lazyPut<LoginController>(
+      () => LoginController(),
+      fenix: true,
+    );
 
     Get.lazyPut<SplashController>(
-          () => SplashController(),
+      () => SplashController(),
+      fenix: true,
+    );
+
+    Get.lazyPut<SingUpController>(
+      () => SingUpController(),
       fenix: true,
     );
   }

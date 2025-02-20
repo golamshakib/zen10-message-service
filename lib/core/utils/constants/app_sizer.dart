@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-const double kFigmaDesignWidth = 390;
-const double kFigmaDesignHeight = 844;
-const double kFigmaDesignStatusBar = 0;
+const double kFigmaDesignWidth = 375;
+const double kFigmaDesignHeight = 812;
+const double kFigmaDesignStatusBar = 48;
 
 enum DeviceType { mobile, tablet, desktop }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/core/utils/constants/logo_path.dart';
 
 import '../../controllers/splash_controller.dart';
 
@@ -14,7 +15,7 @@ final splashController = Get.find<SplashController>();
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              'assets/logos/img.png', // Replace with your logo asset path
+             LogoPath.appLogo, // Replace with your logo asset path
               width: 150, // Set your desired width
               height: 150, // Set your desired height
             ),
