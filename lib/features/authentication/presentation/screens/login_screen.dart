@@ -7,6 +7,9 @@ import 'package:traveling/core/utils/constants/logo_path.dart';
 import 'package:traveling/core/utils/validators/app_validator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/features/authentication/controllers/login_controller.dart';
+import 'package:traveling/features/authentication/presentation/widgets/forgot_password_dialog.dart';
+import 'package:traveling/features/home/presentation/screens/home_screen.dart';
+import 'package:traveling/routes/app_routes.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -100,14 +103,19 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    'Forgot Password?',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      decorationStyle: TextDecorationStyle.solid,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                  GestureDetector(
+                    onTap: () {
+                      showForgotPasswordDialog(context);
+                    },
+                    child: Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.solid,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -115,16 +123,18 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 16.h),
               CustomButton(
                 onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    // Perform login operation
-                  }
+                  // if (formKey.currentState!.validate()) {
+                  //   // Perform login operation
+                  // }
+
+                  Get.offAll(() => HomeScreen());
                 },
                 text: 'Login',
               ),
               SizedBox(height: 40.h),
               GestureDetector(
                 onTap: () {
-                  // Navigate to Sign Up screen
+                  Get.toNamed(AppRoute.signUpScreen);
                 },
                 child: RichText(
                   text: TextSpan(

@@ -12,10 +12,11 @@ class AppRoute {
   static List<GetPage> routes = [
     GetPage(
         name: loginScreen,
-        page: () =>  LoginScreen(),
+        page: () => LoginScreen(),
         transition: Transition.fade,
-        transitionDuration: const Duration(milliseconds: 300),curve: Curves.easeOut),
+        transitionDuration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut),
     GetPage(name: init, page: () => SplashScreen()),
-    GetPage(name: signUpScreen, page: () =>  SignUpScreen())
+    GetPage(name: signUpScreen, page: () => SignUpScreen())
   ];
 }
