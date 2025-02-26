@@ -47,9 +47,9 @@ class MyApp extends StatelessWidget {
         : AppTheme.lightTheme;
   }
 
-  ThemeData _getDarkTheme() {
-    return PlatformUtils.isIOS
-        ? AppTheme.darkTheme.copyWith(platform: TargetPlatform.iOS)
-        : AppTheme.darkTheme;
-  }
+  // ThemeData _getDarkTheme() {
+  //   return PlatformUtils.isIOS
+  //       ? AppTheme.darkTheme.copyWith(platform: TargetPlatform.iOS)
+  //       : AppTheme.darkTheme;
+  // }
 }

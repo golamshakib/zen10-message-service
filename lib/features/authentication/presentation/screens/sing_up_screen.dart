@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/common/widgets/custom_text_feild.dart';
-import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/logo_path.dart';
 import 'package:traveling/core/utils/validators/app_validator.dart';
@@ -117,8 +116,6 @@ class SignUpScreen extends StatelessWidget {
                     // if (formKey.currentState!.validate()) {
                     //   // Perform login operation
                     // }
-
-                    
                   },
                   text: 'Sing Up',
                 ),
@@ -139,7 +136,7 @@ class SignUpScreen extends StatelessWidget {
                           text: "Log In",
                           style: TextStyle(
                               decoration: TextDecoration.underline,
-                              color: AppColors.primary,
+                              color: Color(0xff002BFF),
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600),
                         ),

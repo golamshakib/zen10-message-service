@@ -114,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                         decorationStyle: TextDecorationStyle.solid,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: Color(0xff002BFF),
                       ),
                     ),
                   ),
@@ -148,7 +148,7 @@ class LoginScreen extends StatelessWidget {
                         text: "Sign Up",
                         style: TextStyle(
                             decoration: TextDecoration.underline,
-                            color: AppColors.primary,
+                            color: Color(0xff002BFF),
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600),
                       ),

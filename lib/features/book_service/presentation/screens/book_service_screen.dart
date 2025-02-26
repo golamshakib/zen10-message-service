@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/core/common/widgets/custom_app_bar.dart';
+import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
@@ -14,38 +16,16 @@ class BookServiceView extends StatelessWidget {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(
-          top: 72.h,
-          left: 16.w,
-          right: 16.w,
-        ),
+        padding:
+            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10.h),
-                  decoration: BoxDecoration(
-                      color: Color(0xffF0F0F0),
-                      borderRadius: BorderRadius.circular(22.h)),
-                  child: Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    size: 20.sp,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                SizedBox(
-                  width: 16.w,
-                ),
-                Text(
-                  'Book a service',
-                  style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary),
-                )
-              ],
+            CustomAppBar(
+              onTap: () {
+                Get.back();
+              },
+              text: 'Book a service',
             ),
             SizedBox(
               height: 40.h,
@@ -64,6 +44,7 @@ class BookServiceView extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Obx(
                   () => categoryButton(
@@ -72,7 +53,6 @@ class BookServiceView extends StatelessWidget {
                     onTap: () => controller.changeCategory('Massage'),
                   ),
                 ),
-                const SizedBox(width: 10),
                 Obx(
                   () => categoryButton(
                     text: 'Stretch',
@@ -82,13 +62,10 @@ class BookServiceView extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-
-            /// Services shown conditionally
+            SizedBox(height: 40.h),
             Expanded(
               child: Obx(
                 () {
-                  // Show the correct services based on selectedCategory
                   if (controller.selectedCategory.value == 'Massage') {
                     return Column(
                       children: [
@@ -143,7 +120,7 @@ class BookServiceView extends StatelessWidget {
                 },
               ),
             ),
-            nextButton(),
+            CustomButton(onPressed: () {}, text: "Next"),
           ],
         ),
       ),
@@ -160,19 +137,20 @@ class BookServiceView extends StatelessWidget {
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        padding: EdgeInsets.symmetric(vertical: 9.h, horizontal: 48.w),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.purple.shade100 : Colors.white,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(38.h),
           border: Border.all(
-            color: isSelected ? Colors.purple : Colors.grey.shade300,
+            color: isSelected ? AppColors.primary : Color(0xffE9E9F3),
           ),
         ),
         child: Text(
           text,
           style: TextStyle(
-            color: isSelected ? Colors.purple : Colors.black,
-            fontWeight: FontWeight.w500,
+            color: isSelected ? AppColors.primary : Color(0xff808080),
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontSize: 16.sp,
           ),
         ),
       ),
@@ -190,12 +168,13 @@ class BookServiceView extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(15),
+        width: double.maxFinite,
+        padding: EdgeInsets.all(15.h),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.purple.shade500 : Colors.white,
-          borderRadius: BorderRadius.circular(10),
+          color: isSelected ? AppColors.primary : Colors.white,
+          borderRadius: BorderRadius.circular(8.h),
           border: Border.all(
-            color: isSelected ? Colors.purple.shade500 : Colors.grey.shade300,
+            color: isSelected ? AppColors.primary : Color(0xffE9E9F3),
           ),
         ),
         child: Column(
@@ -204,55 +183,29 @@ class BookServiceView extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.white : AppColors.textPrimary,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 8.h),
             Text(
               description,
               style: TextStyle(
-                color: isSelected ? Colors.white70 : Colors.grey.shade600,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isSelected ? Color(0xffD5D3FD) : AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: 5.h),
             Text(
               'Price: $price',
               style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
+                color: isSelected ? Color(0xffD5D3FD) : Color(0xff808080),
                 fontWeight: FontWeight.bold,
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  /// Next button
-  Widget nextButton() {
-    return GestureDetector(
-      onTap: () {
-        // Handle next action
-      },
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 15, bottom: 20),
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        decoration: BoxDecoration(
-          color: Colors.purple.shade500,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: const Center(
-          child: Text(
-            'Next',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
         ),
       ),
     );

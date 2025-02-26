@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _setCustomMarker() async {
-    customIcon = await BitmapDescriptor.defaultMarkerWithHue(
+    customIcon = BitmapDescriptor.defaultMarkerWithHue(
       BitmapDescriptor.hueBlue,
     );
     setState(() {});
@@ -43,11 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
         toolbarHeight: 70.h,
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 30.h,
-              backgroundImage: AssetImage(
-                  'assets/profile.jpg'), // Change this to actual image
-            ),
+            // CircleAvatar(
+            //   radius: 30.h,
+            //   backgroundImage: AssetImage(
+            //       'assets/profile.jpg'), // Change this to actual image
+            // ),
             SizedBox(width: 8.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,6 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 24.h),
               Container(
+                width: double.maxFinite,
                 padding: EdgeInsets.all(12.h),
                 decoration: BoxDecoration(
                   color: Colors.white,

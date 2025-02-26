@@ -25,7 +25,11 @@ class OtpVerificationScreen extends StatelessWidget {
               SizedBox(height: 70.h),
               Align(
                   alignment: Alignment.center,
-                  child: Image.asset(LogoPath.appLogo)),
+                  child: Image.asset(
+                    LogoPath.appLogo,
+                    height: 80,
+                    width: 80,
+                  )),
               SizedBox(
                 height: 16.h,
               ),
