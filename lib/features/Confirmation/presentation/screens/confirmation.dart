@@ -11,27 +11,24 @@ class BookingConfirmed extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(ImagePath.confirm, width: 44, height: 44),
-            SizedBox(height: 20),
+            Image.asset(ImagePath.confirm, width: 145.w, height: 145.h),
+            SizedBox(height: 24.h),
+
             Text(
-              
               "Booking Confirmed!",
               style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
                 color: Colors.blueAccent,
               ),
             ),
-            SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40.0),
-              child: Text(
-                "Thank you! Your session is scheduled and we’ll notify you 5 minutes before it starts.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
+            SizedBox(height: 8.h),
+            Text(
+              "Thank you! Your session is scheduled and we’ll notify you 5 minutes before it starts.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
               ),
             ),
             SizedBox(height: 40),
