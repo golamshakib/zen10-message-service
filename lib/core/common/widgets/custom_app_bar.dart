@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget {
     return Row(
       children: [
         GestureDetector(
-          onDoubleTap: onTap,
+          onTap: onTap,
           child: Container(
             padding: EdgeInsets.all(10.h),
             decoration: BoxDecoration(
