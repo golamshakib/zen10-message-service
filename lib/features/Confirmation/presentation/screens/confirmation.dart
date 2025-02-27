@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:traveling/core/common/widgets/custom_button.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/image_path.dart';
+import 'package:traveling/features/Tip/presentation/screens/tip.dart';
 
 class BookingConfirmed extends StatelessWidget {
+  const BookingConfirmed({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,13 +19,12 @@ class BookingConfirmed extends StatelessWidget {
           children: [
             Image.asset(ImagePath.confirm, width: 145.w, height: 145.h),
             SizedBox(height: 24.h),
-
             Text(
               "Booking Confirmed!",
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
-                color: Colors.blueAccent,
+                color: AppColors.primary,
               ),
             ),
             SizedBox(height: 8.h),
@@ -28,71 +33,52 @@ class BookingConfirmed extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[600],
+                color: AppColors.textSecondary,
               ),
             ),
-            SizedBox(height: 40),
+            Spacer(),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(12.h),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Color(0xffE9E9F3))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Your session is expected to start in:",
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary),
                   ),
-                  SizedBox(height: 5),
+                  SizedBox(height: 8.h),
                   Text(
                     "45 Minute",
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
+                      fontSize: 14.sp,
+                      color: AppColors.textSecondary,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 16.h),
                   LinearProgressIndicator(
                     value: 0.3,
-                    backgroundColor: Colors.grey[300],
-                    color: Colors.blueAccent,
-                    minHeight: 5,
+                    backgroundColor: Color(0xffD7D7D7),
+                    color: AppColors.primary,
+                    minHeight: 3,
                   ),
                 ],
               ),
             ),
-            Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text(
-                  "Back to Home",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
-              ),
+            SizedBox(
+              height: 16.h,
             ),
+            CustomButton(
+                onPressed: () {
+                  Get.to(() => ThankYouPage());
+                },
+                text: "Back to Home")
           ],
         ),
       ),
