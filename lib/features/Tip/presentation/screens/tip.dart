@@ -76,6 +76,7 @@ class _ThankYouPageState extends State<ThankYouPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
+                  
                   child: OutlinedButton(
                     onPressed: () {},
                     style: OutlinedButton.styleFrom(
