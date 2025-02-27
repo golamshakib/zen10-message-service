@@ -5,6 +5,7 @@ import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
+import 'package:traveling/features/summery/presentation/screens/summery_screen.dart';
 
 class BookServiceView extends StatelessWidget {
   const BookServiceView({super.key});
@@ -120,7 +121,11 @@ class BookServiceView extends StatelessWidget {
                 },
               ),
             ),
-            CustomButton(onPressed: () {}, text: "Next"),
+            CustomButton(
+                onPressed: () {
+                  Get.to(() => SummaryScreen());
+                },
+                text: "Next"),
           ],
         ),
       ),

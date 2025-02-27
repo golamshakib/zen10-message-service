@@ -6,6 +6,7 @@ import 'package:traveling/core/services/location.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/presentation/screens/book_service_screen.dart';
+import 'package:traveling/features/home/controllers/home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  final HomeScreenController controller = Get.put(HomeScreenController());
   @override
   Widget build(BuildContext context) {
     final locationService = LocationService();
@@ -148,31 +150,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       Positioned(
                         top: 10.h,
                         right: 10.w,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12.w, vertical: 9.h),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black12, blurRadius: 5)
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Text('Upcoming',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16.sp,
-                                      color: AppColors.textPrimary)),
-                              SizedBox(
-                                width: 4.w,
-                              ),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                color: AppColors.textPrimary,
-                              ),
-                            ],
+                        child: GestureDetector(
+                          onTap: controller.toggleUpcoming,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.w, vertical: 9.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(color: Colors.black12, blurRadius: 5)
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Text('Upcoming',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16.sp,
+                                        color: AppColors.textPrimary)),
+                                SizedBox(
+                                  width: 4.w,
+                                ),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -213,6 +218,69 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                      Positioned(
+                        top: 55.h,
+                        child: Obx(() => controller.showUpcoming.value
+                            ? SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.h),
+                                    border: Border.all(
+                                      color: Color(0xFFE9E9F3),
+                                      width: 1.0,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color:
+                                            Color(0xFF808080).withOpacity(0.1),
+                                        offset: Offset(0, 4),
+                                        blurRadius: 9,
+                                        spreadRadius: 0,
+                                      ),
+                                      BoxShadow(
+                                        color:
+                                            Color(0xFF808080).withOpacity(0.1),
+                                        offset: Offset(0, 17),
+                                        blurRadius: 17,
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: ListTile(
+                                      title: Text(
+                                        "Dec 10",
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Mon-Fri: 9am to 5pm',
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        'Phoenix',
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink()),
+                      ),
                     ],
                   ),
                 ),
