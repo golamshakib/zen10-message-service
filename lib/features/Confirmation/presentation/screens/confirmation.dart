@@ -14,6 +14,7 @@ class BookingConfirmed extends StatelessWidget {
             Image.asset(ImagePath.confirm, width: 44, height: 44),
             SizedBox(height: 20),
             Text(
+              
               "Booking Confirmed!",
               style: TextStyle(
                 fontSize: 22,
