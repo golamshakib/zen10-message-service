@@ -34,7 +34,8 @@ class SplashController extends GetxController {
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      debugPrint('Location services are disabled.');
+      // Instead of just logging, show a dialog to enable location services
+      await _showLocationServicesDisabledDialog();
       return;
     }
 
@@ -44,12 +45,14 @@ class SplashController extends GetxController {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         debugPrint('Location permissions are denied.');
+        await _showLocationPermissionDeniedDialog();
         return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       debugPrint('Location permissions are permanently denied.');
+      await _showLocationPermissionPermanentlyDeniedDialog();
       return;
     }
 
@@ -66,7 +69,7 @@ class SplashController extends GetxController {
 
       // Reverse geocode to get address
       List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
+      await placemarkFromCoordinates(position.latitude, position.longitude);
 
       if (placemarks.isNotEmpty) {
         Placemark placemark = placemarks.first;
@@ -89,6 +92,93 @@ class SplashController extends GetxController {
     }
   }
 
+  // Show dialog when location services are disabled
+  Future<void> _showLocationServicesDisabledDialog() async {
+    await Get.dialog(
+      AlertDialog(
+        title: const Text('Location Services Disabled'),
+        content: const Text(
+            'Location services are disabled. Please enable location services to continue.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              await Geolocator.openLocationSettings();
+              // After returning from settings, check again
+              await Future.delayed(const Duration(seconds: 2));
+              await _fetchLocation();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  // Show dialog when location permission is denied
+  Future<void> _showLocationPermissionDeniedDialog() async {
+    await Get.dialog(
+      AlertDialog(
+        title: const Text('Location Permission Required'),
+        content: const Text(
+            'Location permission is required to use this feature. Please grant location permission.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              await _fetchLocation(); // Try again
+            },
+            child: const Text('Try Again'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  // Show dialog when location permission is permanently denied
+  Future<void> _showLocationPermissionPermanentlyDeniedDialog() async {
+    await Get.dialog(
+      AlertDialog(
+        title: const Text('Location Permission Denied'),
+        content: const Text(
+            'Location permission is permanently denied. Please enable it from app settings.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              await Geolocator.openAppSettings();
+              // After returning from settings, check again
+              await Future.delayed(const Duration(seconds: 2));
+              await _fetchLocation();
+            },
+            child: const Text('Open Settings'),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -99,3 +189,4 @@ class SplashController extends GetxController {
     }
   }
 }
+
