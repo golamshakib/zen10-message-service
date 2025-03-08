@@ -29,10 +29,10 @@ class LoginScreen extends StatelessWidget {
               children: <Widget>[
                 Image.asset(
                   LogoPath.appLogo,
-                  width: 55.w,
-                  height: 44.h,
+                  width: 250.w,
+                  height: 120.h,
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 12.h),
                 Text(
                   'Log In',
                   style: TextStyle(

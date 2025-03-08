@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/utils/constants/logo_path.dart';
-
 import '../../controllers/splash_controller.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -10,14 +9,15 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
-              LogoPath.appLogo, // Replace with your logo asset path
-              width: 150, // Set your desired width
-              height: 150, // Set your desired height
+              LogoPath.appLogo,
+              width: 150,
+              height: 150,
             ),
           ],
         ),
