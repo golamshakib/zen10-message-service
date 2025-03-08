@@ -5,6 +5,8 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/image_path.dart';
 
 class ThankYouPage extends StatefulWidget {
+  const ThankYouPage({super.key});
+
   @override
   _ThankYouPageState createState() => _ThankYouPageState();
 }

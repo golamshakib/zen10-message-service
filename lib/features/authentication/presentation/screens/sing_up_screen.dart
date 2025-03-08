@@ -29,10 +29,10 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 Image.asset(
                   LogoPath.appLogo,
-                  width: 55.w,
-                  height: 44.h,
+                  width: 250.w,
+                  height: 100.h,
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: 12.h),
                 Text(
                   'Sign Up',
                   style: TextStyle(

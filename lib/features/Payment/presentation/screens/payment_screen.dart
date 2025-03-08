@@ -8,6 +8,8 @@ import 'package:traveling/core/utils/constants/icon_path.dart';
 import 'package:traveling/features/Confirmation/presentation/screens/confirmation.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
+  const PaymentMethodScreen({super.key});
+
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
 }
