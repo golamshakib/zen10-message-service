@@ -6,6 +6,7 @@ import 'package:traveling/core/services/location.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/presentation/screens/book_service_screen.dart';
+import 'package:traveling/features/book_service/presentation/screens/selete_servicer.dart';
 import 'package:traveling/features/home/controllers/home_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -314,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 16.h),
               CustomButton(
                   onPressed: () {
-                    Get.to(() => BookServiceView());
+                    Get.to(() => SelectServiceView());
                   },
                   text: 'Book Now')
             ],

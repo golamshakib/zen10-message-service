@@ -44,25 +44,25 @@ class BookServiceView extends StatelessWidget {
               style: TextStyle(fontSize: 16.sp, color: AppColors.textSecondary),
             ),
             SizedBox(height: 24.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(
-                  () => categoryButton(
-                    text: 'Massage',
-                    isSelected: controller.selectedCategory.value == 'Massage',
-                    onTap: () => controller.changeCategory('Massage'),
-                  ),
-                ),
-                Obx(
-                  () => categoryButton(
-                    text: 'Stretch',
-                    isSelected: controller.selectedCategory.value == 'Stretch',
-                    onTap: () => controller.changeCategory('Stretch'),
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Obx(
+            //       () => categoryButton(
+            //         text: 'Massage',
+            //         isSelected: controller.selectedCategory.value == 'Massage',
+            //         onTap: () => controller.changeCategory('Massage'),
+            //       ),
+            //     ),
+            //     Obx(
+            //       () => categoryButton(
+            //         text: 'Stretch',
+            //         isSelected: controller.selectedCategory.value == 'Stretch',
+            //         onTap: () => controller.changeCategory('Stretch'),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             SizedBox(height: 40.h),
             Expanded(
               child: Obx(

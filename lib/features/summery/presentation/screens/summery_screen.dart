@@ -32,11 +32,11 @@ class SummaryScreen extends StatelessWidget {
               subtitle: "30 minute massage",
               price: "\$20.00",
             ),
-            _buildServiceItem(
-              title: "Stretch Service - Member",
-              subtitle: "10 minute stretch, additional service",
-              price: "\$10.00",
-            ),
+            // _buildServiceItem(
+            //   title: "Stretch Service - Member",
+            //   subtitle: "10 minute stretch, additional service",
+            //   price: "\$10.00",
+            // ),
             const Divider(
               color: Color(0xffE9E9F3),
             ),
@@ -53,7 +53,7 @@ class SummaryScreen extends StatelessWidget {
                         color: AppColors.textPrimary),
                   ),
                   Text(
-                    "\$30.00",
+                    "\$20.00",
                     style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
