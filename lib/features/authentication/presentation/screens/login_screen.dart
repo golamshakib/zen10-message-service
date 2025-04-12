@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/common/widgets/custom_text_feild.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
@@ -8,7 +9,6 @@ import 'package:traveling/core/utils/validators/app_validator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/features/authentication/controllers/login_controller.dart';
 import 'package:traveling/features/authentication/presentation/widgets/forgot_password_dialog.dart';
-import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import 'package:traveling/routes/app_routes.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -122,15 +122,20 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                CustomButton(
-                  onPressed: () {
-                    // if (formKey.currentState!.validate()) {
-                    //   // Perform login operation
-                    // }
-
-                    Get.offAll(() => HomeScreen());
-                  },
-                  text: 'Login',
+                Obx(
+                  () => Center(
+                    child: loginController.isLoading.value
+                        ? LoadingAnimationWidget.staggeredDotsWave(
+                            color: AppColors.primary, size: 25.sp)
+                        : CustomButton(
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                loginController.login();
+                              }
+                            },
+                            text: 'Login',
+                          ),
+                  ),
                 ),
                 SizedBox(height: 40.h),
                 GestureDetector(
