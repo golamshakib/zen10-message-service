@@ -46,6 +46,7 @@ dependencies:
   geocoding: ^3.0.0
   geolocator: ^13.0.1
   location:
+  loading_animation_widget:
 
   # State Management
   get: ^4.6.6

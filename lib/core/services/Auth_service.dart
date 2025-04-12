@@ -25,10 +25,9 @@ class AuthService {
   }
 
   // Save the token and user ID to local storage
-  static Future<void> saveToken(String token, String id) async {
+  static Future<void> saveToken(String token) async {
     try {
       await _preferences.setString(_tokenKey, token);
-      // Update private variables
       _token = token;
     } catch (e) {
       log('Error saving token: $e');

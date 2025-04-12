@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/common/widgets/custom_text_feild.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
@@ -7,6 +8,8 @@ import 'package:traveling/core/utils/validators/app_validator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/features/authentication/controllers/sing_up_controller.dart';
 import 'package:traveling/routes/app_routes.dart';
+
+import '../../../../core/utils/constants/app_colors.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -111,14 +114,22 @@ class SignUpScreen extends StatelessWidget {
                   validator: AppValidator.validatePassword,
                 ),
                 SizedBox(height: 16.h),
-                CustomButton(
-                  onPressed: () {
-                    // if (formKey.currentState!.validate()) {
-                    //   // Perform login operation
-                    // }
-                  },
-                  text: 'Sing Up',
+                Obx(
+                      () => Center(
+                    child: singUpController.isLoading.value
+                        ? LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.primary, size: 25.sp)
+                        : CustomButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                        }
+                      },
+                      text: 'Sing Up',
+                    ),
+                  ),
                 ),
+
+
                 SizedBox(height: 40.h),
                 GestureDetector(
                   onTap: () {
