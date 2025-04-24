@@ -123,12 +123,13 @@ class SignUpScreen extends StatelessWidget {
                             color: AppColors.primary, size: 25.sp)
                         : CustomButton(
                             onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                singUpController.signUp();
-                                // Get.to(
-                                //   OtpVerificationScreen(email: singUpController.emailController.text.trim()),
-                                // );
-                              }
+                              Get.toNamed(AppRoute.loginScreen);
+                              // if (formKey.currentState!.validate()) {
+                              //   // singUpController.signUp();
+                              //   // Get.to(
+                              //   //   OtpVerificationScreen(email: singUpController.emailController.text.trim()),
+                              //   // );
+                              // }
                             },
                             text: 'Sing Up',
                           ),
