@@ -47,6 +47,7 @@ dependencies:
   geolocator: ^13.0.1
   location:
   loading_animation_widget:
+  flutter_easyloading: ^3.0.5
 
   # State Management
   get: ^4.6.6

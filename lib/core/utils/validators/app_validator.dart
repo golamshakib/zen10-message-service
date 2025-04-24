@@ -1,26 +1,40 @@
 class AppValidator {
   AppValidator._();
 
-static String? validateInput(String? value) {
-  if (value == null || value.isEmpty) {
-    return 'This field is required.';
+  static String? validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required.';
+    }
+
+    // Regular expression for email validation
+    final emailRegExp = RegExp(r'^[\w\-.]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$');
+
+    if (!emailRegExp.hasMatch(value)) {
+      return 'Invalid email address.';
+    }
+
+    return null;
   }
 
-  // Regular expression for email validation
-  final emailRegExp = RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$');
+  static String? validateInput(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required.';
+    }
 
-  // Regular expression for phone number validation (10-15 digits, allows + at the start)
-  final phoneRegExp = RegExp(r'^\+?[0-9]{10,15}$');
+    // Regular expression for email validation
+    final emailRegExp = RegExp(r'^[\w\-.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-  if (emailRegExp.hasMatch(value)) {
-    return null; // Valid email
-  } else if (phoneRegExp.hasMatch(value)) {
-    return null; // Valid phone number
-  } else {
-    return 'Enter a valid email or phone number.';
+    // Regular expression for phone number validation (10-15 digits, allows + at the start)
+    final phoneRegExp = RegExp(r'^\+?[0-9]{10,15}$');
+
+    if (emailRegExp.hasMatch(value)) {
+      return null; // Valid email
+    } else if (phoneRegExp.hasMatch(value)) {
+      return null; // Valid phone number
+    } else {
+      return 'Enter a valid email or phone number.';
+    }
   }
-}
-
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
@@ -46,10 +60,8 @@ static String? validateInput(String? value) {
       return 'Password must contain at least one special character.';
     }
     return null;
-
   }
 
-  
   static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required.';
@@ -64,6 +76,4 @@ static String? validateInput(String? value) {
 
     return null;
   }
-
-
 }
