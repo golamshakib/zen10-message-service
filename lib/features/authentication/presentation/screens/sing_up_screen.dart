@@ -10,11 +10,14 @@ import 'package:traveling/features/authentication/controllers/sing_up_controller
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
+import 'otp_verification_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
+
   final singUpController = Get.find<SingUpController>();
   final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +69,6 @@ class SignUpScreen extends StatelessWidget {
                 CustomTextField(
                   controller: singUpController.userNameController,
                   hintText: 'Enter your username',
-                  validator: AppValidator.validateInput,
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -81,7 +83,7 @@ class SignUpScreen extends StatelessWidget {
                 CustomTextField(
                   controller: singUpController.emailController,
                   hintText: 'Enter your phone number/email',
-                  validator: AppValidator.validatePassword,
+                  validator: AppValidator.validateEmail,
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -115,21 +117,23 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Obx(
-                      () => Center(
+                  () => Center(
                     child: singUpController.isLoading.value
                         ? LoadingAnimationWidget.staggeredDotsWave(
-                        color: AppColors.primary, size: 25.sp)
+                            color: AppColors.primary, size: 25.sp)
                         : CustomButton(
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                        }
-                      },
-                      text: 'Sing Up',
-                    ),
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                singUpController.signUp();
+                                // Get.to(
+                                //   OtpVerificationScreen(email: singUpController.emailController.text.trim()),
+                                // );
+                              }
+                            },
+                            text: 'Sing Up',
+                          ),
                   ),
                 ),
-
-
                 SizedBox(height: 40.h),
                 GestureDetector(
                   onTap: () {

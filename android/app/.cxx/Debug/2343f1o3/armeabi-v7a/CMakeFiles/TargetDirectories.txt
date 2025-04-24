@@ -1,0 +1,2 @@
+/Users/yasinmia/Development/office project/traveling/android/app/.cxx/Debug/2343f1o3/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/yasinmia/Development/office project/traveling/android/app/.cxx/Debug/2343f1o3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

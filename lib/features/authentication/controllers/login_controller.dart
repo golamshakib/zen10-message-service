@@ -27,6 +27,7 @@ class LoginController extends GetxController {
     final Map<String, String> requestBody = {
       'email': email,
       "password": password,
+      "deviceToken": "1234567890",
     };
 
     try {
@@ -38,6 +39,12 @@ class LoginController extends GetxController {
 
         if (token != null) {
           await AuthService.saveToken(token);
+          showSnackBar(
+            title: 'Success',
+            message: 'Logged in successfully',
+            icon: Icons.check_circle_outline,
+            color: Colors.greenAccent,
+          );
           Get.offAll(() => HomeScreen());
         }
       } else {

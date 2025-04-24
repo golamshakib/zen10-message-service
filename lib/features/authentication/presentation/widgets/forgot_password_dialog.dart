@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/authentication/controllers/forgot_password_controller.dart';
 
 void showForgotPasswordDialog(BuildContext context) {
-  final ForgotPasswordController controller =
-      Get.put(ForgotPasswordController());
+  final ForgotPasswordController controller = Get.put(ForgotPasswordController());
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -59,7 +59,7 @@ void showForgotPasswordDialog(BuildContext context) {
                     filled: true,
                     fillColor: AppColors.white,
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 12.h, horizontal: 15.w),
+                    EdgeInsets.symmetric(vertical: 12.h, horizontal: 15.w),
                     hintText: 'Enter your email address',
                     hintStyle: TextStyle(),
                     border: OutlineInputBorder(
@@ -82,21 +82,26 @@ void showForgotPasswordDialog(BuildContext context) {
               ),
               SizedBox(height: 10.h),
               Obx(
-                () => controller.errorMessage.isNotEmpty
+                    () => controller.errorMessage.isNotEmpty
                     ? Text(
-                        controller.errorMessage.value,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: Colors.red,
-                        ),
-                      )
+                  controller.errorMessage.value,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.red,
+                  ),
+                )
                     : const SizedBox.shrink(),
               ),
               SizedBox(height: 30.h),
               Center(
-                child: CustomButton(
-                  text: 'Send',
-                  onPressed: controller.forgotPassword,
+                child: Obx(
+                      () => controller.isLoading.value
+                      ? LoadingAnimationWidget.staggeredDotsWave(
+                      color: AppColors.primary, size: 25.sp)
+                      : CustomButton(
+                    text: 'Send',
+                    onPressed: controller.forgotPassword,
+                  ),
                 ),
               ),
             ],

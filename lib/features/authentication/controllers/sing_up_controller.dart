@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/routes/app_routes.dart';
 
 import '../../../core/services/Auth_service.dart';
 import '../../../core/services/network_caller.dart';
@@ -38,9 +39,9 @@ class SingUpController extends GetxController {
 
     isLoading(true);
     final Map<String, String> requestBody = {
-      'username': user.trim(),
-      "email": email.trim(),
-      "password": confirmPassword.trim(),
+      'name': user,
+      "email": email,
+      "password": password,
     };
 
     try {
@@ -51,8 +52,14 @@ class SingUpController extends GetxController {
         String? token = response.responseData['data']['accessToken'];
         if (token != null) {
           await AuthService.saveToken(token);
-
         }
+        showSnackBar(
+          title: 'Success',
+          message: 'This account is created successfully. Please Login',
+          icon: Icons.check_circle_outline,
+          color: Colors.green,
+        );
+        Get.toNamed(AppRoute.loginScreen);
       } else if (response.statusCode == 409) {
         showSnackBar(
           title: 'Same Email',

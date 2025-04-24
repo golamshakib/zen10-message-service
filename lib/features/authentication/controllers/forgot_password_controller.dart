@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/features/authentication/presentation/screens/otp_verification_screen.dart';
+import 'package:traveling/core/services/network_caller.dart';
+import 'package:traveling/core/utils/constants/app_urls.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import '../presentation/widgets/showSnacker.dart';
 
 class ForgotPasswordController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final RxString errorMessage = ''.obs;
+  final RxBool isLoading = false.obs; // Add loading state
 
   bool _isValidEmail(String email) {
     return email.isNotEmpty && GetUtils.isEmail(email);
@@ -12,35 +18,45 @@ class ForgotPasswordController extends GetxController {
 
   Future<void> forgotPassword() async {
     String email = emailController.text.trim();
+
     if (!_isValidEmail(email)) {
       errorMessage.value = 'Please enter a valid email address';
       return;
     }
-    errorMessage.value = '';
-    Get.offAll(() => OtpVerificationScreen(
-          email: email,
-        ));
-    // try {
 
-    //   final Map<String, String> requestBody = {
-    //     'email': email,
-    //   };
-    //   // Send reset email via network request
-    //   // final response = await NetworkCaller().postRequest(AppUrls.forgotPass,body: requestBody);
+    errorMessage.value = ''; // Clear any previous error messages
+    isLoading(true); // Set loading to true while request is being made
 
-    //   // Handle response success
-    //   if (response.isSuccess) {
-    //     Get.offAll(()=>OtpVerificationScreen(email: email,));
+    final Map<String, String> requestBody = {
+      'email': email,
+    };
 
-    //   } else {
-    //     EasyLoading.showError('Failed to send reset email. Please try again.');
-    //   }
-    // } catch (error) {
-    //   EasyLoading.showError('An error occurred. Please try again later.');
+    try {
+      final response = await NetworkCaller().postRequest(
+        AppUrls.forgotPassword, // Ensure this URL is correct
+        body: requestBody,
+      );
 
-    // } finally {
-    //   EasyLoading.dismiss();
-    // }
+      if (response.isSuccess) {
+        // If OTP was successfully sent, navigate to OTP verification screen
+        showSnackBar(
+          title: 'Success',
+          message: 'OTP Send Successfully',
+          icon: Icons.check_circle_outline,
+          color: Colors.green,
+        );
+        Get.offAll(() => OtpVerificationScreen(email: email));
+      } else {
+        // If there was an error (e.g., email not found), show error
+        errorMessage.value = response.errorMessage ?? 'Failed to send OTP. Please try again.';
+      }
+    } catch (e) {
+      // Handle network errors or other exceptions
+      errorMessage.value = 'An error occurred. Please try again later.';
+      print('Error: $e');
+    } finally {
+      isLoading(false); // Set loading to false after the operation is complete
+    }
   }
 
   @override
