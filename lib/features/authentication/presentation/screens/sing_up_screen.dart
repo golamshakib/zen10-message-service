@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/common/widgets/custom_text_feild.dart';
@@ -10,12 +15,15 @@ import 'package:traveling/features/authentication/controllers/sing_up_controller
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
-import 'otp_verification_screen.dart';
+import '../../controllers/location_controller.dart';
+import 'map_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   final singUpController = Get.find<SingUpController>();
+  final locationController =
+      Get.find<LocationController>(); // Initialize LocationController
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -30,9 +38,7 @@ class SignUpScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                SizedBox(
-                  height: 72.h,
-                ),
+                SizedBox(height: 72.h),
                 Image.asset(
                   LogoPath.appLogo,
                   width: 250.w,
@@ -72,7 +78,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  'Phone/Email',
+                  'Email',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -82,8 +88,72 @@ class SignUpScreen extends StatelessWidget {
                 SizedBox(height: 8.h),
                 CustomTextField(
                   controller: singUpController.emailController,
-                  hintText: 'Enter your phone number/email',
+                  hintText: 'Enter your email',
                   validator: AppValidator.validateEmail,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Address',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF333333),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(38.h),
+                  ),
+                  child: TextFormField(
+                    readOnly: true,
+                    controller: singUpController.addressController,
+                    validator: AppValidator.validateInputField,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () async {
+                          log("Navigating to MapScreen...");
+                          LatLng? selectedLocation =
+                              await Get.to(() => MapScreen());
+                          log("Returned location: $selectedLocation");
+
+                          if (selectedLocation != null) {
+                            // Use reverse geocoding to get the address from latitude and longitude
+                            List<Placemark> placemarks = await GeocodingPlatform
+                                .instance!
+                                .placemarkFromCoordinates(
+                              selectedLocation.latitude,
+                              selectedLocation.longitude,
+                            );
+
+                            // Check if placemarks are available
+                            if (placemarks.isNotEmpty) {
+                              Placemark place = placemarks[0];
+                              String address =
+                                  '${place.name}, ${place.locality}, ${place.country}';
+
+                              // Set the selected address in the controller
+                              singUpController.addressController.text = address;
+                            } else {
+                              singUpController.addressController.text =
+                                  'Address not found';
+                            }
+                          }
+                        },
+                        icon: Icon(Icons.location_on_outlined),
+                      ),
+                      hintText: 'Pick your address',
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      focusedErrorBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -125,12 +195,10 @@ class SignUpScreen extends StatelessWidget {
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 singUpController.signUp();
-                                // Get.to(
-                                //   OtpVerificationScreen(email: singUpController.emailController.text.trim()),
-                                // );
+                                Get.toNamed(AppRoute.loginScreen);
                               }
                             },
-                            text: 'Sing Up',
+                            text: 'Sign Up',
                           ),
                   ),
                 ),
@@ -158,7 +226,8 @@ class SignUpScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
+                SizedBox(height: 20.h),
               ],
             ),
           ),

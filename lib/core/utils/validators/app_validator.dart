@@ -16,6 +16,13 @@ class AppValidator {
     return null;
   }
 
+  static String? validateInputField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'This field is required.';
+    }
+    return null;
+  }
+
   static String? validateInput(String? value) {
     if (value == null || value.isEmpty) {
       return 'This field is required.';

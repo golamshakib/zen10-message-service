@@ -27,7 +27,7 @@ class LoginController extends GetxController {
     final Map<String, String> requestBody = {
       'email': email,
       "password": password,
-      "deviceToken": "1234567890",
+      "fcmToken": "",
     };
 
     try {

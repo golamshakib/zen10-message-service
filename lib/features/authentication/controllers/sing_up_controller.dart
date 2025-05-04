@@ -7,26 +7,32 @@ import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
 import '../presentation/widgets/showSnacker.dart';
+import 'location_controller.dart';
 
 class SingUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController confirmPassController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
 
   RxBool isLoading = false.obs;
 
 
-
-
-
   void signUp() async {
-    final user = userNameController.text.trim();
+    final userName = userNameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPassController.text.trim();
+    final address = addressController.text.trim();
+    final locationController = Get.find<LocationController>();
 
+    // Get latitude and longitude from the LocationController
+    final latitude = locationController.userLocation.value.latitude;
+    final longitude = locationController.userLocation.value.longitude;
+
+    // Check if passwords match
     if (password != confirmPassword) {
       showSnackBar(
         title: 'Password Mismatch',
@@ -36,47 +42,70 @@ class SingUpController extends GetxController {
       );
       return;
     }
-
-    isLoading(true);
-    final Map<String, String> requestBody = {
-      'name': user,
-      "email": email,
-      "password": password,
+    // Prepare request body
+    final Map<String, dynamic> requestBody = {
+      'userName': userName,
+      'email': email,
+      'password': password,
+      'location': address,
+      'locationLatitude': latitude,
+      'locationLongitude': longitude,
+      // Add other fields if necessary
     };
 
     try {
-      final response =
-      await NetworkCaller().postRequest(AppUrls.singUp, body: requestBody);
+      isLoading.value = true;
+
+      // Make API request
+      final response = await NetworkCaller().postRequest(AppUrls.singUp, body: requestBody);
 
       if (response.isSuccess) {
+        // If success, extract token and other necessary data
         String? token = response.responseData['data']['accessToken'];
+
         if (token != null) {
-          await AuthService.saveToken(token);
+          await AuthService.saveToken(token); // Save the token for further API calls
         }
+
+        // Show success message
         showSnackBar(
           title: 'Success',
-          message: 'This account is created successfully. Please Login',
-          icon: Icons.check_circle_outline,
+          message: 'User registered successfully',
+          icon: Icons.check_circle,
           color: Colors.green,
         );
+
+        // Redirect to login page or dashboard
         Get.toNamed(AppRoute.loginScreen);
-      } else if (response.statusCode == 409) {
-        showSnackBar(
-          title: 'Same Email',
-          message: 'This email is already registered',
-          icon: Icons.error_outline_rounded,
-          color: Colors.redAccent,
-        );
+
       } else {
-        showSnackBar(
-          title: 'Error',
-          message: response.errorMessage,
-          icon: Icons.error_outline_rounded,
-          color: Colors.redAccent,
-        );
+        // If email already exists or some other error
+        if (response.responseData['message'] == 'User already exists with this email') {
+          showSnackBar(
+            title: 'Email Already Exists',
+            message: 'This email is already registered. Please try another one.',
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        } else {
+          // Handle other errors from the API
+          showSnackBar(
+            title: 'Error',
+            message: response.errorMessage ?? 'An error occurred. Please try again later.',
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        }
       }
     } catch (e) {
-      AppLoggerHelper.error('Error: $e');
+      // Catch any errors during the API call
+      AppLoggerHelper.error('SignUp Error: $e');
+      showSnackBar(
+        title: 'Error',
+        message: 'Something went wrong. Please try again later.',
+        icon: Icons.error_outline_rounded,
+        color: Colors.redAccent,
+      );
     } finally {
       isLoading.value = false;
     }

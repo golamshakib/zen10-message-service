@@ -1,0 +1,2 @@
+/Users/yasinmia/Development/office project/traveling/android/app/.cxx/RelWithDebInfo/28o1k2l6/x86/CMakeFiles/edit_cache.dir
+/Users/yasinmia/Development/office project/traveling/android/app/.cxx/RelWithDebInfo/28o1k2l6/x86/CMakeFiles/rebuild_cache.dir
