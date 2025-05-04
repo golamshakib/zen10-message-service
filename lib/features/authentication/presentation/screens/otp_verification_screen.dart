@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-import 'package:traveling/core/utils/constants/logo_path.dart';
 import 'package:traveling/features/authentication/controllers/otp_verification_controller.dart';
 
+import '../../../../core/utils/constants/logo_path.dart';
+
 class OtpVerificationScreen extends StatelessWidget {
-  OtpVerificationScreen({super.key, required this.email});
+  OtpVerificationScreen({super.key, required this.email, required this.userId});
+
   final String email;
+  final String userId;
   final otpController = Get.find<OtpVerificationController>();
 
   @override
@@ -65,81 +67,41 @@ class OtpVerificationScreen extends StatelessWidget {
                 enableActiveFill: true,
               ),
               SizedBox(height: 15.h),
-              Text(
-                'Set New Password',
-                style: TextStyle(),
-              ),
-              SizedBox(height: 15.h),
-              SizedBox(
-                height: 40.h,
-                width: double.infinity,
-                child: TextField(
-                  controller: otpController.newPasswordTEController,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    height: 24.h / 16.h,
-                  ),
-                  decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
-                    hintText: 'Enter your new password',
-                    hintStyle: GoogleFonts.poppins(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      height: 24.h / 16.h,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.h),
-                      borderSide:
-                          const BorderSide(color: Color(0xff010101), width: 1),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.h),
-                      borderSide:
-                          const BorderSide(color: Color(0xff010101), width: 1),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.h),
-                      borderSide:
-                          const BorderSide(color: Color(0xff010101), width: 1),
+              Obx(() => Center(
+                child: Text(
+                  otpController.start.value == 0
+                      ? 'Didn’t receive the OTP?'
+                      : 'Resend OTP in ${otpController.start.value} seconds',
+                  style: TextStyle(color: Colors.black, fontSize: 14.sp),
+                ),
+              )),
+              SizedBox(height: 10.h),
+              Obx(
+                    () => Center(
+                  child: GestureDetector(
+                    onTap: otpController.isResendEnabled.value
+                        ? () {
+                      otpController.resendOtp(email);
+                    }
+                        : null,
+                    child: Text(
+                      'Resend OTP',
+                      style: TextStyle(
+                        color: otpController.isResendEnabled.value
+                            ? AppColors.primary
+                            : Colors.grey,
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: 20.h),
-              Obx(() => Center(
-                    child: Text(
-                      otpController.start.value == 0
-                          ? 'Didn’t receive the OTP?'
-                          : 'Resend OTP in ${otpController.start.value} seconds',
-                      style: TextStyle(color: Colors.black, fontSize: 14.sp),
-                    ),
-                  )),
-              SizedBox(height: 10.h),
-              Obx(() => Center(
-                    child: GestureDetector(
-                      onTap: otpController.isResendEnabled.value
-                          ? () {
-                              // otpController.resendOtp(email);
-                            }
-                          : null,
-                      child: Text(
-                        'Resend OTP',
-                        style: TextStyle(
-                          color: otpController.isResendEnabled.value
-                              ? AppColors.primary
-                              : Colors.grey,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ),
-                  )),
               SizedBox(height: 30.h),
               CustomButton(
-                  text: 'Save',
+                  text: 'Confirm',
                   onPressed: () {
-                    // otpController.otpSend(email);
+                    // Call the OTP verification method
+                    otpController.verifyOtp(userId, otpController.otpController.text);
                   }),
             ],
           ),

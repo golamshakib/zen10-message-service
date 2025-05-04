@@ -1,6 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/core/services/network_caller.dart'; // Your network service
+import 'package:traveling/core/utils/constants/app_urls.dart'; // Your API URLs
+import 'package:traveling/core/utils/logging/logger.dart'; // For logging errors
+import 'package:traveling/core/utils/constants/app_colors.dart';
+import 'package:traveling/features/authentication/presentation/screens/change_password_screen.dart';
+import 'package:traveling/routes/app_routes.dart'; // App Colors for UI
 
 class OtpVerificationController extends GetxController {
   final TextEditingController otpController = TextEditingController();
@@ -16,6 +22,7 @@ class OtpVerificationController extends GetxController {
     startTimer();
   }
 
+  // Timer for OTP resend
   void startTimer() {
     isResendEnabled.value = false;
     start.value = 300; // Set timer to 5 minutes (300 seconds)
@@ -30,85 +37,73 @@ class OtpVerificationController extends GetxController {
     });
   }
 
-  // void resendOtp(String email) async {
-  //   startTimer(); // Restart the timer
-  //   final Map<String, String> requestBody = {
-  //     'email': email,
-  //   };
-  //   final response = await NetworkCaller()
-  //       .postRequest(AppUrls.forgotPass, body: requestBody);
-  //   if (response.isSuccess) {
-  //     EasyLoading.showError('Please Check Your Email');
-  //   } else {
-  //     EasyLoading.showError('Failed to send reset email. Please try again.');
-  //   }
-  // }
+  // Method to verify OTP
+  Future<void> verifyOtp(String userId, String otpCode) async {
+    final Map<String, String> requestBody = {
+      'userId': userId,
+      'otpCode': otpCode,
+    };
 
-  // Future<void> otpSend(String email) async {
-  //   final Map<String, String> requestBody = {
-  //     'email': email.trim(),
-  //     'otpCode': otpController.text.trim(),
-  //     'password': newPasswordTEController.text.trim(),
-  //   };
+    try {
+      final response = await NetworkCaller().postRequest(
+        AppUrls.verifyOtp,
+        body: requestBody,
+      );
 
-  //   if (otpController.text.isEmpty || otpController.text.length != 6) {
-  //     Get.snackbar(
-  //       'Invalid OTP',
-  //       'Please enter a valid 6-digit OTP',
-  //       snackPosition: SnackPosition.TOP,
-  //       backgroundColor: AppColors.primary,
-  //       colorText: AppColors.white,
-  //       borderRadius: 10,
-  //       margin: EdgeInsets.all(16.sp),
-  //       animationDuration: const Duration(milliseconds: 300),
-  //       duration: const Duration(seconds: 3),
-  //     );
-  //     return;
-  //   }
+      if (response.isSuccess) {
+        // Handle successful OTP verification
+        Get.snackbar(
+          'Success',
+          'OTP verified successfully, please reset your password.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.greenAccent,
+        );
+        String accessToken = response.responseData['data']['accessToken'];
+        Get.off(() => ChangePasswordScreen(accessToken: accessToken));
+      } else {
+        // Handle failed OTP verification
+        Get.snackbar(
+          'OTP Verification Failed',
+          response.errorMessage ?? 'Invalid OTP.',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.redAccent,
+        );
+      }
+    } catch (e) {
+      AppLoggerHelper.error('Error during OTP verification: $e');
+      Get.snackbar(
+        'Error',
+        'Something went wrong. Please try again later.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.redAccent,
+      );
+    }
+  }
 
-  //   if (newPasswordTEController.text.isEmpty ||
-  //       newPasswordTEController.text.length < 8) {
-  //     Get.snackbar(
-  //       'Invalid Password',
-  //       'Your password must be at least 8 characters long.',
-  //       snackPosition: SnackPosition.TOP,
-  //       backgroundColor: AppColors.primary,
-  //       colorText: AppColors.white,
-  //       borderRadius: 10,
-  //       margin: EdgeInsets.all(16.sp),
-  //       animationDuration: const Duration(milliseconds: 300),
-  //       duration: const Duration(seconds: 3),
-  //     );
-  //     return;
-  //   }
+  // Resend OTP function
+  Future<void> resendOtp(String email) async {
+    startTimer(); // Restart the timer
+    final Map<String, String> requestBody = {
+      'email': email,
+    };
+    final response = await NetworkCaller().postRequest(AppUrls.forgotPassword, body: requestBody);
 
-  //   try {
-  //     EasyLoading.show();
-  //     final response =
-  //         await NetworkCaller().postRequest(AppUrls.otp, body: requestBody);
-  //     if (response.isSuccess) {
-  //       Get.offNamed('/loginScreen');
-  //     } else {
-  //       Get.snackbar(
-  //         'Otp Failed',
-  //         'Invalid otp response.',
-  //         snackPosition: SnackPosition.TOP,
-  //         padding: const EdgeInsets.all(15),
-  //         backgroundColor: AppColors.primary,
-  //         colorText: Colors.white,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar(
-  //       'Error',
-  //       'Something went wrong. Please try again later.',
-  //       padding: const EdgeInsets.all(15),
-  //       snackPosition: SnackPosition.TOP,
-  //       backgroundColor: AppColors.primary,
-  //       colorText: Colors.white,
-  //     );
-  //   } finally {
-  //     EasyLoading.dismiss();
-  //   }
-  // }
+    if (response.isSuccess) {
+      Get.snackbar(
+        'Success',
+        'Please check your email for the new OTP.',
+        snackPosition: SnackPosition.TOP,
+       backgroundColor: Colors.greenAccent
+      );
+      String accessToken = response.responseData['data']['accessToken'];
+      Get.off(() => ChangePasswordScreen(accessToken: accessToken));
+    } else {
+      Get.snackbar(
+        'Error',
+        'Failed to send reset OTP. Please try again.',
+        snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.redAccent
+      );
+    }
+  }
 }

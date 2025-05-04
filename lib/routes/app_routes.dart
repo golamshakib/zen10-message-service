@@ -1,5 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
+import 'package:traveling/features/authentication/presentation/screens/change_password_screen.dart';
 import '../features/authentication/presentation/screens/login_screen.dart';
 import '../features/authentication/presentation/screens/sing_up_screen.dart';
 import '../features/splash_screen/presentation/screens/splash_screen.dart';
@@ -9,6 +10,8 @@ class AppRoute {
   static String signUpScreen = "/signUpScreen";
   static String init = "/";
 
+
+
   static List<GetPage> routes = [
     GetPage(
         name: loginScreen,
@@ -17,6 +20,7 @@ class AppRoute {
         transitionDuration: const Duration(milliseconds: 300),
         curve: Curves.easeOut),
     GetPage(name: init, page: () => SplashScreen()),
-    GetPage(name: signUpScreen, page: () => SignUpScreen())
+    GetPage(name: signUpScreen, page: () => SignUpScreen()),
+
   ];
 }

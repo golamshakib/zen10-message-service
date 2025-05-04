@@ -4,7 +4,6 @@ import 'package:traveling/features/authentication/presentation/screens/otp_verif
 import 'package:traveling/core/services/network_caller.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-
 import '../presentation/widgets/showSnacker.dart';
 
 class ForgotPasswordController extends GetxController {
@@ -43,9 +42,14 @@ class ForgotPasswordController extends GetxController {
           title: 'Success',
           message: 'OTP Send Successfully',
           icon: Icons.check_circle_outline,
-          color: Colors.green,
+          color: Colors.greenAccent,
         );
-        Get.offAll(() => OtpVerificationScreen(email: email));
+
+        // Get the userId from the response or your user data
+        String userId = response.responseData['data']['userId'];
+
+        // Navigate to OTP Verification screen with email and userId
+        Get.off(() => OtpVerificationScreen(email: email, userId: userId));
       } else {
         // If there was an error (e.g., email not found), show error
         errorMessage.value = response.errorMessage ?? 'Failed to send OTP. Please try again.';

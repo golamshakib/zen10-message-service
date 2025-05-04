@@ -11,8 +11,6 @@ import 'package:traveling/features/authentication/controllers/login_controller.d
 import 'package:traveling/features/authentication/presentation/widgets/forgot_password_dialog.dart';
 import 'package:traveling/routes/app_routes.dart';
 
-import '../../../home/presentation/screens/home_screen.dart';
-
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final loginController = Get.find<LoginController>();
@@ -54,7 +52,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 40.h),
                 Text(
-                  'Phone/Email',
+                  'Email',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -64,7 +62,7 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(height: 8.h),
                 CustomTextField(
                   controller: loginController.emailController,
-                  hintText: 'Enter your phone number or email',
+                  hintText: 'Enter your email',
                   validator: AppValidator.validateInput,
                 ),
                 SizedBox(height: 16.h),
@@ -131,10 +129,9 @@ class LoginScreen extends StatelessWidget {
                             color: AppColors.primary, size: 25.sp)
                         : CustomButton(
                             onPressed: () {
-                              Get.offAll(() => HomeScreen());
-                              // if (formKey.currentState!.validate()) {
-                              //   // loginController.login();
-                              // }
+                              if (formKey.currentState!.validate()) {
+                                loginController.login();
+                              }
                             },
                             text: 'Login',
                           ),
