@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -45,6 +47,7 @@ class LoginController extends GetxController {
             icon: Icons.check_circle_outline,
             color: Colors.greenAccent,
           );
+          log("Saved token is: ${AuthService.token}");
           Get.offAll(() => HomeScreen());
         }
       } else {
