@@ -8,4 +8,5 @@ class AppUrls {
   static const String forgotPassword = '$_baseUrl/auth/forgot-password';
   static const String verifyOtp = '$_baseUrl/auth/verify-reset-password-otp';
   static const String changePassword = '$_baseUrl/auth/reset-password';
+  static const String fetchProfile = '$_baseUrl/users/me';
 }

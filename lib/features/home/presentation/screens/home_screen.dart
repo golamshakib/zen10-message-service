@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:traveling/core/common/widgets/custom_button.dart';
+import 'package:traveling/core/services/Auth_service.dart';
 import 'package:traveling/core/services/location.dart';
-import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-import 'package:traveling/features/book_service/presentation/screens/book_service_screen.dart';
 import 'package:traveling/features/book_service/presentation/screens/selete_servicer.dart';
-import 'package:traveling/features/home/controllers/home_screen.dart';
+
+import '../../../../core/common/widgets/custom_button.dart';
+import '../../../../core/utils/constants/app_colors.dart';
+import '../../controllers/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+   HomeScreen({super.key}){
+    AuthService.init();
+  }
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,11 +23,14 @@ class _HomeScreenState extends State<HomeScreen> {
   late GoogleMapController mapController;
   late BitmapDescriptor customIcon;
   bool showInfo = false;
+  final HomeScreenController controller = Get.find<HomeScreenController>();
 
   @override
   void initState() {
     super.initState();
+
     _setCustomMarker();
+   // Fetch user profile from the API
   }
 
   void _setCustomMarker() async {
@@ -34,12 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
-  final HomeScreenController controller = Get.put(HomeScreenController());
   @override
   Widget build(BuildContext context) {
     final locationService = LocationService();
     final LatLng location =
-        LatLng(locationService.latitude, locationService.longitude);
+    LatLng(locationService.latitude, locationService.longitude);
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -48,30 +54,39 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // CircleAvatar(
             //   radius: 30.h,
-            //   backgroundImage: AssetImage(
-            //       'assets/profile.jpg'), // Change this to actual image
+            //   backgroundImage: NetworkImage(controller.userProfile.value!.data.profileImage),
             // ),
             SizedBox(width: 8.w),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'John Snow',
+                Obx(() => Text(
+                  controller.userProfile.value == null
+                      ? 'Loading...'
+                      : controller.userProfile.value!.data.userName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
                     color: Color(0xff333333),
                   ),
-                ),
+                )),
                 Row(
                   children: [
                     Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
                     SizedBox(width: 2.w),
-                    Text(locationService.address,
-                        style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey)),
+                    Obx(() => Text(
+                      controller.userProfile.value == null
+                          ? 'Loading...'
+                          : controller.userProfile.value!.data.location,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey),
+                    )),
                   ],
                 ),
               ],

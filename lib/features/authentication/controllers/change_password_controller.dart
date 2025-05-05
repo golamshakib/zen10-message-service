@@ -52,7 +52,7 @@ class ChangePasswordController extends GetxController {
         color: Colors.redAccent,
       );
     } finally {
-      isLoading(false);
+      isLoading(false); 
     }
   }
 

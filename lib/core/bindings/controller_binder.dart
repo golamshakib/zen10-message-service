@@ -3,6 +3,7 @@ import 'package:traveling/features/authentication/controllers/location_controlle
 import 'package:traveling/features/authentication/controllers/login_controller.dart';
 import 'package:traveling/features/authentication/controllers/otp_verification_controller.dart';
 import 'package:traveling/features/authentication/controllers/sing_up_controller.dart';
+import 'package:traveling/features/home/controllers/home_controller.dart';
 
 import '../../features/splash_screen/controllers/splash_controller.dart';
 
@@ -31,6 +32,10 @@ class ControllerBinder extends Bindings {
 
     Get.lazyPut<OtpVerificationController>(
       () => OtpVerificationController(),
+      fenix: true,
+    );
+    Get.lazyPut<HomeScreenController>(
+          () => HomeScreenController(),
       fenix: true,
     );
   }
