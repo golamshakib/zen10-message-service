@@ -1,23 +1,25 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/services/location.dart';
+import '../../../core/services/Auth_service.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashController extends GetxController {
-  void navigateToHomeScreen() {
-    Get.offAllNamed(
-      AppRoute.loginScreen,
-    );
-  }
-
-  var latitude = 0.0.obs;
-  var longitude = 0.0.obs;
-  var address = '......'.obs;
-
+  // Remove global variables, and use LocationService instead
   final LocationService _locationService = LocationService();
+
+  void navigateToHomeScreen() {
+    log('Splash Token: ${AuthService.hasToken()}');
+    if (AuthService.hasToken()) {
+      Get.offAllNamed(AppRoute.homeScreen); // Navigate to home screen if logged in
+    } else {
+      Get.offAllNamed(AppRoute.loginScreen); // Otherwise, navigate to the login screen
+    }
+  }
 
   Future<void> fetchLocationForIOS() async {
     await _fetchLocation();
@@ -28,13 +30,13 @@ class SplashController extends GetxController {
   }
 
   Future<void> _fetchLocation() async {
+    log("Fetching location");
     bool serviceEnabled;
     LocationPermission permission;
 
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Instead of just logging, show a dialog to enable location services
       await _showLocationServicesDisabledDialog();
       return;
     }
@@ -61,11 +63,11 @@ class SplashController extends GetxController {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
-      latitude.value = position.latitude;
-      longitude.value = position.longitude;
+      // Update the location in LocationService
+      _locationService.setLocation(position.latitude, position.longitude, '');
 
-      debugPrint('Latitude: ${latitude.value}');
-      debugPrint('Longitude: ${longitude.value}');
+      log('Latitude: ${position.latitude}');
+      log('Longitude: ${position.longitude}');
 
       // Reverse geocode to get address
       List<Placemark> placemarks =
@@ -78,21 +80,24 @@ class SplashController extends GetxController {
           placemark.subLocality,
           placemark.locality,
           placemark.country,
-        ].where((element) => element != null && element.isNotEmpty).join(', ');
+        ]
+            .where((element) => element != null && element.isNotEmpty)
+            .join(', ');
 
-        _locationService.setLocation(
-            latitude.value, longitude.value, fullAddress);
-        navigateToHomeScreen();
-        debugPrint('Address: $fullAddress');
-      } else {
-        debugPrint('No placemarks found for the location.');
+        // Update the address in LocationService
+        _locationService.setLocation(position.latitude, position.longitude, fullAddress);
+
+        log('Address: $fullAddress');
       }
+
+      // Navigate to the appropriate screen after location fetch
+      navigateToHomeScreen();
     } catch (e) {
       debugPrint('Error fetching location: $e');
     }
   }
 
-  // Show dialog when location services are disabled
+  // Dialog methods remain the same...
   Future<void> _showLocationServicesDisabledDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -122,7 +127,6 @@ class SplashController extends GetxController {
     );
   }
 
-  // Show dialog when location permission is denied
   Future<void> _showLocationPermissionDeniedDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -149,7 +153,6 @@ class SplashController extends GetxController {
     );
   }
 
-  // Show dialog when location permission is permanently denied
   Future<void> _showLocationPermissionPermanentlyDeniedDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -189,4 +192,3 @@ class SplashController extends GetxController {
     }
   }
 }
-

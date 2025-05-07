@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:traveling/routes/app_routes.dart';
 
 import '../utils/logging/logger.dart';
 
@@ -12,7 +14,6 @@ class AuthService {
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
     _token = _preferences.getString(_tokenKey);
-    AppLoggerHelper.info('Token loaded: $_token');  // Debug log
   }
 
   static bool hasToken() {
@@ -38,9 +39,8 @@ class AuthService {
       log('Error during logout: $e');
     }
   }
-
   static Future<void> goToLogin() async {
-    // Get.offAllNamed('/login');
+    Get.offAllNamed(AppRoute.loginScreen);
   }
 
   static String? get token => _token;

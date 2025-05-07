@@ -10,9 +10,9 @@ class LocationService {
   String _address = '......';
 
   // Getters for other classes to access
-  double get latitude => _latitude;
-  double get longitude => _longitude;
-  String get address => _address;
+  double get gLatitude => _latitude;
+  double get gLongitude => _longitude;
+  String get gAddress => _address;
 
   // Setters to update values
   void setLocation(double lat, double lon, String address) {

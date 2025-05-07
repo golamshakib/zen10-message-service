@@ -9,4 +9,5 @@ class AppUrls {
   static const String verifyOtp = '$_baseUrl/auth/verify-reset-password-otp';
   static const String changePassword = '$_baseUrl/auth/reset-password';
   static const String fetchProfile = '$_baseUrl/users/me';
+  static const String getNearByLocations = '$_baseUrl/locations/get-nearby-locations';
 }
