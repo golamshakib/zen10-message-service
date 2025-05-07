@@ -12,8 +12,9 @@ class HomeScreenController extends GetxController {
   Rx<ProfileResponse?> userProfile = Rx<ProfileResponse?>(null);
   RxList<dynamic> nearbyLocations = <dynamic>[].obs;  // Observing locations
   RxSet<Marker> markers = <Marker>{}.obs;  // Observable markers
-  // Add a loading state variable at the top of the class
   var isLoading = true.obs;
+  // Add a variable to track if we're in service zone
+  var isInServiceZone = false.obs;
 
   @override
   void onInit() async {
@@ -29,7 +30,6 @@ class HomeScreenController extends GetxController {
   }
 
   // Combined method to fetch user profile and update variables
-  // Modify the fetchUserProfile method to set loading state
   Future<void> fetchUserProfile() async {
     isLoading.value = true;
     if (AuthService.token == null) {
@@ -61,7 +61,6 @@ class HomeScreenController extends GetxController {
   }
 
   // Fetch nearby locations from the API
-  // Modify fetchNearbyLocations to return a Future
   Future<void> fetchNearbyLocations() async {
     final token = AuthService.token;
 
@@ -101,24 +100,34 @@ class HomeScreenController extends GetxController {
         tempMarkers.add(userMarker);
         log('Added user location marker at $userLatitude, $userLongitude');
 
-        // Add new markers for nearby locations
-        for (var location in nearbyLocations) {
-          double latitude = double.parse(location['latitude'].toString());
-          double longitude = double.parse(location['longitude'].toString());
+        // Check if we have any nearby locations
+        if (nearbyLocations.isEmpty) {
+          // No nearby locations found, we're out of service zone
+          isInServiceZone.value = false;
+          log('No nearby locations found - Out of service zone');
+        } else {
+          // We have nearby locations, we're in service zone
+          isInServiceZone.value = true;
 
-          log('Fetched Location: ${location['location']} - Lat: $latitude, Long: $longitude');
-          log('Location ID: ${location['id']}');
+          // Add new markers for nearby locations
+          for (var location in nearbyLocations) {
+            double latitude = double.parse(location['latitude'].toString());
+            double longitude = double.parse(location['longitude'].toString());
 
-          final marker = Marker(
-            markerId: MarkerId(location['id'].toString()),
-            position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(
-              title: location['location'],
-              snippet: "Lat: $latitude, Long: $longitude",
-            ),
-            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          );
-          tempMarkers.add(marker);
+            log('Fetched Location: ${location['location']} - Lat: $latitude, Long: $longitude');
+            log('Location ID: ${location['id']}');
+
+            final marker = Marker(
+              markerId: MarkerId(location['id'].toString()),
+              position: LatLng(latitude, longitude),
+              infoWindow: InfoWindow(
+                title: location['location'],
+                snippet: "Lat: $latitude, Long: $longitude",
+              ),
+              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+            );
+            tempMarkers.add(marker);
+          }
         }
 
         // Update markers all at once to trigger a single rebuild
@@ -127,12 +136,14 @@ class HomeScreenController extends GetxController {
         log('Total Markers: ${markers.length}');
         AppLoggerHelper.info('Nearby locations fetched successfully');
       } else {
+        // API error, assume we're out of service zone
+        isInServiceZone.value = false;
         AppLoggerHelper.error('Failed to load locations: ${response.errorMessage}');
       }
     } catch (e) {
+      // Error occurred, assume we're out of service zone
+      isInServiceZone.value = false;
       AppLoggerHelper.error('Error occurred while fetching nearby locations: $e');
     }
   }
-
-// Remove the _addUserLocationMarker method as we've integrated it directly into fetchNearbyLocations
 }

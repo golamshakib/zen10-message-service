@@ -10,4 +10,5 @@ class AppUrls {
   static const String changePassword = '$_baseUrl/auth/reset-password';
   static const String fetchProfile = '$_baseUrl/users/me';
   static const String getNearByLocations = '$_baseUrl/locations/get-nearby-locations';
+  static const String getUpcomingLocations = '$_baseUrl/locations/get-upcoming-locations';
 }

@@ -159,43 +159,87 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                       // Add a refresh button to manually refresh markers
-                      // Positioned(
-                      //   bottom: 16.h,
-                      //   right: 16.w,
-                      //   child: FloatingActionButton.small(
-                      //     backgroundColor: Colors.white.withOpacity(0.8),
-                      //     child: Icon(Icons.refresh, color: AppColors.primary),
-                      //     onPressed: () {
-                      //       controller.fetchNearbyLocations();
-                      //     },
-                      //   ),
-                      // ),
+                      Positioned(
+                        bottom: 16.h,
+                        left: 16.w,
+                        child: FloatingActionButton.small(
+                          backgroundColor: Colors.white.withOpacity(0.8),
+                          child: Icon(Icons.refresh, color: AppColors.primary),
+                          onPressed: () {
+                            controller.fetchNearbyLocations();
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
               SizedBox(height: 24.h),
-              Container(
+              Obx(() => Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.all(12.h),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8)
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('We are near you!', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                    Text(
+                        controller.isInServiceZone.value
+                            ? 'We are near you!'
+                            : 'Out of zone 😢',
+                        style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary
+                        )
+                    ),
                     SizedBox(height: 8.h),
-                    Text('Would you like to book a session with us?', style: TextStyle(color: AppColors.textSecondary)),
+                    Text(
+                        controller.isInServiceZone.value
+                            ? 'Would you like to book a session with us?'
+                            : 'We will notify you as soon as we are in your area.',
+                        style: TextStyle(color: AppColors.textSecondary)
+                    ),
                   ],
                 ),
-              ),
+              )),
               SizedBox(height: 16.h),
-              CustomButton(
-                  onPressed: () {
-                    Get.to(() => SelectServiceView());
-                  },
-                  text: 'Book Now')
+              Obx(() => controller.isInServiceZone.value
+                  ? CustomButton(
+                onPressed: () {
+                  Get.to(() => SelectServiceView());
+                },
+                text: 'Book Now',
+              )
+                  : _buildDisabledButton()
+              )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  // Custom disabled button that matches the style of CustomButton but with gray colors
+  Widget _buildDisabledButton() {
+    return Container(
+      alignment: Alignment.center,
+      width: double.maxFinite,
+      padding: EdgeInsets.symmetric(
+        vertical: 13.h,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(38.h),
+      ),
+      child: Text(
+        'Book Now',
+        style: TextStyle(
+          color: Colors.grey[600],
+          fontWeight: FontWeight.w700,
+          fontSize: 16.sp,
         ),
       ),
     );
