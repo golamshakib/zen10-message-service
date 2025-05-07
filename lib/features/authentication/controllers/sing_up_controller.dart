@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../core/services/Auth_service.dart';
+import '../../../core/services/location.dart';
 import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
@@ -28,12 +29,13 @@ class SingUpController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPassController.text.trim();
-    final splashController = Get.find<SplashController>();
+    final LocationService _locationService = LocationService();
 
-    // Get latitude and longitude from the SplashController
-    final latitude = splashController.latitude.value;
-    final longitude = splashController.longitude.value;
-    final address = splashController.address.value;
+    // Retrieve the location data from LocationService
+    final latitude = _locationService.gLatitude;
+    final longitude = _locationService.gLongitude;
+    final address = _locationService.gAddress;
+    log('Latitude: $latitude, Longitude: $longitude, Address: $address');  // Log the location data
 
     // Check if passwords match
     if (password != confirmPassword) {

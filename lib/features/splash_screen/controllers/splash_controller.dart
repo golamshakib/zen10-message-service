@@ -9,6 +9,9 @@ import '../../../core/services/Auth_service.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashController extends GetxController {
+  // Remove global variables, and use LocationService instead
+  final LocationService _locationService = LocationService();
+
   void navigateToHomeScreen() {
     log('Splash Token: ${AuthService.hasToken()}');
     if (AuthService.hasToken()) {
@@ -17,12 +20,6 @@ class SplashController extends GetxController {
       Get.offAllNamed(AppRoute.loginScreen); // Otherwise, navigate to the login screen
     }
   }
-
-  var latitude = 0.0.obs;
-  var longitude = 0.0.obs;
-  var address = '......'.obs;
-
-  final LocationService _locationService = LocationService();
 
   Future<void> fetchLocationForIOS() async {
     await _fetchLocation();
@@ -33,13 +30,13 @@ class SplashController extends GetxController {
   }
 
   Future<void> _fetchLocation() async {
+    log("Fetching location");
     bool serviceEnabled;
     LocationPermission permission;
 
     // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Instead of just logging, show a dialog to enable location services
       await _showLocationServicesDisabledDialog();
       return;
     }
@@ -66,12 +63,11 @@ class SplashController extends GetxController {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
 
-      latitude.value = position.latitude;
-      longitude.value = position.longitude;
+      // Update the location in LocationService
+      _locationService.setLocation(position.latitude, position.longitude, '');
 
-      // Log latitude, longitude and address in console
-      log('Latitude: ${latitude.value}');
-      log('Longitude: ${longitude.value}');
+      log('Latitude: ${position.latitude}');
+      log('Longitude: ${position.longitude}');
 
       // Reverse geocode to get address
       List<Placemark> placemarks =
@@ -84,25 +80,24 @@ class SplashController extends GetxController {
           placemark.subLocality,
           placemark.locality,
           placemark.country,
-        ].where((element) => element != null && element.isNotEmpty).join(', ');
+        ]
+            .where((element) => element != null && element.isNotEmpty)
+            .join(', ');
 
-        address.value = fullAddress;
-        _locationService.setLocation(
-            latitude.value, longitude.value, fullAddress);
-        // Log the address
+        // Update the address in LocationService
+        _locationService.setLocation(position.latitude, position.longitude, fullAddress);
+
         log('Address: $fullAddress');
-
-        navigateToHomeScreen();
-
-      } else {
-        debugPrint('No placemarks found for the location.');
       }
+
+      // Navigate to the appropriate screen after location fetch
+      navigateToHomeScreen();
     } catch (e) {
       debugPrint('Error fetching location: $e');
     }
   }
 
-  // Show dialog when location services are disabled
+  // Dialog methods remain the same...
   Future<void> _showLocationServicesDisabledDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -132,7 +127,6 @@ class SplashController extends GetxController {
     );
   }
 
-  // Show dialog when location permission is denied
   Future<void> _showLocationPermissionDeniedDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -159,7 +153,6 @@ class SplashController extends GetxController {
     );
   }
 
-  // Show dialog when location permission is permanently denied
   Future<void> _showLocationPermissionPermanentlyDeniedDialog() async {
     await Get.dialog(
       AlertDialog(
@@ -199,4 +192,3 @@ class SplashController extends GetxController {
     }
   }
 }
-

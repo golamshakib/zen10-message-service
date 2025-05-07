@@ -193,7 +193,6 @@ class SignUpScreen extends StatelessWidget {
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 singUpController.signUp();
-                                Get.toNamed(AppRoute.loginScreen);
                               }
                             },
                             text: 'Sign Up',

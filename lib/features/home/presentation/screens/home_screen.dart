@@ -2,18 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:traveling/core/services/Auth_service.dart';
-import 'package:traveling/core/services/location.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/presentation/screens/selete_servicer.dart';
 
 import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../authentication/controllers/location_controller.dart';
 import '../../controllers/home_controller.dart';
 import 'logout_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-   HomeScreen({super.key}){
+  HomeScreen({super.key}){
     AuthService.init();
   }
 
@@ -22,31 +20,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late GoogleMapController mapController;
-  late BitmapDescriptor customIcon;
-  bool showInfo = false;
+  GoogleMapController? mapController;
   final HomeScreenController controller = Get.find<HomeScreenController>();
-  // final LocationController locationController = Get.find<LocationController>();
-
 
   @override
   void initState() {
     super.initState();
-    _setCustomMarker();
-    // controller.fetchUserProfile();
-    // controller.fetchNearbyLocations();  // Fetch locations on init
-  }
-
-  void _setCustomMarker() async {
-    customIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
-    setState(() {});
+    // No need to call these here as they're already called in controller's onInit
   }
 
   @override
   Widget build(BuildContext context) {
-    // Default coordinates (for example, New York City)
-    final LatLng defaultLocation = LatLng(40.7128, -74.006);  // New York City coordinates
-
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -112,16 +96,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8.h),
                   child: Stack(
                     children: [
-                      GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: defaultLocation,  // Default location (New York City)
-                          zoom: 14,  // Set zoom level to 14
-                        ),
-                        markers: controller.markers,  // Use the markers from the controller
-                        onMapCreated: (GoogleMapController controller) {
-                          mapController = controller;
-                        },
-                      ),
+                      Obx(() {
+                        final userLatitude = controller.userProfile.value?.data.locationLatitude ?? 40.7128;
+                        final userLongitude = controller.userProfile.value?.data.locationLongitude ?? -74.0060;
+
+                        if (controller.isLoading.value) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(color: AppColors.primary),
+                                SizedBox(height: 16.h),
+                                Text('Loading map and locations...',
+                                    style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold))
+                              ],
+                            ),
+                          );
+                        }
+
+                        return GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(userLatitude, userLongitude),
+                            zoom: 14,
+                          ),
+                          markers: controller.markers,
+                          onMapCreated: (GoogleMapController mapCtrl) {
+                            mapController = mapCtrl;
+                            // Force a small delay and then check if we need to refresh markers
+                            Future.delayed(Duration(milliseconds: 500), () {
+                              if (controller.markers.isEmpty) {
+                                controller.fetchNearbyLocations();
+                              }
+                            });
+                          },
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          compassEnabled: true,
+                        );
+                      }),
+
                       Positioned(
                         top: 10.h,
                         right: 10.w,
@@ -144,6 +157,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+
+                      // Add a refresh button to manually refresh markers
+                      // Positioned(
+                      //   bottom: 16.h,
+                      //   right: 16.w,
+                      //   child: FloatingActionButton.small(
+                      //     backgroundColor: Colors.white.withOpacity(0.8),
+                      //     child: Icon(Icons.refresh, color: AppColors.primary),
+                      //     onPressed: () {
+                      //       controller.fetchNearbyLocations();
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
@@ -175,6 +201,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-

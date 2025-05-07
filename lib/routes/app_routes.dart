@@ -21,7 +21,7 @@ class AppRoute {
         transition: Transition.fade,
         transitionDuration: const Duration(milliseconds: 300),
         curve: Curves.easeOut),
-    GetPage(name: init, page: () => LoginScreen()),
+    GetPage(name: init, page: () => SplashScreen()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: homeScreen, page: () => HomeScreen()),
 
