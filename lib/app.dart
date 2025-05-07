@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:traveling/routes/app_routes.dart';
 import 'core/bindings/controller_binder.dart';
+import 'core/services/Auth_service.dart';
 import 'core/utils/constants/app_sizer.dart';
 import 'core/utils/theme/theme.dart';
 
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final String initialRoute = AuthService.hasToken()
+    //     ? AppRoute.homeScreen
+    //     : AppRoute.init;
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +10,7 @@ import 'core/utils/logging/loggerformain.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AuthService.init();
+  log('Main Token: ${AuthService.token}');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (value) {
       Logger.init(kReleaseMode ? LogMode.live : LogMode.debug);

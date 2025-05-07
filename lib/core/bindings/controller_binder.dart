@@ -10,10 +10,10 @@ import '../../features/splash_screen/controllers/splash_controller.dart';
 class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LocationController>(
-          () => LocationController(),
-      fenix: true,
-    );
+    // Get.lazyPut<LocationController>(
+    //       () => LocationController(),
+    //   fenix: true,
+    // );
 
     Get.lazyPut<LoginController>(
       () => LoginController(),

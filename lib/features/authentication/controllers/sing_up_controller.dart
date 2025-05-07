@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/routes/app_routes.dart';
@@ -6,6 +8,7 @@ import '../../../core/services/Auth_service.dart';
 import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
+import '../../splash_screen/controllers/splash_controller.dart';
 import '../presentation/widgets/showSnacker.dart';
 import 'location_controller.dart';
 
@@ -25,12 +28,12 @@ class SingUpController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPassController.text.trim();
-    final address = addressController.text.trim();
-    final locationController = Get.find<LocationController>();
+    final splashController = Get.find<SplashController>();
 
-    // Get latitude and longitude from the LocationController
-    final latitude = locationController.userLocation.value.latitude;
-    final longitude = locationController.userLocation.value.longitude;
+    // Get latitude and longitude from the SplashController
+    final latitude = splashController.latitude.value;
+    final longitude = splashController.longitude.value;
+    final address = splashController.address.value;
 
     // Check if passwords match
     if (password != confirmPassword) {
@@ -74,7 +77,7 @@ class SingUpController extends GetxController {
           icon: Icons.check_circle,
           color: Colors.green,
         );
-
+        log('Signup Response: ${response.responseData}');
         // Redirect to login page or dashboard
         Get.toNamed(AppRoute.loginScreen);
 

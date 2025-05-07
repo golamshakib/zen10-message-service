@@ -1,16 +1,21 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/services/location.dart';
+import '../../../core/services/Auth_service.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashController extends GetxController {
   void navigateToHomeScreen() {
-    Get.offAllNamed(
-      AppRoute.loginScreen,
-    );
+    log('Splash Token: ${AuthService.hasToken()}');
+    if (AuthService.hasToken()) {
+      Get.offAllNamed(AppRoute.homeScreen); // Navigate to home screen if logged in
+    } else {
+      Get.offAllNamed(AppRoute.loginScreen); // Otherwise, navigate to the login screen
+    }
   }
 
   var latitude = 0.0.obs;
@@ -64,8 +69,9 @@ class SplashController extends GetxController {
       latitude.value = position.latitude;
       longitude.value = position.longitude;
 
-      debugPrint('Latitude: ${latitude.value}');
-      debugPrint('Longitude: ${longitude.value}');
+      // Log latitude, longitude and address in console
+      log('Latitude: ${latitude.value}');
+      log('Longitude: ${longitude.value}');
 
       // Reverse geocode to get address
       List<Placemark> placemarks =
@@ -80,10 +86,14 @@ class SplashController extends GetxController {
           placemark.country,
         ].where((element) => element != null && element.isNotEmpty).join(', ');
 
+        address.value = fullAddress;
         _locationService.setLocation(
             latitude.value, longitude.value, fullAddress);
+        // Log the address
+        log('Address: $fullAddress');
+
         navigateToHomeScreen();
-        debugPrint('Address: $fullAddress');
+
       } else {
         debugPrint('No placemarks found for the location.');
       }
