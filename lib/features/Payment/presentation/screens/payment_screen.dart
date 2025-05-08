@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/icon_path.dart';
-import 'package:traveling/features/Confirmation/presentation/screens/confirmation.dart';
+import 'package:traveling/features/Payment/controllers/pay_and_book_controller.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  const PaymentMethodScreen({super.key});
+  const PaymentMethodScreen(
+      {super.key,
+      required this.connectedServiceId,
+      required this.ownerId,
+      required this.amount});
+  final String connectedServiceId;
+  final String ownerId;
+  final int amount;
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -16,6 +24,7 @@ class PaymentMethodScreen extends StatefulWidget {
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   String selectedPayment = "PayPal";
+  final PayAndBookController controller = Get.put(PayAndBookController());
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +82,20 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               ),
             ),
             Spacer(),
-            CustomButton(
-                onPressed: () {
-                  Get.to(() => BookingConfirmed());
-                },
-                text: "Pay & Book Now")
+            Obx(() => controller.isPaymentLoading.value
+                ? Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.primary, size: 35.sp),
+                  )
+                : CustomButton(
+                    onPressed: () {
+                      controller.crateBooking(
+                        connectedServiceId: widget.connectedServiceId,
+                        ownerId: widget.ownerId,
+                        amount: widget.amount,
+                      );
+                    },
+                    text: "Pay & Book Now"))
           ],
         ),
       ),

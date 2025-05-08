@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
@@ -18,7 +20,7 @@ class SummaryScreen extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding:
-        const EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30),
+            const EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -32,10 +34,10 @@ class SummaryScreen extends StatelessWidget {
               height: 40.h,
             ),
             Obx(() => _buildServiceItem(
-              title: controller.getFormattedServiceTitle(),
-              subtitle: controller.serviceDescription.value,
-              price: controller.servicePrice.value,
-            )),
+                  title: controller.getFormattedServiceTitle(),
+                  subtitle: controller.serviceDescription.value,
+                  price: controller.servicePrice.value,
+                )),
             const Divider(
               color: Color(0xffE9E9F3),
             ),
@@ -52,19 +54,28 @@ class SummaryScreen extends StatelessWidget {
                         color: AppColors.textPrimary),
                   ),
                   Obx(() => Text(
-                    controller.servicePrice.value,
-                    style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary),
-                  )),
+                        controller.servicePrice.value,
+                        style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary),
+                      )),
                 ],
               ),
             ),
             const Spacer(),
             CustomButton(
                 onPressed: () {
-                  Get.to(() => PaymentMethodScreen());
+                  //TODO: Connect the right connectedService id and owner id
+
+                  log("Selected price is: ${controller.servicePrice.value}");
+                  Get.to(() => PaymentMethodScreen(
+                        connectedServiceId: "",
+                        ownerId: "",
+                        amount: double.parse(controller.servicePrice.value
+                                .replaceAll("\$", ""))
+                            .toInt(),
+                      ));
                 },
                 text: "Next")
           ],

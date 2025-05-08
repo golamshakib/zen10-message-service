@@ -10,6 +10,15 @@ class AppUrls {
   static const String verifyOtp = '$_baseUrl/auth/verify-reset-password-otp';
   static const String changePassword = '$_baseUrl/auth/reset-password';
   static const String fetchProfile = '$_baseUrl/users/me';
-  static const String getNearByLocations = '$_baseUrl/locations/get-nearby-locations';
-  static const String getUpcomingLocations = '$_baseUrl/locations/get-upcoming-locations';
+  static const String getNearByLocations =
+      '$_baseUrl/locations/get-nearby-locations';
+  static const String getUpcomingLocations =
+      '$_baseUrl/locations/get-upcoming-locations';
+
+  // Added by @alphabetic100
+  static String createPayment = "$_baseUrl/payments/create-payment";
+  static String createBooking({required String ownerId}) =>
+      "$_baseUrl/bookings/create-booking/$ownerId";
+  static String capturePayment({required String orderId}) =>
+      "$_baseUrl/payments/capture-payment/$orderId";
 }
