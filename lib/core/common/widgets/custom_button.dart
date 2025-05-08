@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 
 class CustomButton extends StatelessWidget {
-  final void Function() onPressed;
+  final void Function()? onPressed; // Allow nullable function here
   final String text;
+
   const CustomButton({
     super.key,
     required this.onPressed,

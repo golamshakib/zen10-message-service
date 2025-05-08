@@ -4,17 +4,21 @@ import 'package:traveling/core/common/widgets/custom_app_bar.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-import 'package:traveling/features/Payment/presentation/screens/payment_screen.dart';
+import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
+
+import '../../../Payment/presentation/screens/payment_screen.dart';
 
 class SummaryScreen extends StatelessWidget {
   const SummaryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final BookServiceController controller = Get.find<BookServiceController>();
+
     return Scaffold(
       body: Padding(
         padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30),
+        const EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -27,16 +31,11 @@ class SummaryScreen extends StatelessWidget {
             SizedBox(
               height: 40.h,
             ),
-            _buildServiceItem(
-              title: "Massage Service - Non Member",
-              subtitle: "30 minute massage",
-              price: "\$20.00",
-            ),
-            // _buildServiceItem(
-            //   title: "Stretch Service - Member",
-            //   subtitle: "10 minute stretch, additional service",
-            //   price: "\$10.00",
-            // ),
+            Obx(() => _buildServiceItem(
+              title: controller.getFormattedServiceTitle(),
+              subtitle: controller.serviceDescription.value,
+              price: controller.servicePrice.value,
+            )),
             const Divider(
               color: Color(0xffE9E9F3),
             ),
@@ -52,13 +51,13 @@ class SummaryScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary),
                   ),
-                  Text(
-                    "\$20.00",
+                  Obx(() => Text(
+                    controller.servicePrice.value,
                     style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary),
-                  ),
+                  )),
                 ],
               ),
             ),

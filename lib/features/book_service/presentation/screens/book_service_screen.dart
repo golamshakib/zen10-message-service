@@ -18,7 +18,7 @@ class BookServiceView extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding:
-            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
+        EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,29 +44,10 @@ class BookServiceView extends StatelessWidget {
               style: TextStyle(fontSize: 16.sp, color: AppColors.textSecondary),
             ),
             SizedBox(height: 24.h),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     Obx(
-            //       () => categoryButton(
-            //         text: 'Massage',
-            //         isSelected: controller.selectedCategory.value == 'Massage',
-            //         onTap: () => controller.changeCategory('Massage'),
-            //       ),
-            //     ),
-            //     Obx(
-            //       () => categoryButton(
-            //         text: 'Stretch',
-            //         isSelected: controller.selectedCategory.value == 'Stretch',
-            //         onTap: () => controller.changeCategory('Stretch'),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             SizedBox(height: 40.h),
             Expanded(
               child: Obx(
-                () {
+                    () {
                   if (controller.selectedCategory.value == 'Massage') {
                     return Column(
                       children: [
@@ -76,19 +57,31 @@ class BookServiceView extends StatelessWidget {
                           price: '\$20.00',
                           isSelected: controller.selectedService.value ==
                               'Non-Members-Massage',
-                          onTap: () =>
-                              controller.changeService('Non-Members-Massage'),
+                          onTap: () {
+                            controller.changeService('Non-Members-Massage');
+                            controller.setServiceDetails(
+                                'For Non-Members',
+                                '30 minute massage',
+                                '\$20.00'
+                            );
+                          },
                         ),
                         const SizedBox(height: 10),
                         serviceCard(
                           title: 'For Members',
                           description:
-                              '10 minute massage, Footmassage, Prepaid for 4x',
+                          '10 minute massage, Footmassage, Prepaid for 4x',
                           price: '\$20.00',
                           isSelected: controller.selectedService.value ==
                               'Members-Massage',
-                          onTap: () =>
-                              controller.changeService('Members-Massage'),
+                          onTap: () {
+                            controller.changeService('Members-Massage');
+                            controller.setServiceDetails(
+                                'For Members',
+                                '10 minute massage, Footmassage, Prepaid for 4x',
+                                '\$20.00'
+                            );
+                          },
                         ),
                       ],
                     );
@@ -102,8 +95,14 @@ class BookServiceView extends StatelessWidget {
                           price: '\$15.00',
                           isSelected: controller.selectedService.value ==
                               'Non-Members-Stretch',
-                          onTap: () =>
-                              controller.changeService('Non-Members-Stretch'),
+                          onTap: () {
+                            controller.changeService('Non-Members-Stretch');
+                            controller.setServiceDetails(
+                                'For Non-Members',
+                                '15 min assisted stretching',
+                                '\$15.00'
+                            );
+                          },
                         ),
                         const SizedBox(height: 10),
                         serviceCard(
@@ -112,8 +111,14 @@ class BookServiceView extends StatelessWidget {
                           price: '\$18.00',
                           isSelected: controller.selectedService.value ==
                               'Members-Stretch',
-                          onTap: () =>
-                              controller.changeService('Members-Stretch'),
+                          onTap: () {
+                            controller.changeService('Members-Stretch');
+                            controller.setServiceDetails(
+                                'For Members',
+                                '20 min deep stretch, Prepaid for 3x',
+                                '\$18.00'
+                            );
+                          },
                         ),
                       ],
                     );
@@ -122,8 +127,23 @@ class BookServiceView extends StatelessWidget {
               ),
             ),
             CustomButton(
-                onPressed: () {
-                  Get.to(() => SummaryScreen());
+                onPressed: () async {
+                  if (controller.selectedService.isEmpty) {
+                    // Show snackbar if no service is selected
+                    Get.snackbar(
+                      'Selection Required',
+                      'Please select a service type',
+                      backgroundColor: Colors.red[100],
+                      colorText: Colors.red[800],
+                      margin: EdgeInsets.all(16),
+                      duration: Duration(seconds: 2),
+                      borderRadius: 8,
+                      icon: Icon(Icons.warning_amber_rounded, color: Colors.red[800]),
+                    );
+                  } else {
+                    // Navigate to summary screen if service is selected
+                    Get.to(() => SummaryScreen());
+                  }
                 },
                 text: "Next"),
           ],
