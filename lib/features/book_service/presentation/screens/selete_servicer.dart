@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
@@ -8,11 +9,18 @@ import 'package:traveling/features/book_service/controllers/book_service_control
 import 'package:traveling/features/book_service/presentation/screens/book_service_screen.dart';
 
 class SelectServiceView extends StatelessWidget {
-  const SelectServiceView({super.key});
+  // Add locationId parameter
+  final dynamic locationId;
+
+  // Make it required in the constructor
+  const SelectServiceView({super.key, required this.locationId});
 
   @override
   Widget build(BuildContext context) {
     final BookServiceController controller = Get.put(BookServiceController());
+
+    // Log the locationId when the screen is built
+    log('SelectServiceView opened with location ID: $locationId');
 
     return Scaffold(
       body: Padding(
@@ -46,7 +54,8 @@ class SelectServiceView extends StatelessWidget {
             Spacer(),
             CustomButton(
               onPressed: () {
-                Get.to(() => BookServiceView());
+                // Pass the locationId to the next screen if needed
+                Get.to(() => BookServiceView(), arguments: {'locationId': locationId});
               },
               text: 'Next',
             ),

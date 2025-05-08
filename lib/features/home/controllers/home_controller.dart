@@ -5,6 +5,7 @@ import 'package:traveling/core/services/auth_service.dart';
 import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
+import '../../book_service/presentation/screens/selete_servicer.dart';
 import '../data/model/user_profile_model.dart';
 
 class HomeScreenController extends GetxController {
@@ -15,6 +16,8 @@ class HomeScreenController extends GetxController {
   var isLoading = true.obs;
   // Add a variable to track if we're in service zone
   var isInServiceZone = false.obs;
+  // Add a variable to track the selected location
+  Rx<dynamic> selectedLocation = Rx<dynamic>(null);
 
   @override
   void onInit() async {
@@ -125,6 +128,11 @@ class HomeScreenController extends GetxController {
                 snippet: "Lat: $latitude, Long: $longitude",
               ),
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              onTap: () {
+                // When marker is tapped, set this location as selected
+                selectedLocation.value = location;
+                log('Selected location ID: ${location['id']}');
+              },
             );
             tempMarkers.add(marker);
           }
@@ -144,6 +152,22 @@ class HomeScreenController extends GetxController {
       // Error occurred, assume we're out of service zone
       isInServiceZone.value = false;
       AppLoggerHelper.error('Error occurred while fetching nearby locations: $e');
+    }
+  }
+
+  // Method to navigate to select service with the selected location ID
+  void navigateToSelectService() {
+    if (selectedLocation.value != null) {
+      final locationId = selectedLocation.value['id'];
+      log('Navigating to SelectServiceView with location ID: $locationId');
+      Get.to(() => SelectServiceView(locationId: locationId));
+    } else {
+      log('No location selected. Please select a location marker first.');
+      // You could show a snackbar or toast here to inform the user
+      Get.snackbar(
+        'No Location Selected',
+        'Please select a location on the map first',
+      );
     }
   }
 }
