@@ -56,32 +56,32 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               },
             ),
             SizedBox(height: 16.h),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Color(0xffE9E9F3),
-                  width: 1,
-                ),
-                color: Color(0xffFFFFFF),
-              ),
-              padding: EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Image.asset(IconPath.zelle, width: 44, height: 44),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      "Zelle",
-                      style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            // Container(
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(8),
+            //     border: Border.all(
+            //       color: Color(0xffE9E9F3),
+            //       width: 1,
+            //     ),
+            //     color: Color(0xffFFFFFF),
+            //   ),
+            //   padding: EdgeInsets.all(12),
+            //   child: Row(
+            //     children: [
+            //       Image.asset(IconPath.zelle, width: 44, height: 44),
+            //       SizedBox(width: 8),
+            //       Expanded(
+            //         child: Text(
+            //           "Zelle",
+            //           style: TextStyle(
+            //               fontSize: 20.sp,
+            //               fontWeight: FontWeight.w600,
+            //               color: AppColors.textPrimary),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Spacer(),
             Obx(() => controller.isPaymentLoading.value
                 ? Center(
