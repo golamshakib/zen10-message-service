@@ -7,6 +7,7 @@ import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/icon_path.dart';
 import 'package:traveling/features/Payment/controllers/pay_and_book_controller.dart';
+import 'package:traveling/features/Payment/presentation/screens/pay_pal_web_view.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen(
@@ -89,11 +90,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   )
                 : CustomButton(
                     onPressed: () {
-                      controller.crateBooking(
-                        connectedServiceId: widget.connectedServiceId,
-                        ownerId: widget.ownerId,
-                        amount: widget.amount,
-                      );
+                      // controller.crateBooking(
+                      //   connectedServiceId: widget.connectedServiceId,
+                      //   ownerId: widget.ownerId,
+                      //   amount: widget.amount,
+                      // );
+                      Get.to(() => PayPalWebView(
+                          approvalUrl:
+                              "https://www.sandbox.paypal.com/checkoutnow?token=42H42001J44430327"));
                     },
                     text: "Pay & Book Now"))
           ],
