@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           theme: _getLightTheme(),
           // darkTheme: _getDarkTheme(),
           defaultTransition:
-              PlatformUtils.isIOS ? Transition.cupertino : Transition.fade,
+          PlatformUtils.isIOS ? Transition.cupertino : Transition.fade,
           locale: Get.deviceLocale,
           builder: (context, child) => PlatformUtils.isIOS
               ? CupertinoTheme(data: const CupertinoThemeData(), child: child!)
@@ -51,9 +51,9 @@ class MyApp extends StatelessWidget {
         : AppTheme.lightTheme;
   }
 
-  // ThemeData _getDarkTheme() {
-  //   return PlatformUtils.isIOS
-  //       ? AppTheme.darkTheme.copyWith(platform: TargetPlatform.iOS)
-  //       : AppTheme.darkTheme;
-  // }
+// ThemeData _getDarkTheme() {
+//   return PlatformUtils.isIOS
+//       ? AppTheme.darkTheme.copyWith(platform: TargetPlatform.iOS)
+//       : AppTheme.darkTheme;
+// }
 }

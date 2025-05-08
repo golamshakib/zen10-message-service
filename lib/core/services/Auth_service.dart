@@ -8,12 +8,15 @@ import '../utils/logging/logger.dart';
 
 class AuthService {
   static const String _tokenKey = 'token';
+  static const String _userIdKey = 'userId';  // Add key for userId
   static late SharedPreferences _preferences;
   static String? _token;
+  static String? _userId;
 
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
     _token = _preferences.getString(_tokenKey);
+    _userId = _preferences.getString(_userIdKey);  // Initialize userId
   }
 
   static bool hasToken() {
@@ -30,18 +33,31 @@ class AuthService {
     }
   }
 
+  static Future<void> saveUserId(String userId) async {  // Save userId method
+    try {
+      await _preferences.setString(_userIdKey, userId);
+      _userId = userId;
+      AppLoggerHelper.info('User ID saved: $userId'); // Debug log
+    } catch (e) {
+      log('Error saving userId: $e');
+    }
+  }
+
   static Future<void> logoutUser() async {
     try {
       await _preferences.clear();
       _token = null;
+      _userId = null;  // Clear userId as well
       await goToLogin();
     } catch (e) {
       log('Error during logout: $e');
     }
   }
+
   static Future<void> goToLogin() async {
     Get.offAllNamed(AppRoute.loginScreen);
   }
 
   static String? get token => _token;
+  static String? get userId => _userId;  // Getter for userId
 }
