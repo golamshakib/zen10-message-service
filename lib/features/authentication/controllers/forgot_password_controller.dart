@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:traveling/features/authentication/presentation/screens/otp_verification_screen.dart';
 import 'package:traveling/core/services/network_caller.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../presentation/widgets/showSnacker.dart';
 
 class ForgotPasswordController extends GetxController {

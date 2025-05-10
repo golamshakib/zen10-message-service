@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +5,6 @@ import 'package:traveling/core/common/widgets/custom_app_bar.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
 import 'package:traveling/features/book_service/data/models/service_data_mode.dart';
 
 import '../../../Payment/presentation/screens/payment_screen.dart';
@@ -16,7 +14,7 @@ class SummaryScreen extends StatelessWidget {
   final ConnectedService selectedService;
   @override
   Widget build(BuildContext context) {
-    final BookServiceController controller = Get.find<BookServiceController>();
+    // final BookServiceController controller = Get.find<BookServiceController>();
 
     return Scaffold(
       body: Padding(
@@ -67,9 +65,6 @@ class SummaryScreen extends StatelessWidget {
             const Spacer(),
             CustomButton(
                 onPressed: () {
-                  //TODO: Connect the right connectedService id and owner id
-
-                  log("Selected price is: ${controller.servicePrice.value}");
                   Get.to(() => PaymentMethodScreen(
                         connectedServiceId: selectedService.id,
                         ownerId: selectedService.userId,
