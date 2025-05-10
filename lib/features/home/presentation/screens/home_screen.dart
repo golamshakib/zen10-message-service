@@ -10,6 +10,8 @@ import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 import '../../controllers/home_controller.dart';
+import '../widgets/disable_button.dart';
+import 'helper_function/helper_function.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key}) {
@@ -221,11 +223,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         right: 10.w,
                         child: Obx(() {
                           if (controller.showUpcoming.value) {
-                            // Check if upcomingLocations has any data before rendering
                             if (controller.upcomingLocations.isEmpty) {
                               return Text('No Upcoming event found');
                             }
-
                             return Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         controller.upcomingLocations[index];
                                     return ListTile(
                                       title: Text(
-                                        _formatDate(upcomingLocation.date),
+                                        formatDate(upcomingLocation.date),
                                         // Format date as May 20
                                         style: TextStyle(
                                           fontSize: 16.sp,
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        _getDayRange(upcomingLocation.startTime,
+                                        getDayRange(upcomingLocation.startTime,
                                             upcomingLocation.endTime),
                                         style: TextStyle(
                                           fontSize: 14.sp,
@@ -279,7 +279,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       trailing: Text(
                                         upcomingLocation.location,
-                                       // 'asdfljadslf jdlfjlkdsjf lkdsjf lkdsfl dslkf jlkdjfl ',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
@@ -294,12 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           } else {
-                            return SizedBox
-                                .shrink(); // Hide upcoming locations if the toggle is off
+                            return SizedBox.shrink();
                           }
                         }),
                       ),
-
                       // Add a refresh button to manually refresh markers
                       Positioned(
                         bottom: 16.h,
@@ -347,52 +344,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Obx(() => controller.isInServiceZone.value
                   ? CustomButton(
                       onPressed: () {
-                        // Use the new navigation method that checks for selected location
                         controller.navigateToSelectService();
                       },
                       text: 'Book Now',
                     )
-                  : _buildDisabledButton()),
+                  : buildDisabledButton()),
             ],
           ),
         ),
       ),
     );
-  }
-
-  // Custom disabled button that matches the style of CustomButton but with gray colors
-  Widget _buildDisabledButton() {
-    return Container(
-      alignment: Alignment.center,
-      width: double.maxFinite,
-      padding: EdgeInsets.symmetric(
-        vertical: 13.h,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(38.h),
-      ),
-      child: Text(
-        'Book Now',
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontWeight: FontWeight.w700,
-          fontSize: 16.sp,
-        ),
-      ),
-    );
-  }
-
-  String _formatDate(String date) {
-    try {
-      DateTime parsedDate = DateTime.parse(date); // Parse the date
-      return DateFormat('MMM dd').format(parsedDate); // Format as May 20
-    } catch (e) {
-      return date; // Return the original if parsing fails
-    }
-  }
-
-  String _getDayRange(String startTime, String endTime) {
-    return '$startTime to $endTime';
   }
 }
