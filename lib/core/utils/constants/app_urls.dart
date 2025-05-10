@@ -21,4 +21,7 @@ class AppUrls {
       "$_baseUrl/bookings/create-booking/$ownerId";
   static String capturePayment({required String orderId}) =>
       "$_baseUrl/payments/capture-payment/$orderId";
+  static String getUserService(
+          {required String userID, required String filter}) =>
+      "$_baseUrl/services/user-service/$userID?filter=$filter";
 }

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:traveling/routes/app_routes.dart';
 import 'core/bindings/controller_binder.dart';
-import 'core/services/Auth_service.dart';
 import 'core/utils/constants/app_sizer.dart';
 import 'core/utils/theme/theme.dart';
 

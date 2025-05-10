@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:traveling/core/services/Auth_service.dart';
-import 'package:traveling/core/utils/logging/logger.dart';
 
 class PaymentController extends GetxController {
   var isLoading = false.obs;

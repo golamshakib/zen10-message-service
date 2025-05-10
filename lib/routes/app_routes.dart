@@ -1,6 +1,5 @@
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
-import 'package:traveling/features/authentication/presentation/screens/change_password_screen.dart';
 import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import '../features/authentication/presentation/screens/login_screen.dart';
 import '../features/authentication/presentation/screens/sing_up_screen.dart';
