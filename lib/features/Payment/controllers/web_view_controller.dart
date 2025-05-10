@@ -22,10 +22,11 @@ class CustomWebViewController extends GetxController {
           loadingPercentage.value = 100;
           log("url is $url");
         },
-        onNavigationRequest: (request) {
+        onNavigationRequest: (request) async {
           if (request.url.contains("http://10.0.20.36:8013/success")) {
             Get.back();
-            controller.capturePayment(orderId: controller.orderId.value);
+
+            await controller.capturePayment(orderId: controller.orderId.value);
             return NavigationDecision.prevent;
           } else if (request.url.contains("http://10.0.20.36:8013/cancel")) {
             Get.back();

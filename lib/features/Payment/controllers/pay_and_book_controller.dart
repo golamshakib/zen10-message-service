@@ -1,12 +1,15 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/services/Auth_service.dart';
 import 'package:traveling/core/services/network_caller.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/core/utils/logging/logger.dart';
 import 'package:traveling/features/Payment/presentation/screens/pay_pal_web_view.dart';
 import 'package:traveling/features/home/presentation/screens/home_screen.dart';
+import 'package:http/http.dart' as http;
 
 class PayAndBookController extends GetxController {
   RxBool isPaymentLoading = false.obs;
@@ -82,16 +85,18 @@ class PayAndBookController extends GetxController {
     try {
       isPaymentLoading.value = true;
       log("Token is: ${AuthService.token}");
-      final response = await NetworkCaller().postRequest(
-          AppUrls.capturePayment(orderId: orderId),
-          token: "Bearer ${AuthService.token}");
+      final response = await http.post(
+          Uri.parse(AppUrls.capturePayment(orderId: orderId)),
+          headers: {"Authorization": "Bearer ${AuthService.token}"});
       isPaymentLoading.value = false;
-      if (response.isSuccess) {
+      if (response.statusCode == 200) {
         // show payment succes message
 
         Get.offAll(() => HomeScreen());
         log("Payment successfull");
-        Get.snackbar("Success", "oxff");
+        Get.snackbar(
+            "Success", "Payment successful! Thank you for your purchase.",
+            backgroundColor: AppColors.success, colorText: Colors.white);
         // Payment successfull
       } else {
         isPaymentLoading.value = false;

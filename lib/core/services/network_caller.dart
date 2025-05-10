@@ -8,7 +8,7 @@ import '../utils/logging/logger.dart';
 import 'Auth_service.dart';
 
 class NetworkCaller {
-  final int timeoutDuration = 10;
+  final int timeoutDuration = 20;
 
   Future<ResponseData> getRequest(String endpoint, {String? token}) async {
     AppLoggerHelper.info('GET Request: $endpoint');
@@ -30,7 +30,9 @@ class NetworkCaller {
       {Map<String, dynamic>? body, String? token}) async {
     AppLoggerHelper.info('POST Request: $endpoint');
     AppLoggerHelper.info('Request Body: ${jsonEncode(body)}');
+
     log(endpoint);
+    log("Token is: $token");
 
     try {
       final Response response = await post(
