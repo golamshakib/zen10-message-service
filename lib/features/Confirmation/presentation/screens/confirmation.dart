@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/image_path.dart';
-import 'package:traveling/features/Tip/presentation/screens/tip.dart';
 
 class BookingConfirmed extends StatelessWidget {
   const BookingConfirmed({super.key});
@@ -76,7 +74,7 @@ class BookingConfirmed extends StatelessWidget {
             ),
             CustomButton(
                 onPressed: () {
-                  Get.to(() => ThankYouPage());
+                  // Get.to(() => ThankYouPage());
                 },
                 text: "Back to Home")
           ],
