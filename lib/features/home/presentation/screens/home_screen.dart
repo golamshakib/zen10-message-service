@@ -10,6 +10,7 @@ import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 import '../../controllers/home_controller.dart';
+import '../widgets/disable_button.dart';
 import 'helper_function/helper_function.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -278,7 +279,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                       trailing: Text(
                                         upcomingLocation.location,
-                                       // 'asdfljadslf jdlfjlkdsjf lkdsjf lkdsfl dslkf jlkdjfl ',
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
@@ -344,40 +344,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Obx(() => controller.isInServiceZone.value
                   ? CustomButton(
                       onPressed: () {
-                        // Use the new navigation method that checks for selected location
                         controller.navigateToSelectService();
                       },
                       text: 'Book Now',
                     )
-                  : _buildDisabledButton()),
+                  : buildDisabledButton()),
             ],
           ),
         ),
       ),
     );
   }
-
-  // Custom disabled button that matches the style of CustomButton but with gray colors
-  Widget _buildDisabledButton() {
-    return Container(
-      alignment: Alignment.center,
-      width: double.maxFinite,
-      padding: EdgeInsets.symmetric(
-        vertical: 13.h,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(38.h),
-      ),
-      child: Text(
-        'Book Now',
-        style: TextStyle(
-          color: Colors.grey[600],
-          fontWeight: FontWeight.w700,
-          fontSize: 16.sp,
-        ),
-      ),
-    );
-  }
-
 }
