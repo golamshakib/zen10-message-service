@@ -11,8 +11,8 @@ import '../data/model/user_profile_model.dart';
 class HomeScreenController extends GetxController {
   var showUpcoming = false.obs;
   Rx<ProfileResponse?> userProfile = Rx<ProfileResponse?>(null);
-  RxList<dynamic> nearbyLocations = <dynamic>[].obs;  // Observing locations
-  RxSet<Marker> markers = <Marker>{}.obs;  // Observable markers
+  RxList<dynamic> nearbyLocations = <dynamic>[].obs; // Observing locations
+  RxSet<Marker> markers = <Marker>{}.obs; // Observable markers
   var isLoading = true.obs;
   // Add a variable to track if we're in service zone
   var isInServiceZone = false.obs;
@@ -54,7 +54,8 @@ class HomeScreenController extends GetxController {
         // After fetching the user profile, fetch nearby locations
         await fetchNearbyLocations();
       } else {
-        AppLoggerHelper.error('Failed to load user profile: ${response.errorMessage}');
+        AppLoggerHelper.error(
+            'Failed to load user profile: ${response.errorMessage}');
       }
     } catch (e) {
       AppLoggerHelper.error('Error occurred while fetching user profile: $e');
@@ -86,8 +87,10 @@ class HomeScreenController extends GetxController {
         final Set<Marker> tempMarkers = {};
 
         // Add user location marker first
-        final userLatitude = userProfile.value?.data.locationLatitude ?? 40.7128;
-        final userLongitude = userProfile.value?.data.locationLongitude ?? -74.0060;
+        final userLatitude =
+            userProfile.value?.data.locationLatitude ?? 40.7128;
+        final userLongitude =
+            userProfile.value?.data.locationLongitude ?? -74.0060;
         final LatLng userLocation = LatLng(userLatitude, userLongitude);
 
         final userMarker = Marker(
@@ -127,7 +130,8 @@ class HomeScreenController extends GetxController {
                 title: location['location'],
                 snippet: "Lat: $latitude, Long: $longitude",
               ),
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
               onTap: () {
                 // When marker is tapped, set this location as selected
                 selectedLocation.value = location;
@@ -146,21 +150,23 @@ class HomeScreenController extends GetxController {
       } else {
         // API error, assume we're out of service zone
         isInServiceZone.value = false;
-        AppLoggerHelper.error('Failed to load locations: ${response.errorMessage}');
+        AppLoggerHelper.error(
+            'Failed to load locations: ${response.errorMessage}');
       }
     } catch (e) {
       // Error occurred, assume we're out of service zone
       isInServiceZone.value = false;
-      AppLoggerHelper.error('Error occurred while fetching nearby locations: $e');
+      AppLoggerHelper.error(
+          'Error occurred while fetching nearby locations: $e');
     }
   }
 
   // Method to navigate to select service with the selected location ID
   void navigateToSelectService() {
     if (selectedLocation.value != null) {
-      final locationId = selectedLocation.value['id'];
-      log('Navigating to SelectServiceView with location ID: $locationId');
-      Get.to(() => SelectServiceView(locationId: locationId));
+      final userID = selectedLocation.value['userId'];
+      log('Navigating to SelectServiceView with User ID: $userID');
+      Get.to(() => SelectServiceView(userID: userID));
     } else {
       log('No location selected. Please select a location marker first.');
       // You could show a snackbar or toast here to inform the user

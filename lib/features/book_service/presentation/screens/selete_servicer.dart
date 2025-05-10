@@ -10,21 +10,22 @@ import 'package:traveling/features/book_service/presentation/screens/book_servic
 
 class SelectServiceView extends StatelessWidget {
   // Add locationId parameter
-  final dynamic locationId;
+  final dynamic userID;
 
   // Make it required in the constructor
-  const SelectServiceView({super.key, required this.locationId});
+  const SelectServiceView({super.key, required this.userID});
 
   @override
   Widget build(BuildContext context) {
     final BookServiceController controller = Get.put(BookServiceController());
 
     // Log the locationId when the screen is built
-    log('SelectServiceView opened with location ID: $locationId');
+    log('SelectServiceView opened with user ID: $userID');
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
+        padding:
+            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,7 +56,8 @@ class SelectServiceView extends StatelessWidget {
             CustomButton(
               onPressed: () {
                 // Pass the locationId to the next screen if needed
-                Get.to(() => BookServiceView(), arguments: {'locationId': locationId});
+                Get.to(() => BookServiceView(),
+                    arguments: {'userID': userID});
               },
               text: 'Next',
             ),
@@ -65,11 +67,12 @@ class SelectServiceView extends StatelessWidget {
     );
   }
 
-  Widget serviceContainer(String serviceType, IconData icon, BookServiceController controller) {
+  Widget serviceContainer(
+      String serviceType, IconData icon, BookServiceController controller) {
     return GestureDetector(
       onTap: () => controller.changeCategory(serviceType),
       child: Obx(
-            () => Container(
+        () => Container(
           height: 140.h,
           width: 160.w,
           alignment: Alignment.center,
@@ -78,7 +81,6 @@ class SelectServiceView extends StatelessWidget {
                 ? AppColors.primary
                 : Colors.white,
             borderRadius: BorderRadius.circular(16.h),
-
             border: Border.all(
               color: controller.selectedCategory.value == serviceType
                   ? AppColors.primary

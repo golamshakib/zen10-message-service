@@ -7,12 +7,13 @@ import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
+import 'package:traveling/features/book_service/data/models/service_data_mode.dart';
 
 import '../../../Payment/presentation/screens/payment_screen.dart';
 
 class SummaryScreen extends StatelessWidget {
-  const SummaryScreen({super.key});
-
+  const SummaryScreen({super.key, required this.selectedService});
+  final ConnectedService selectedService;
   @override
   Widget build(BuildContext context) {
     final BookServiceController controller = Get.find<BookServiceController>();
@@ -33,11 +34,11 @@ class SummaryScreen extends StatelessWidget {
             SizedBox(
               height: 40.h,
             ),
-            Obx(() => _buildServiceItem(
-                  title: controller.getFormattedServiceTitle(),
-                  subtitle: controller.serviceDescription.value,
-                  price: controller.servicePrice.value,
-                )),
+            _buildServiceItem(
+              title: selectedService.type,
+              subtitle: selectedService.offer,
+              price: selectedService.price.toString(),
+            ),
             const Divider(
               color: Color(0xffE9E9F3),
             ),
@@ -53,13 +54,13 @@ class SummaryScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary),
                   ),
-                  Obx(() => Text(
-                        controller.servicePrice.value,
-                        style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary),
-                      )),
+                  Text(
+                    "\$${selectedService.price}",
+                    style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary),
+                  ),
                 ],
               ),
             ),
@@ -70,11 +71,9 @@ class SummaryScreen extends StatelessWidget {
 
                   log("Selected price is: ${controller.servicePrice.value}");
                   Get.to(() => PaymentMethodScreen(
-                        connectedServiceId: "",
-                        ownerId: "",
-                        amount: double.parse(controller.servicePrice.value
-                                .replaceAll("\$", ""))
-                            .toInt(),
+                        connectedServiceId: selectedService.id,
+                        ownerId: selectedService.userId,
+                        amount: selectedService.price,
                       ));
                 },
                 text: "Next")
@@ -131,7 +130,7 @@ class SummaryScreen extends StatelessWidget {
             width: 15.w,
           ),
           Text(
-            price,
+            "\$$price",
             style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
