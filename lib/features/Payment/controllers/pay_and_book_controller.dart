@@ -10,6 +10,7 @@ import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 
 class PayAndBookController extends GetxController {
   RxBool isPaymentLoading = false.obs;
+  RxString orderId = "".obs;
 
   Future<void> crateBooking({
     required String connectedServiceId,
@@ -60,6 +61,9 @@ class PayAndBookController extends GetxController {
         final String? payPalUrl = request.responseData["data"]["approvalUrl"];
 
         if (orderID != null && payPalUrl != null) {
+          isPaymentLoading.value = false;
+          log("OrderID : $orderID");
+          orderId.value = orderID;
           Get.to(() => PayPalWebView(
                 approvalUrl: payPalUrl,
               ));
@@ -76,13 +80,18 @@ class PayAndBookController extends GetxController {
 
   Future<void> capturePayment({required String orderId}) async {
     try {
-      final response = await NetworkCaller()
-          .postRequest(AppUrls.capturePayment(orderId: orderId));
+      isPaymentLoading.value = true;
+      log("Token is: ${AuthService.token}");
+      final response = await NetworkCaller().postRequest(
+          AppUrls.capturePayment(orderId: orderId),
+          token: "Bearer ${AuthService.token}");
       isPaymentLoading.value = false;
       if (response.isSuccess) {
         // show payment succes message
 
         Get.offAll(() => HomeScreen());
+        log("Payment successfull");
+        Get.snackbar("Success", "oxff");
         // Payment successfull
       } else {
         isPaymentLoading.value = false;
