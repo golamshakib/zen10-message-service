@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
@@ -5,20 +7,25 @@ import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/controllers/book_service_controller.dart';
+import 'package:traveling/features/book_service/data/models/service_data_mode.dart';
 import 'package:traveling/features/summery/presentation/screens/summery_screen.dart';
 
 class BookServiceView extends StatelessWidget {
-  const BookServiceView({super.key});
-
+  BookServiceView({super.key}) {
+    controller.getServiceList(userID: userID);
+  }
+  final String userID = Get.arguments["userID"].toString();
+  final BookServiceController controller = Get.put(BookServiceController());
   @override
   Widget build(BuildContext context) {
     // Inject the controller if it isn't already in memory
-    final BookServiceController controller = Get.put(BookServiceController());
+
+    log("Passed user id is: $userID");
 
     return Scaffold(
       body: Padding(
         padding:
-        EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
+            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,88 +54,91 @@ class BookServiceView extends StatelessWidget {
             SizedBox(height: 40.h),
             Expanded(
               child: Obx(
-                    () {
+                () {
                   if (controller.selectedCategory.value == 'Massage') {
-                    return Column(
-                      children: [
-                        serviceCard(
-                          title: 'For Non-Members',
-                          description: '30 minute massage',
-                          price: '\$20.00',
-                          isSelected: controller.selectedService.value ==
-                              'Non-Members-Massage',
-                          onTap: () {
-                            controller.changeService('Non-Members-Massage');
-                            controller.setServiceDetails(
-                                'For Non-Members',
-                                '30 minute massage',
-                                '\$20.00'
-                            );
-                          },
+                    if (controller.isLoading.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
                         ),
-                        const SizedBox(height: 10),
-                        serviceCard(
-                          title: 'For Members',
-                          description:
-                          '10 minute massage, Footmassage, Prepaid for 4x',
-                          price: '\$20.00',
-                          isSelected: controller.selectedService.value ==
-                              'Members-Massage',
-                          onTap: () {
-                            controller.changeService('Members-Massage');
-                            controller.setServiceDetails(
-                                'For Members',
-                                '10 minute massage, Footmassage, Prepaid for 4x',
-                                '\$20.00'
-                            );
-                          },
+                      );
+                    } else if (controller.serviceData.value == null) {
+                      return Center(
+                        child: Text(
+                          "Something went wrong, please check your internet and try again",
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    );
+                      );
+                    } else if (controller.serviceData.value!.data.isEmpty) {
+                      return Center(
+                        child: Text("No service available at this time"),
+                      );
+                    } else {
+                      final services = controller.serviceData.value!.data;
+                      return ListView.builder(
+                          itemCount: services[0].connectedService.length,
+                          itemBuilder: (context, index) {
+                            final service = services[0].connectedService[index];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Obx(() => serviceCard(
+                                  title: service.type,
+                                  description: service.offer,
+                                  price: service.price.toString(),
+                                  isSelected:
+                                      controller.selectedService.value == index,
+                                  onTap: () {
+                                    controller.changeService(index, service);
+                                  })),
+                            );
+                          });
+                    }
                   } else {
-                    // STRETCH services
-                    return Column(
-                      children: [
-                        serviceCard(
-                          title: 'For Non-Members',
-                          description: '15 min assisted stretching',
-                          price: '\$15.00',
-                          isSelected: controller.selectedService.value ==
-                              'Non-Members-Stretch',
-                          onTap: () {
-                            controller.changeService('Non-Members-Stretch');
-                            controller.setServiceDetails(
-                                'For Non-Members',
-                                '15 min assisted stretching',
-                                '\$15.00'
-                            );
-                          },
+                    //   STRETCH services
+                    if (controller.isLoading.value) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primary,
                         ),
-                        const SizedBox(height: 10),
-                        serviceCard(
-                          title: 'For Members',
-                          description: '20 min deep stretch, Prepaid for 3x',
-                          price: '\$18.00',
-                          isSelected: controller.selectedService.value ==
-                              'Members-Stretch',
-                          onTap: () {
-                            controller.changeService('Members-Stretch');
-                            controller.setServiceDetails(
-                                'For Members',
-                                '20 min deep stretch, Prepaid for 3x',
-                                '\$18.00'
-                            );
-                          },
+                      );
+                    } else if (controller.serviceData.value == null) {
+                      return Center(
+                        child: Text(
+                          "Something went wrong, please check your internet and try again",
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    );
+                      );
+                    } else if (controller.serviceData.value!.data.isEmpty) {
+                      return Center(
+                        child: Text("No service available at this time"),
+                      );
+                    } else {
+                      final services = controller.serviceData.value!.data;
+                      return ListView.builder(
+                          itemCount: services[0].connectedService.length,
+                          itemBuilder: (context, index) {
+                            final service = services[0].connectedService[index];
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Obx(() => serviceCard(
+                                  title: service.type,
+                                  description: service.offer,
+                                  price: service.price.toString(),
+                                  isSelected:
+                                      controller.selectedService.value == index,
+                                  onTap: () {
+                                    controller.changeService(index, service);
+                                  })),
+                            );
+                          });
+                    }
                   }
                 },
               ),
             ),
             CustomButton(
                 onPressed: () async {
-                  if (controller.selectedService.isEmpty) {
+                  if (controller.selectedService.value < 0) {
                     // Show snackbar if no service is selected
                     Get.snackbar(
                       'Selection Required',
@@ -138,11 +148,27 @@ class BookServiceView extends StatelessWidget {
                       margin: EdgeInsets.all(16),
                       duration: Duration(seconds: 2),
                       borderRadius: 8,
-                      icon: Icon(Icons.warning_amber_rounded, color: Colors.red[800]),
+                      icon: Icon(Icons.warning_amber_rounded,
+                          color: Colors.red[800]),
                     );
                   } else {
                     // Navigate to summary screen if service is selected
-                    Get.to(() => SummaryScreen());
+                    Get.to(() => SummaryScreen(
+                          selectedService:
+                              controller.selectedServiceCard.value ??
+                                  ConnectedService(
+                                    id: '',
+                                    userId: userID,
+                                    serviceId: '',
+                                    type: '',
+                                    offer: '',
+                                    additionalOffer: '',
+                                    duration: '',
+                                    price: 0,
+                                    createdAt: "",
+                                    updatedAt: "",
+                                  ),
+                        ));
                   }
                 },
                 text: "Next"),
@@ -224,7 +250,7 @@ class BookServiceView extends StatelessWidget {
             ),
             SizedBox(height: 5.h),
             Text(
-              'Price: $price',
+              'Price: \$$price',
               style: TextStyle(
                 color: isSelected ? Color(0xffD5D3FD) : Color(0xff808080),
                 fontWeight: FontWeight.bold,

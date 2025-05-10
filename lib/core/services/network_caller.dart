@@ -30,6 +30,7 @@ class NetworkCaller {
       {Map<String, dynamic>? body, String? token}) async {
     AppLoggerHelper.info('POST Request: $endpoint');
     AppLoggerHelper.info('Request Body: ${jsonEncode(body)}');
+    log(endpoint);
 
     try {
       final Response response = await post(

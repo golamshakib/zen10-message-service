@@ -7,7 +7,6 @@ import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/icon_path.dart';
 import 'package:traveling/features/Payment/controllers/pay_and_book_controller.dart';
-import 'package:traveling/features/Payment/presentation/screens/pay_pal_web_view.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
   const PaymentMethodScreen(
@@ -90,14 +89,14 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                   )
                 : CustomButton(
                     onPressed: () {
-                      // controller.crateBooking(
-                      //   connectedServiceId: widget.connectedServiceId,
-                      //   ownerId: widget.ownerId,
-                      //   amount: widget.amount,
-                      // );
-                      Get.to(() => PayPalWebView(
-                          approvalUrl:
-                              "https://www.sandbox.paypal.com/checkoutnow?token=42H42001J44430327"));
+                      controller.crateBooking(
+                        connectedServiceId: widget.connectedServiceId,
+                        ownerId: widget.ownerId,
+                        amount: widget.amount,
+                      );
+                      // Get.to(() => PayPalWebView(
+                      //     approvalUrl:
+                      //        ));
                     },
                     text: "Pay & Book Now"))
           ],
@@ -146,37 +145,37 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
             SizedBox(
               height: 12.h,
             ),
-            Divider(
-              color: Colors.white,
-            ),
-            SizedBox(
-              height: 6.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "**** **** **43",
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textSecondary),
-                ),
-                IconButton(
-                  icon:
-                      Icon(Icons.delete, size: 20.sp, color: Color(0xff757575)),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            Text(
-              "Add new Card",
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  decorationStyle: TextDecorationStyle.solid,
-                  color: Color(0xff002BFF),
-                  fontWeight: FontWeight.w600),
-            )
+            // Divider(
+            //   color: Colors.white,
+            // ),
+            // SizedBox(
+            //   height: 6.h,
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "**** **** **43",
+            //       style: TextStyle(
+            //           fontSize: 14,
+            //           fontWeight: FontWeight.w500,
+            //           color: AppColors.textSecondary),
+            //     ),
+            //     IconButton(
+            //       icon:
+            //           Icon(Icons.delete, size: 20.sp, color: Color(0xff757575)),
+            //       onPressed: () {},
+            //     ),
+            //   ],
+            // ),
+            // Text(
+            //   "Add new Card",
+            //   style: TextStyle(
+            //       decoration: TextDecoration.underline,
+            //       decorationStyle: TextDecorationStyle.solid,
+            //       color: Color(0xff002BFF),
+            //       fontWeight: FontWeight.w600),
+            // )
           ],
         ),
       ),

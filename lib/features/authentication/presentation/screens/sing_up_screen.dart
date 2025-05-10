@@ -1,9 +1,7 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/common/widgets/custom_text_feild.dart';
@@ -15,9 +13,6 @@ import 'package:traveling/features/authentication/controllers/sing_up_controller
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../controllers/location_controller.dart';
-import 'map_screen.dart';
-
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
