@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:traveling/core/services/Auth_service.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-
+import 'package:traveling/features/notification/presentation/view/notification_screen.dart';
 
 import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
@@ -73,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             InkWell(
               onTap: () async {
                 // navigate to Notification Screen
+                Get.to(() => NotificationScreen());
               },
               child: Image.asset(
                 IconPath.notification,

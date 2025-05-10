@@ -32,6 +32,7 @@ class PayAndBookController extends GetxController {
           AppUrls.createBooking(ownerId: ownerId),
           body: requestBdy,
           token: "Bearer ${AuthService.token}");
+      isPaymentLoading.value = false;
       log(response.responseData.toString());
       if (response.isSuccess) {
         final String? bookingId = response.responseData["data"]["id"];
@@ -50,6 +51,7 @@ class PayAndBookController extends GetxController {
   Future<void> createPayment(
       {required int amount, required String bookingId}) async {
     try {
+      isPaymentLoading.value = true;
       final Map<String, dynamic> requestbody = {
         "amount": amount,
         "bookingId": bookingId,
@@ -58,6 +60,7 @@ class PayAndBookController extends GetxController {
       final request = await NetworkCaller().postRequest(AppUrls.createPayment,
           body: requestbody, token: "Bearer ${AuthService.token}");
       log(request.responseData.toString());
+      isPaymentLoading.value = false;
       if (request.isSuccess) {
         // Save the order id,
         final String? orderID = request.responseData["data"]["orderId"];
@@ -89,6 +92,7 @@ class PayAndBookController extends GetxController {
           Uri.parse(AppUrls.capturePayment(orderId: orderId)),
           headers: {"Authorization": "Bearer ${AuthService.token}"});
       isPaymentLoading.value = false;
+      log("Capture payment: ${response.body}");
       if (response.statusCode == 200) {
         // show payment succes message
 
