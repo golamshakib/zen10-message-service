@@ -10,6 +10,7 @@ import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 import '../../controllers/home_controller.dart';
+import 'helper_function/helper_function.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key}) {
@@ -221,11 +222,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         right: 10.w,
                         child: Obx(() {
                           if (controller.showUpcoming.value) {
-                            // Check if upcomingLocations has any data before rendering
                             if (controller.upcomingLocations.isEmpty) {
                               return Text('No Upcoming event found');
                             }
-
                             return Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -260,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         controller.upcomingLocations[index];
                                     return ListTile(
                                       title: Text(
-                                        _formatDate(upcomingLocation.date),
+                                        formatDate(upcomingLocation.date),
                                         // Format date as May 20
                                         style: TextStyle(
                                           fontSize: 16.sp,
@@ -269,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       subtitle: Text(
-                                        _getDayRange(upcomingLocation.startTime,
+                                        getDayRange(upcomingLocation.startTime,
                                             upcomingLocation.endTime),
                                         style: TextStyle(
                                           fontSize: 14.sp,
@@ -294,12 +293,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           } else {
-                            return SizedBox
-                                .shrink(); // Hide upcoming locations if the toggle is off
+                            return SizedBox.shrink();
                           }
                         }),
                       ),
-
                       // Add a refresh button to manually refresh markers
                       Positioned(
                         bottom: 16.h,
@@ -383,16 +380,4 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _formatDate(String date) {
-    try {
-      DateTime parsedDate = DateTime.parse(date); // Parse the date
-      return DateFormat('MMM dd').format(parsedDate); // Format as May 20
-    } catch (e) {
-      return date; // Return the original if parsing fails
-    }
-  }
-
-  String _getDayRange(String startTime, String endTime) {
-    return '$startTime to $endTime';
-  }
 }
