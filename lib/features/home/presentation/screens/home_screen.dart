@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:traveling/core/services/Auth_service.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/book_service/presentation/screens/selete_servicer.dart';
@@ -22,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   GoogleMapController? mapController;
   final HomeScreenController controller = Get.find<HomeScreenController>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       )),
                   Row(
                     children: [
-                      Icon(Icons.location_on,
-                          size: 16.sp, color: Colors.grey),
+                      Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
                       SizedBox(width: 2.w),
                       Expanded(
                         child: Obx(() => Text(
                               controller.userProfile.value == null
                                   ? 'Loading...'
-                                  : controller
-                                      .userProfile.value!.data.location,
+                                  : controller.userProfile.value!.data.location,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: TextStyle(
@@ -183,13 +181,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           myLocationEnabled: true,
                           myLocationButtonEnabled: true,
                           compassEnabled: true,
-
                         );
                       }),
 
                       Positioned(
                         top: 10.h,
-                        right: 10.w,
+                        right: 50.w,
                         child: GestureDetector(
                           onTap: controller.toggleUpcoming,
                           child: Container(
@@ -216,6 +213,91 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
+                      ),
+                      // Upcoming Locations List positioned just below the Upcoming Button
+                      Positioned(
+                        top: 60.h, // Adjust this to position below the button
+                        left: 10.w,
+                        right: 10.w,
+                        child: Obx(() {
+                          if (controller.showUpcoming.value) {
+                            // Check if upcomingLocations has any data before rendering
+                            if (controller.upcomingLocations.isEmpty) {
+                              return Text('No Upcoming event found');
+                            }
+
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.h),
+                                border: Border.all(
+                                  color: Color(0xFFE9E9F3),
+                                  width: 1.0,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFF808080).withOpacity(0.1),
+                                    offset: Offset(0, 4),
+                                    blurRadius: 9,
+                                    spreadRadius: 0,
+                                  ),
+                                  BoxShadow(
+                                    color: Color(0xFF808080).withOpacity(0.1),
+                                    offset: Offset(0, 17),
+                                    blurRadius: 17,
+                                    spreadRadius: 0,
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 15.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      controller.upcomingLocations.length,
+                                  itemBuilder: (context, index) {
+                                    final upcomingLocation =
+                                        controller.upcomingLocations[index];
+                                    return ListTile(
+                                      title: Text(
+                                        _formatDate(upcomingLocation.date),
+                                        // Format date as May 20
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        _getDayRange(upcomingLocation.startTime,
+                                            upcomingLocation.endTime),
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.textSecondary,
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        upcomingLocation.location,
+                                       // 'asdfljadslf jdlfjlkdsjf lkdsjf lkdsfl dslkf jlkdjfl ',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textPrimary,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox
+                                .shrink(); // Hide upcoming locations if the toggle is off
+                          }
+                        }),
                       ),
 
                       // Add a refresh button to manually refresh markers
@@ -264,13 +346,13 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 16.h),
               Obx(() => controller.isInServiceZone.value
                   ? CustomButton(
-                onPressed: () {
-                  // Use the new navigation method that checks for selected location
-                  controller.navigateToSelectService();
-                },
-                text: 'Book Now',
-              )
-                  : _buildDisabledButton())
+                      onPressed: () {
+                        // Use the new navigation method that checks for selected location
+                        controller.navigateToSelectService();
+                      },
+                      text: 'Book Now',
+                    )
+                  : _buildDisabledButton()),
             ],
           ),
         ),
@@ -299,5 +381,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  String _formatDate(String date) {
+    try {
+      DateTime parsedDate = DateTime.parse(date); // Parse the date
+      return DateFormat('MMM dd').format(parsedDate); // Format as May 20
+    } catch (e) {
+      return date; // Return the original if parsing fails
+    }
+  }
+
+  String _getDayRange(String startTime, String endTime) {
+    return '$startTime to $endTime';
   }
 }

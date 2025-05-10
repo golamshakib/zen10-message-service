@@ -6,6 +6,7 @@ import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
 import '../../book_service/presentation/screens/selete_servicer.dart';
+import '../data/model/upcoming_event_model.dart';
 import '../data/model/user_profile_model.dart';
 
 class HomeScreenController extends GetxController {
@@ -19,12 +20,17 @@ class HomeScreenController extends GetxController {
   // Add a variable to track the selected location
   Rx<dynamic> selectedLocation = Rx<dynamic>(null);
 
+  RxList<UpcomingLocation> upcomingLocations = <UpcomingLocation>[].obs;
+  var isLoadingUpcoming = false.obs;  // Loading state for upcoming locations
+
+
   @override
   void onInit() async {
     super.onInit();
     await AuthService.init();
     await Future.delayed(Duration(milliseconds: 300), () {
       fetchUserProfile();
+      fetchUpcomingLocations();
     });
   }
 
@@ -53,7 +59,11 @@ class HomeScreenController extends GetxController {
         AppLoggerHelper.info('User profile fetched successfully');
         // After fetching the user profile, fetch nearby locations
         await fetchNearbyLocations();
-      } else {
+      } else if (response.statusCode == 400) {
+        // User not found
+        AppLoggerHelper.error('User not found: ${response.errorMessage}');
+      }
+      else {
         AppLoggerHelper.error('Failed to load user profile: ${response.errorMessage}');
       }
     } catch (e) {
@@ -62,6 +72,34 @@ class HomeScreenController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // Fetch upcoming locations
+  Future<void> fetchUpcomingLocations() async {
+    isLoadingUpcoming.value = true;
+
+    try {
+      final response = await NetworkCaller().getRequest(
+        AppUrls.getUpcomingLocations,
+        token: "Bearer ${AuthService.token}",
+      );
+
+      if (response.isSuccess) {
+        List<dynamic> data = response.responseData['data'];
+
+        upcomingLocations.value = data
+            .map((location) => UpcomingLocation.fromJson(location))
+            .toList();
+        AppLoggerHelper.info('Upcoming locations fetched successfully');
+      } else {
+        AppLoggerHelper.error('Failed to load upcoming locations: ${response.errorMessage}');
+      }
+    } catch (e) {
+      AppLoggerHelper.error('Error occurred while fetching upcoming locations: $e');
+    } finally {
+      isLoadingUpcoming.value = false;
+    }
+  }
+
 
   // Fetch nearby locations from the API
   Future<void> fetchNearbyLocations() async {
