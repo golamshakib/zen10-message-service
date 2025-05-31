@@ -225,7 +225,40 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Obx(() {
                           if (controller.showUpcoming.value) {
                             if (controller.upcomingLocations.isEmpty) {
-                              return Text('No Upcoming event found');
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.h),
+                                  border: Border.all(
+                                    color: Color(0xFFE9E9F3),
+                                    width: 1.0,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF808080).withOpacity(0.1),
+                                      offset: Offset(0, 4),
+                                      blurRadius: 9,
+                                      spreadRadius: 0,
+                                    ),
+                                    BoxShadow(
+                                      color: Color(0xFF808080).withOpacity(0.1),
+                                      offset: Offset(0, 17),
+                                      blurRadius: 17,
+                                      spreadRadius: 0,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20.0, top: 20.0, left: 15.0, right: 15.0),
+                                  child: Text('No Upcoming event found' ,
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                              );
                             }
                             return Container(
                               decoration: BoxDecoration(
