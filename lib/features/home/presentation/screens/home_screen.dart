@@ -109,13 +109,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w700,
                       color: Color(0xff333333))),
               SizedBox(height: 8.h),
-              Row(
+              Wrap(
                 children: [
                   Text('Chicago',
                       style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600)),
+                        fontSize: 16.sp,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w600,
+                      )),
                   Text(' and ',
                       style: TextStyle(
                           fontSize: 16.sp,
@@ -142,14 +143,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Stack(
                     children: [
                       Obx(() {
-                        final userLatitude = controller
-                                .userProfile.value?.data.locationLatitude ??
-                            40.7128;
-                        final userLongitude = controller
-                                .userProfile.value?.data.locationLongitude ??
-                            -74.0060;
+                        // Use current location instead of registration location
+                        final userLatitude = controller.currentLatitude.value != 0.0
+                            ? controller.currentLatitude.value
+                            : (controller.userProfile.value?.data.locationLatitude ?? 40.7128);
 
-                        if (controller.isLoading.value) {
+                        final userLongitude = controller.currentLongitude.value != 0.0
+                            ? controller.currentLongitude.value
+                            : (controller.userProfile.value?.data.locationLongitude ?? -74.0060);
+
+                        if (controller.isLoading.value || controller.isLocationLoading.value) {
                           return Center(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 CircularProgressIndicator(
                                     color: AppColors.primary),
                                 SizedBox(height: 16.h),
-                                Text('Loading map and locations...',
+                                Text(
+                                    controller.isLocationLoading.value
+                                        ? 'Getting your current location...'
+                                        : 'Loading map and locations...',
                                     style: TextStyle(
                                         color: AppColors.primary,
                                         fontWeight: FontWeight.bold))
@@ -339,6 +345,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor: Colors.white.withOpacity(0.8),
                           child: Icon(Icons.refresh, color: AppColors.primary),
                           onPressed: () {
+                            controller.refreshCurrentLocation();
                             controller.fetchNearbyLocations();
                           },
                         ),

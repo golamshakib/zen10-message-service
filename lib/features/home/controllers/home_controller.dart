@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:traveling/core/services/auth_service.dart';
@@ -24,10 +25,16 @@ class HomeScreenController extends GetxController {
   var isLoadingUpcoming = false.obs;  // Loading state for upcoming locations
 
 
+  var currentLatitude = 0.0.obs;
+  var currentLongitude = 0.0.obs;
+  var isLocationLoading = true.obs;
+  var locationPermissionGranted = false.obs;
+
   @override
   void onInit() async {
     super.onInit();
     await AuthService.init();
+    await getCurrentLocation();
     await Future.delayed(Duration(milliseconds: 300), () {
       fetchUserProfile();
       fetchUpcomingLocations();
@@ -37,6 +44,74 @@ class HomeScreenController extends GetxController {
   void toggleUpcoming() {
     showUpcoming.value = !showUpcoming.value;
   }
+
+  // Add this method to get current location
+  Future<void> getCurrentLocation() async {
+    isLocationLoading.value = true;
+
+    try {
+      // Check if location services are enabled
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        AppLoggerHelper.error('Location services are disabled.');
+        _setDefaultLocation();
+        return;
+      }
+
+      // Check location permissions
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          AppLoggerHelper.error('Location permissions are denied');
+          _setDefaultLocation();
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        AppLoggerHelper.error('Location permissions are permanently denied');
+        _setDefaultLocation();
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 10),
+      );
+
+      currentLatitude.value = position.latitude;
+      currentLongitude.value = position.longitude;
+      locationPermissionGranted.value = true;
+
+      AppLoggerHelper.info('Current location: ${position.latitude}, ${position.longitude}');
+
+    } catch (e) {
+      AppLoggerHelper.error('Error getting current location: $e');
+      _setDefaultLocation();
+    } finally {
+      isLocationLoading.value = false;
+    }
+  }
+
+
+  // Fallback to default location if current location fails
+  void _setDefaultLocation() {
+    // Use registration location as fallback, or default coordinates
+    currentLatitude.value = userProfile.value?.data.locationLatitude ?? 40.7128;
+    currentLongitude.value = userProfile.value?.data.locationLongitude ?? -74.0060;
+    locationPermissionGranted.value = false;
+    isLocationLoading.value = false;
+  }
+
+  // Add method to refresh current location
+  Future<void> refreshCurrentLocation() async {
+    await getCurrentLocation();
+    // Optionally refresh nearby locations based on new position
+    await fetchNearbyLocations();
+  }
+
 
   // Combined method to fetch user profile and update variables
   Future<void> fetchUserProfile() async {
@@ -125,17 +200,23 @@ class HomeScreenController extends GetxController {
         final Set<Marker> tempMarkers = {};
 
         // Add user location marker first
-        final userLatitude =
-            userProfile.value?.data.locationLatitude ?? 40.7128;
-        final userLongitude =
-            userProfile.value?.data.locationLongitude ?? -74.0060;
+        final userLatitude = currentLatitude.value != 0.0
+            ? currentLatitude.value
+            : (userProfile.value?.data.locationLatitude ?? 40.7128);
+
+        final userLongitude = currentLongitude.value != 0.0
+            ? currentLongitude.value
+            : (userProfile.value?.data.locationLongitude ?? -74.0060);
+
         final LatLng userLocation = LatLng(userLatitude, userLongitude);
 
         final userMarker = Marker(
           markerId: MarkerId('user_location'),
           position: userLocation,
           infoWindow: InfoWindow(
-            title: 'Your Location',
+            title: locationPermissionGranted.value
+                ? 'Your Current Location'
+                : 'Your Registered Location',
             snippet: "Lat: $userLatitude, Long: $userLongitude",
           ),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
@@ -157,15 +238,16 @@ class HomeScreenController extends GetxController {
           for (var location in nearbyLocations) {
             double latitude = double.parse(location['latitude'].toString());
             double longitude = double.parse(location['longitude'].toString());
+            String locationName = location['location'] ?? 'Unknown Location';
 
-            log('Fetched Location: ${location['location']} - Lat: $latitude, Long: $longitude');
+            log('Fetched Location: $locationName - Lat: $latitude, Long: $longitude');
             log('Location ID: ${location['id']}');
 
             final marker = Marker(
               markerId: MarkerId(location['id'].toString()),
               position: LatLng(latitude, longitude),
               infoWindow: InfoWindow(
-                title: location['location'],
+                title: locationName,
                 snippet: "Lat: $latitude, Long: $longitude",
               ),
               icon: BitmapDescriptor.defaultMarkerWithHue(
