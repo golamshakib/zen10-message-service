@@ -230,6 +230,11 @@ class HomeScreenController extends GetxController {
           // No nearby locations found, we're out of service zone
           isInServiceZone.value = false;
           log('No nearby locations found - Out of service zone');
+          Get.snackbar(
+            'Service Zone',
+            'You are currently out of service zone. Please try again later.',
+            snackPosition: SnackPosition.TOP,
+          );
         } else {
           // We have nearby locations, we're in service zone
           isInServiceZone.value = true;
