@@ -38,32 +38,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Obx(() => Text(
-                        controller.userProfile.value == null
-                            ? 'Loading...'
-                            : controller.userProfile.value!.data.userName,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff333333)),
-                      )),
+                    controller.userProfile.value == null
+                        ? 'Loading...'
+                        : controller.userProfile.value!.data.userName,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff333333)),
+                  )),
                   Row(
                     children: [
                       Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
                       SizedBox(width: 2.w),
                       Expanded(
                         child: Obx(() => Text(
-                              controller.userProfile.value == null
-                                  ? 'Loading...'
-                                  : controller.userProfile.value!.data.location,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey),
-                            )),
+                          controller.userProfile.value == null
+                              ? 'Loading...'
+                              : controller.userProfile.value!.data.location,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        )),
                       ),
                     ],
                   ),
@@ -72,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             InkWell(
               onTap: () async {
-                // navigate to Notification Screen
                 Get.to(() => NotificationScreen());
               },
               child: Image.asset(
@@ -96,9 +95,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Padding(
-        padding: EdgeInsets.only(left: 16.h, right: 16.h),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(  // Ensure entire body can scroll
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -109,26 +108,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w700,
                       color: Color(0xff333333))),
               SizedBox(height: 8.h),
-              Wrap(
-                children: [
-                  Text('Chicago',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w600,
-                      )),
-                  Text(' and ',
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Color(0xff333333),
-                          fontWeight: FontWeight.w600)),
-                  Text('New-York',
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600)),
-                ],
-              ),
+              Obx(() {
+                // Check if the upcoming locations list has been fetched
+                if (controller.nearbyLocations.isNotEmpty) {
+                  // Only show the first two locations
+                  final locationsToShow = controller.nearbyLocations.take(2).toList();
+
+                  // If there are two locations, insert additional text between them
+                  return Wrap(
+                    children: locationsToShow.asMap().entries.map((entry) {
+                      int index = entry.key;
+                      var location = entry.value;
+                      String locationName = location['location'] ?? 'Unknown Location'; // Accessing the 'location' key from the Map
+
+                      List<Widget> widgets = [
+                        Text(
+                          locationName,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ];
+
+                      // If not the last element, add text between locations
+                      if (index < locationsToShow.length - 1) {
+                        widgets.add(
+                          Text(
+                            ' and ',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: Color(0xff333333),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return Row(
+                        children: widgets,
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  return Text(
+                    'Loading locations...',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                }
+              }),
               SizedBox(height: 4.h),
               Text('Mon-Fri: 9am to 5pm',
                   style: TextStyle(
@@ -143,7 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Stack(
                     children: [
                       Obx(() {
-                        // Use current location instead of registration location
                         final userLatitude = controller.currentLatitude.value != 0.0
                             ? controller.currentLatitude.value
                             : (controller.userProfile.value?.data.locationLatitude ?? 40.7128);
@@ -179,17 +211,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           markers: controller.markers,
                           onMapCreated: (GoogleMapController mapCtrl) {
-                            mapController = mapCtrl;
-                            // Force a small delay and then check if we need to refresh markers
+                            mapController = mapCtrl; // Assign controller here
                             Future.delayed(Duration(milliseconds: 500), () {
                               if (controller.markers.isEmpty) {
                                 controller.fetchNearbyLocations();
                               }
                             });
                           },
-                          myLocationEnabled: true,
-                          myLocationButtonEnabled: true,
-                          compassEnabled: true,
+                          myLocationEnabled: true, // Allow user to see their current location
+                          myLocationButtonEnabled: true, // Show the button to go to current location
+                          compassEnabled: true, // Enable the compass
+                          zoomControlsEnabled: true, // Enable zoom controls
                         );
                       }),
 
@@ -199,8 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: GestureDetector(
                           onTap: controller.toggleUpcoming,
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12.w, vertical: 9.h),
+                            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(20),
@@ -216,57 +247,20 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontSize: 16.sp,
                                         color: AppColors.textPrimary)),
                                 SizedBox(width: 4.w),
-                                Icon(Icons.arrow_drop_down,
-                                    color: AppColors.textPrimary),
+                                Icon(Icons.arrow_drop_down, color: AppColors.textPrimary),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      // Upcoming Locations List positioned just below the Upcoming Button
                       Positioned(
-                        top: 60.h, // Adjust this to position below the button
+                        top: 60.h,  // Adjust this to position below the button
                         left: 10.w,
                         right: 10.w,
                         child: Obx(() {
                           if (controller.showUpcoming.value) {
-                            if (controller.upcomingLocations.isEmpty) {
-                              return Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8.h),
-                                  border: Border.all(
-                                    color: Color(0xFFE9E9F3),
-                                    width: 1.0,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color(0xFF808080).withOpacity(0.1),
-                                      offset: Offset(0, 4),
-                                      blurRadius: 9,
-                                      spreadRadius: 0,
-                                    ),
-                                    BoxShadow(
-                                      color: Color(0xFF808080).withOpacity(0.1),
-                                      offset: Offset(0, 17),
-                                      blurRadius: 17,
-                                      spreadRadius: 0,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 20.0, top: 20.0, left: 15.0, right: 15.0),
-                                  child: Text('No Upcoming event found' ,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
                             return Container(
+                              height: 300.h, // Fixed height for upcoming list
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.h),
@@ -289,46 +283,59 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 15.0),
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount:
-                                      controller.upcomingLocations.length,
-                                  itemBuilder: (context, index) {
-                                    final upcomingLocation =
-                                        controller.upcomingLocations[index];
-                                    return ListTile(
-                                      title: Text(
-                                        formatDate(upcomingLocation.date),
-                                        // Format date as May 20
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.textPrimary,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        getDayRange(upcomingLocation.startTime,
-                                            upcomingLocation.endTime),
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.textSecondary,
-                                        ),
-                                      ),
-                                      trailing: Text(
-                                        upcomingLocation.location,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        style: TextStyle(
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.textPrimary,
-                                        ),
-                                      ),
-                                    );
-                                  },
+                              child: SingleChildScrollView( // Make the content scrollable
+                                child: Column(
+                                  children: [
+                                    controller.upcomingLocations.isEmpty
+                                        ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 20.0, horizontal: 15.0),
+                                      child: Text('No Upcoming event found',
+                                          style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textPrimary)),
+                                    )
+                                        : ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(), // Prevent ListView from scrolling independently
+                                      itemCount: controller.upcomingLocations.length,
+                                      itemBuilder: (context, index) {
+                                        final upcomingLocation = controller.upcomingLocations[index];
+                                        return ListTile(
+                                          title: Text(
+                                            formatDate(upcomingLocation.date),
+                                            style: TextStyle(
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.textPrimary,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),
+                                            style: TextStyle(
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.textSecondary,
+                                            ),
+                                          ),
+                                          trailing: Container(
+                                            width: 100, // Set a fixed width for the trailing widget
+                                            child: Text(
+                                              upcomingLocation.location,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.textPrimary,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
@@ -337,6 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         }),
                       ),
+
                       // Add a refresh button to manually refresh markers
                       Positioned(
                         bottom: 16.h,
@@ -356,40 +364,53 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 24.h),
               Obx(() => Container(
-                    width: double.maxFinite,
-                    padding: EdgeInsets.all(12.h),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            controller.isInServiceZone.value
-                                ? 'We are near you!'
-                                : 'Out of zone 😢',
-                            style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary)),
-                        SizedBox(height: 8.h),
-                        Text(
-                            controller.isInServiceZone.value
-                                ? 'Would you like to book a session with us?'
-                                : 'We will notify you as soon as we are in your area.',
-                            style: TextStyle(color: AppColors.textSecondary)),
-                      ],
-                    ),
-                  )),
+                width: double.maxFinite,
+                padding: EdgeInsets.all(12.h),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        controller.isInServiceZone.value
+                            ? 'We are near you!'
+                            : 'Out of zone 😢',
+                        style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary)),
+                    SizedBox(height: 8.h),
+                    Text(
+                        controller.isInServiceZone.value
+                            ? 'Would you like to book a session with us?'
+                            : 'We will notify you as soon as we are in your area.',
+                        style: TextStyle(color: AppColors.textSecondary)),
+                  ],
+                ),
+              )),
               SizedBox(height: 16.h),
               Obx(() => controller.isInServiceZone.value
                   ? CustomButton(
-                      onPressed: () {
-                        controller.navigateToSelectService();
-                      },
-                      text: 'Book Now',
-                    )
+                onPressed: () {
+                  // Check if a location is selected
+                  if (controller.currentLatitude.value == 0.0 || controller.currentLongitude.value == 0.0) {
+                    // You can show an alert or a snack bar to notify the user
+                    Get.snackbar(
+                      "Location not selected",
+                      "Please select your location before proceeding.",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  } else {
+                    controller.navigateToSelectService();
+                  }
+                },
+                text: 'Book Now',
+              )
                   : buildDisabledButton()),
+
             ],
           ),
         ),
