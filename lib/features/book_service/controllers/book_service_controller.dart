@@ -13,7 +13,7 @@ class BookServiceController extends GetxController {
   Rx<ConnectedService?> selectedServiceCard = Rx(null);
 
   /// The currently selected category
-  RxString selectedCategory = 'Massage'.obs;
+  RxString selectedCategory = 'Message'.obs;
 
   /// The currently selected service (depends on category)
   RxInt selectedService = (-1).obs;

@@ -95,13 +95,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SingleChildScrollView(  // Ensure entire body can scroll
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 24.h),
               Text('Currently we are in:',
                   style: TextStyle(
                       fontSize: 20.sp,
@@ -114,20 +113,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Only show the first two locations
                   final locationsToShow = controller.nearbyLocations.take(2).toList();
 
-                  // If there are two locations, insert additional text between them
                   return Wrap(
+                    alignment: WrapAlignment.start,  // Align children to the start
+                    spacing: 8.0,                    // Space between locations
+                    runSpacing: 4.0,                 // Space between wrapped lines
                     children: locationsToShow.asMap().entries.map((entry) {
                       int index = entry.key;
                       var location = entry.value;
-                      String locationName = location['location'] ?? 'Unknown Location'; // Accessing the 'location' key from the Map
+                      String locationName = location['location'] ?? 'Unknown Location';
 
                       List<Widget> widgets = [
-                        Text(
-                          locationName,
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: Text(
+                            locationName,
+                            style: TextStyle(
+                              fontSize: 16.sp, // Responsive font size
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w600,
+                              overflow: TextOverflow.ellipsis,  // Handle long text gracefully
+                            ),
+                            maxLines: 1,  // Ensure that text doesn't exceed 1 line if possible
                           ),
                         ),
                       ];
@@ -135,39 +140,45 @@ class _HomeScreenState extends State<HomeScreen> {
                       // If not the last element, add text between locations
                       if (index < locationsToShow.length - 1) {
                         widgets.add(
-                          Text(
-                            ' and ',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              color: Color(0xff333333),
-                              fontWeight: FontWeight.w600,
+                          Flexible(
+                            child: Text(
+                              ' and ',
+                              style: TextStyle(
+                                fontSize: 16.sp,  // Responsive font size
+                                color: Color(0xff333333),
+                                fontWeight: FontWeight.w600,
+                                overflow: TextOverflow.ellipsis,  // Handle overflow of 'and'
+                              ),
+                              maxLines: 1,  // Prevent overflow of 'and' text
                             ),
                           ),
                         );
                       }
 
                       return Row(
+                        mainAxisSize: MainAxisSize.min, // Ensure no additional space is used if they fit in one line
                         children: widgets,
                       );
                     }).toList(),
                   );
                 } else {
                   return Text(
-                    'Loading locations...',
+                    'Out of zone',
                     style: TextStyle(
-                      fontSize: 16.sp,
+                      fontSize: 16.sp, // Responsive font size
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   );
                 }
               }),
+
               SizedBox(height: 4.h),
-              Text('Mon-Fri: 9am to 5pm',
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold)),
+              // Text('Mon-Fri: 9am to 5pm',
+              //     style: TextStyle(
+              //         color: Colors.grey,
+              //         fontSize: 16.sp,
+              //         fontWeight: FontWeight.bold)),
               SizedBox(height: 16.h),
               SizedBox(
                 height: 370.h,
@@ -260,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Obx(() {
                           if (controller.showUpcoming.value) {
                             return Container(
-                              height: 300.h, // Fixed height for upcoming list
+                              height: 300.h,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.h),
@@ -283,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ],
                               ),
-                              child: SingleChildScrollView( // Make the content scrollable
+                              child: SingleChildScrollView(
                                 child: Column(
                                   children: [
                                     controller.upcomingLocations.isEmpty
@@ -298,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )
                                         : ListView.builder(
                                       shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(), // Prevent ListView from scrolling independently
+                                      physics: NeverScrollableScrollPhysics(),
                                       itemCount: controller.upcomingLocations.length,
                                       itemBuilder: (context, index) {
                                         final upcomingLocation = controller.upcomingLocations[index];

@@ -23,6 +23,9 @@ class HomeScreenController extends GetxController {
 
   RxList<UpcomingLocation> upcomingLocations = <UpcomingLocation>[].obs;
   var isLoadingUpcoming = false.obs;  // Loading state for upcoming locations
+  // Add a new variable to store the nearest location's time
+  Rx<String> nearestLocationTime = ''.obs;
+
 
 
   var currentLatitude = 0.0.obs;
@@ -162,6 +165,7 @@ class HomeScreenController extends GetxController {
       if (response.isSuccess) {
         List<dynamic> data = response.responseData['data'];
 
+        log('Upcoming Locations: $data');
         upcomingLocations.value = data
             .map((location) => UpcomingLocation.fromJson(location))
             .toList();
@@ -238,6 +242,10 @@ class HomeScreenController extends GetxController {
         } else {
           // We have nearby locations, we're in service zone
           isInServiceZone.value = true;
+          // Fetch the nearest location's working hours
+          var nearestLocation = nearbyLocations[0]; // Assuming the first location is the nearest
+          String locationTime = nearestLocation['workingHours'] ?? '9am to 5pm'; // Adjust key if necessary
+          nearestLocationTime.value = locationTime;
 
           // Add new markers for nearby locations
           for (var location in nearbyLocations) {
@@ -245,8 +253,8 @@ class HomeScreenController extends GetxController {
             double longitude = double.parse(location['longitude'].toString());
             String locationName = location['location'] ?? 'Unknown Location';
 
-            log('Fetched Location: $locationName - Lat: $latitude, Long: $longitude');
-            log('Location ID: ${location['id']}');
+            // log('Fetched Location: $locationName - Lat: $latitude, Long: $longitude');
+            // log('Location ID: ${location['id']}');
 
             final marker = Marker(
               markerId: MarkerId(location['id'].toString()),
@@ -260,7 +268,7 @@ class HomeScreenController extends GetxController {
               onTap: () {
                 // When marker is tapped, set this location as selected
                 selectedLocation.value = location;
-                log('Selected location ID: ${location['id']}');
+                // log('Selected location ID: ${location['id']}');
               },
             );
             tempMarkers.add(marker);
