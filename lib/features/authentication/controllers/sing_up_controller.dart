@@ -85,7 +85,7 @@ class SingUpController extends GetxController {
 
       } else {
         // If email already exists or some other error
-        if (response.responseData['message'] == 'User already exists with this email') {
+        if (response.statusCode == 409) {
           showSnackBar(
             title: 'Email Already Exists',
             message: 'This email is already registered. Please try another one.',

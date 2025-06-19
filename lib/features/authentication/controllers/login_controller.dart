@@ -22,6 +22,7 @@ class LoginController extends GetxController {
   }
 
   RxBool isLoading = false.obs;
+
   void login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -51,12 +52,23 @@ class LoginController extends GetxController {
           Get.offAll(() => HomeScreen());
         }
       } else {
-        showSnackBar(
-          title: 'Error',
-          message: response.errorMessage,
-          icon: Icons.error_outline_rounded,
-          color: Colors.redAccent,
-        );
+        if (response.statusCode == 400) {
+          showSnackBar(
+            title: 'Error',
+            message: 'Please check your email and password.',
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        } else {
+          // Handle other errors from the API
+          showSnackBar(
+            title: 'Error',
+            message: response.errorMessage ??
+                'An error occurred. Please try again later.',
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        }
       }
     } catch (e) {
       AppLoggerHelper.error('Error: $e');
