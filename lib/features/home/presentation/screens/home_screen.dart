@@ -366,6 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             controller.refreshCurrentLocation();
                             controller.fetchNearbyLocations();
+                            controller.fetchUpcomingLocations();
                           },
                         ),
                       ),

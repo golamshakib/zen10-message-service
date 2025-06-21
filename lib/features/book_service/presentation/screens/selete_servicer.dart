@@ -47,7 +47,7 @@ class SelectServiceView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                serviceContainer('Message', Icons.spa, controller),
+                serviceContainer('Massage', Icons.spa, controller),
                 serviceContainer('Stretch', Icons.fitness_center, controller),
               ],
             ),

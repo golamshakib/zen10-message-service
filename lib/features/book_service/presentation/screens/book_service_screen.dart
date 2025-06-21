@@ -55,7 +55,7 @@ class BookServiceView extends StatelessWidget {
             Expanded(
               child: Obx(
                 () {
-                  if (controller.selectedCategory.value == 'Message') {
+                  if (controller.selectedCategory.value == 'Massage') {
                     if (controller.isLoading.value) {
                       return Center(
                         child: CircularProgressIndicator(
