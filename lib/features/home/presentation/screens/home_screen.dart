@@ -365,8 +365,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Icon(Icons.refresh, color: AppColors.primary),
                           onPressed: () {
                             controller.refreshCurrentLocation();
-                            controller.fetchNearbyLocations();
-                            controller.fetchUpcomingLocations();
                           },
                         ),
                       ),
