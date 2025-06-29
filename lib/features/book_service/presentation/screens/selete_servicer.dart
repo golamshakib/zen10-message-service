@@ -47,8 +47,12 @@ class SelectServiceView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                serviceContainer('Massage', Icons.spa, controller),
-                serviceContainer('Stretch', Icons.fitness_center, controller),
+                serviceContainer('Massage',
+                    // Icons.spa,
+                    controller),
+                serviceContainer('Stretch',
+                    // Icons.fitness_center,
+                    controller),
               ],
             ),
             SizedBox(height: 40.h),
@@ -68,12 +72,14 @@ class SelectServiceView extends StatelessWidget {
   }
 
   Widget serviceContainer(
-      String serviceType, IconData icon, BookServiceController controller) {
+      String serviceType,
+      // IconData icon,
+      BookServiceController controller) {
     return GestureDetector(
       onTap: () => controller.changeCategory(serviceType),
       child: Obx(
         () => Container(
-          height: 140.h,
+          height: 100.h,
           width: 160.w,
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -90,13 +96,13 @@ class SelectServiceView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                icon,
-                size: 40.sp,
-                color: controller.selectedCategory.value == serviceType
-                    ? Colors.white
-                    : AppColors.primary,
-              ),
+              // Icon(
+              //   icon,
+              //   size: 40.sp,
+              //   color: controller.selectedCategory.value == serviceType
+              //       ? Colors.white
+              //       : AppColors.primary,
+              // ),
               SizedBox(height: 8.h),
               Text(
                 serviceType,

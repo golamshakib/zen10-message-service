@@ -84,6 +84,7 @@ class BookServiceView extends StatelessWidget {
                               child: Obx(() => serviceCard(
                                   title: service.type,
                                   description: service.offer,
+                                  duration: service.duration,
                                   price: service.price.toString(),
                                   isSelected:
                                       controller.selectedService.value == index,
@@ -123,6 +124,7 @@ class BookServiceView extends StatelessWidget {
                               child: Obx(() => serviceCard(
                                   title: service.type,
                                   description: service.offer,
+                                  duration: service.duration,
                                   price: service.price.toString(),
                                   isSelected:
                                       controller.selectedService.value == index,
@@ -213,6 +215,7 @@ class BookServiceView extends StatelessWidget {
     required String title,
     required String description,
     required String price,
+    required String duration,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
@@ -242,6 +245,15 @@ class BookServiceView extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               description,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isSelected ? Color(0xffD5D3FD) : AppColors.textSecondary,
+              ),
+            ),
+            SizedBox(height: 5.h),
+            Text(
+              duration,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
