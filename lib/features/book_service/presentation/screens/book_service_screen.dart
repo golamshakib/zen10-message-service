@@ -52,7 +52,7 @@ class BookServiceView extends StatelessWidget {
             SizedBox(height: 24.h),
             Expanded(
               child: Obx(() {
-                if (controller.isLoading.value) {
+                if (controller.serviceData.value == null) {
                   return Center(
                     child: CircularProgressIndicator(color: AppColors.primary),
                   );
