@@ -15,6 +15,7 @@ class AppUrls {
       '$_baseUrl/locations/get-nearby-locations';
   static const String getUpcomingLocations =
       '$_baseUrl/locations/get-upcoming-locations';
+  static const String fetchServiceType = '$_baseUrl/services/all-services';
 
   // Added by @alphabetic100
   static String createPayment = "$_baseUrl/payments/create-payment";

@@ -11,6 +11,8 @@ class BookServiceController extends GetxController {
   RxBool isLoading = false.obs;
   Rx<ServiceDataModel?> serviceData = Rx(null);
   Rx<ConnectedService?> selectedServiceCard = Rx(null);
+  RxList<String> serviceTypes = <String>[].obs;
+
 
   /// The currently selected category
   RxString selectedCategory = 'Massage'.obs;
@@ -59,6 +61,27 @@ class BookServiceController extends GetxController {
   //     return "$selectedCategory Service - Member";
   //   }
   // }
+
+
+  /// Fetch service types dynamically
+  Future<void> fetchServiceTypes() async {
+    try {
+      isLoading.value = true;
+      final response = await NetworkCaller().getRequest(AppUrls.fetchServiceType, token: "Bearer ${AuthService.token}");
+      isLoading.value = false;
+
+      if (response.isSuccess) {
+        // Parse the data and populate the serviceTypes list
+        var fetchedData = response.responseData['data'] as List;
+        serviceTypes.value = fetchedData.map((e) => e['title'] as String).toList();
+      } else {
+        Get.snackbar("Error", response.errorMessage);
+      }
+    } catch (error) {
+      isLoading.value = false;
+      AppLoggerHelper.error(error.toString());
+    }
+  }
 
   Future<void> getServiceList({
     required String userID,

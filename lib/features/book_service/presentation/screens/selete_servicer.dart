@@ -9,10 +9,8 @@ import 'package:traveling/features/book_service/controllers/book_service_control
 import 'package:traveling/features/book_service/presentation/screens/book_service_screen.dart';
 
 class SelectServiceView extends StatelessWidget {
-  // Add locationId parameter
   final dynamic userID;
 
-  // Make it required in the constructor
   const SelectServiceView({super.key, required this.userID});
 
   @override
@@ -22,10 +20,12 @@ class SelectServiceView extends StatelessWidget {
     // Log the locationId when the screen is built
     log('SelectServiceView opened with user ID: $userID');
 
+    // Fetch the service types when the screen is built
+    controller.fetchServiceTypes();
+
     return Scaffold(
       body: Padding(
-        padding:
-            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
+        padding: EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,17 +44,27 @@ class SelectServiceView extends StatelessWidget {
                   color: AppColors.textPrimary),
             ),
             SizedBox(height: 24.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                serviceContainer('Massage',
-                    // Icons.spa,
-                    controller),
-                serviceContainer('Stretch',
-                    // Icons.fitness_center,
-                    controller),
-              ],
-            ),
+            // Use Obx to reactively display the service categories
+            Obx(() {
+              if (controller.isLoading.value) {
+                return Center(child: CircularProgressIndicator(color: AppColors.primary));
+              }
+              return Expanded(
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Two items per row
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 2 / 1, // Adjust the aspect ratio as needed
+                  ),
+                  itemCount: controller.serviceTypes.length,
+                  itemBuilder: (context, index) {
+                    final serviceType = controller.serviceTypes[index];
+                    return serviceContainer(serviceType, controller);
+                  },
+                ),
+              );
+            }),
             SizedBox(height: 40.h),
             Spacer(),
             CustomButton(
@@ -71,16 +81,12 @@ class SelectServiceView extends StatelessWidget {
     );
   }
 
-  Widget serviceContainer(
-      String serviceType,
-      // IconData icon,
-      BookServiceController controller) {
+  Widget serviceContainer(String serviceType, BookServiceController controller) {
     return GestureDetector(
       onTap: () => controller.changeCategory(serviceType),
       child: Obx(
-        () => Container(
+            () => Container(
           height: 100.h,
-          width: 160.w,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: controller.selectedCategory.value == serviceType
@@ -96,13 +102,6 @@ class SelectServiceView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon(
-              //   icon,
-              //   size: 40.sp,
-              //   color: controller.selectedCategory.value == serviceType
-              //       ? Colors.white
-              //       : AppColors.primary,
-              // ),
               SizedBox(height: 8.h),
               Text(
                 serviceType,
