@@ -65,8 +65,8 @@ class SelectServiceView extends StatelessWidget {
                 ),
               );
             }),
-            SizedBox(height: 40.h),
-            Spacer(),
+            // SizedBox(height: 40.h),
+            // Spacer(),
             CustomButton(
               onPressed: () {
                 // Pass the locationId to the next screen if needed
@@ -75,6 +75,7 @@ class SelectServiceView extends StatelessWidget {
               },
               text: 'Next',
             ),
+            SizedBox(height: 40.h),
           ],
         ),
       ),
@@ -87,6 +88,7 @@ class SelectServiceView extends StatelessWidget {
       child: Obx(
             () => Container(
           height: 100.h,
+              padding: EdgeInsets.all(12.h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: controller.selectedCategory.value == serviceType
@@ -102,11 +104,13 @@ class SelectServiceView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 8.h),
               Text(
                 serviceType,
+                maxLines: 2,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.sp,
+                  overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.w700,
                   color: controller.selectedCategory.value == serviceType
                       ? Colors.white

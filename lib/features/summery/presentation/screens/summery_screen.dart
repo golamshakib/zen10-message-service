@@ -36,6 +36,7 @@ class SummaryScreen extends StatelessWidget {
               title: selectedService.type,
               subtitle: selectedService.offer,
               price: selectedService.price.toString(),
+              duration: selectedService.duration.toString(),
             ),
             const Divider(
               color: Color(0xffE9E9F3),
@@ -82,6 +83,7 @@ class SummaryScreen extends StatelessWidget {
     required String title,
     required String subtitle,
     required String price,
+    required String duration,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -103,6 +105,13 @@ class SummaryScreen extends StatelessWidget {
                 SizedBox(height: 8.h),
                 Text(
                   subtitle,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  duration,
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
