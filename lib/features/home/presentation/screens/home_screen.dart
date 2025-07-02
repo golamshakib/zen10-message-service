@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             return controller.isRefreshing.value
                                 ? LoadingAnimationWidget.staggeredDotsWave(
                               color: AppColors.primary,
-                              size: 30.sp, // Adjust size of the loading animation
+                              size: 20.sp, // Adjust size of the loading animation
                             )
                                 : Icon(Icons.refresh, color: AppColors.primary);
                           }),
