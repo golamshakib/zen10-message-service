@@ -26,7 +26,8 @@ class BookServiceView extends StatelessWidget {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
+        padding:
+            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -52,20 +53,27 @@ class BookServiceView extends StatelessWidget {
             SizedBox(height: 24.h),
             Expanded(
               child: Obx(() {
-                if (controller.serviceData.value == null) {
+                // Check if serviceData is null or empty
+                if (controller.serviceData.value == null ||
+                    controller.serviceData.value!.data.isEmpty) {
                   return Center(
                     child: CircularProgressIndicator(color: AppColors.primary),
                   );
                 }
 
-                // Check if the service data is null or empty
-                if (controller.serviceData.value!.data[0].connectedService == null || controller.serviceData.value!.data[0].connectedService.isEmpty) {
+                // Check if the connected service is empty
+                if (controller.serviceData.value!.data[0].connectedService == null ||
+                    controller
+                        .serviceData.value!.data[0].connectedService.isEmpty) {
                   return Center(
                     child: Text("No service available at this time"),
                   );
                 }
 
-                final services = controller.serviceData.value!.data[0].connectedService;
+                // Now that we know the data is available, we can safely access it
+                final services =
+                    controller.serviceData.value!.data[0].connectedService;
+
                 return ListView.builder(
                   itemCount: services.length,
                   itemBuilder: (context, index) {
@@ -98,25 +106,26 @@ class BookServiceView extends StatelessWidget {
                     margin: EdgeInsets.all(16),
                     duration: Duration(seconds: 2),
                     borderRadius: 8,
-                    icon: Icon(Icons.warning_amber_rounded, color: Colors.red[800]),
+                    icon: Icon(Icons.warning_amber_rounded,
+                        color: Colors.red[800]),
                   );
                 } else {
                   // Navigate to summary screen if service is selected
                   Get.to(() => SummaryScreen(
-                    selectedService: controller.selectedServiceCard.value ??
-                        ConnectedService(
-                          id: '',
-                          userId: userID,
-                          serviceId: '',
-                          type: '',
-                          offer: '',
-                          additionalOffer: '',
-                          duration: '',
-                          price: 0,
-                          createdAt: "",
-                          updatedAt: "",
-                        ),
-                  ));
+                        selectedService: controller.selectedServiceCard.value ??
+                            ConnectedService(
+                              id: '',
+                              userId: userID,
+                              serviceId: '',
+                              type: '',
+                              offer: '',
+                              additionalOffer: '',
+                              duration: '',
+                              price: 0,
+                              createdAt: "",
+                              updatedAt: "",
+                            ),
+                      ));
                 }
               },
               text: "Next",

@@ -11,6 +11,8 @@ import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 import '../../controllers/home_controller.dart';
 import '../widgets/disable_button.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
 import 'helper_function/helper_function.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -110,7 +112,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Obx(() {
                 // Check if the upcoming locations list has been fetched
                 if (controller.nearbyLocations.isNotEmpty) {
-                  // Only show the first two locations
                   final locationsToShow = controller.nearbyLocations.take(2).toList();
 
                   return Wrap(
@@ -137,26 +138,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ];
 
-                      // If not the last element, add text between locations
                       if (index < locationsToShow.length - 1) {
                         widgets.add(
                           Flexible(
                             child: Text(
                               ' and ',
                               style: TextStyle(
-                                fontSize: 16.sp,  // Responsive font size
+                                fontSize: 16.sp,
                                 color: Color(0xff333333),
                                 fontWeight: FontWeight.w600,
-                                overflow: TextOverflow.ellipsis,  // Handle overflow of 'and'
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,  // Prevent overflow of 'and' text
+                              maxLines: 1,
                             ),
                           ),
                         );
                       }
 
                       return Row(
-                        mainAxisSize: MainAxisSize.min, // Ensure no additional space is used if they fit in one line
+                        mainAxisSize: MainAxisSize.min,
                         children: widgets,
                       );
                     }).toList(),
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Text(
                     'Out of zone',
                     style: TextStyle(
-                      fontSize: 16.sp, // Responsive font size
+                      fontSize: 16.sp,
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
@@ -173,12 +173,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               }),
 
-              SizedBox(height: 4.h),
-              // Text('Mon-Fri: 9am to 5pm',
-              //     style: TextStyle(
-              //         color: Colors.grey,
-              //         fontSize: 16.sp,
-              //         fontWeight: FontWeight.bold)),
               SizedBox(height: 16.h),
               SizedBox(
                 height: 370.h,
@@ -197,20 +191,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         if (controller.isLoading.value || controller.isLocationLoading.value) {
                           return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircularProgressIndicator(
-                                    color: AppColors.primary),
-                                SizedBox(height: 16.h),
-                                Text(
-                                    controller.isLocationLoading.value
-                                        ? 'Getting your current location...'
-                                        : 'Loading map and locations...',
-                                    style: TextStyle(
-                                        color: AppColors.primary,
-                                        fontWeight: FontWeight.bold))
-                              ],
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: AppColors.primary,
+                              size: 30.sp, // Adjust size as needed
                             ),
                           );
                         }
@@ -222,20 +205,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           markers: controller.markers,
                           onMapCreated: (GoogleMapController mapCtrl) {
-                            mapController = mapCtrl; // Assign controller here
+                            mapController = mapCtrl;
                             Future.delayed(Duration(milliseconds: 500), () {
                               if (controller.markers.isEmpty) {
                                 controller.fetchNearbyLocations();
                               }
                             });
                           },
-                          myLocationEnabled: true, // Allow user to see their current location
-                          myLocationButtonEnabled: true, // Show the button to go to current location
-                          compassEnabled: true, // Enable the compass
-                          zoomControlsEnabled: true, // Enable zoom controls
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          compassEnabled: true,
+                          zoomControlsEnabled: true,
                         );
                       }),
 
+                      // Refresh Button to trigger the refresh and loading animation
+                      Positioned(
+                        bottom: 16.h,
+                        left: 16.w,
+                        child: FloatingActionButton(
+                          backgroundColor: Colors.white.withOpacity(0.8),
+                          child: Obx(() {
+                            return controller.isRefreshing.value
+                                ? LoadingAnimationWidget.staggeredDotsWave(
+                              color: AppColors.primary,
+                              size: 30.sp, // Adjust size of the loading animation
+                            )
+                                : Icon(Icons.refresh, color: AppColors.primary);
+                          }),
+                          onPressed: () async {
+                            controller.isRefreshing.value = true; // Set to true to show loading
+                            await controller.refreshCurrentLocation();
+                            controller.isRefreshing.value = false; // Hide loading after refresh
+                          },
+                        ),
+                      ),
+
+                      // Upcoming Button
                       Positioned(
                         top: 10.h,
                         right: 50.w,
@@ -264,8 +270,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+
+                      // Upcoming Events List
                       Positioned(
-                        top: 60.h,  // Adjust this to position below the button
+                        top: 60.h,
                         left: 10.w,
                         right: 10.w,
                         child: Obx(() {
@@ -299,8 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     controller.upcomingLocations.isEmpty
                                         ? Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 20.0, horizontal: 15.0),
+                                      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
                                       child: Text('No Upcoming event found',
                                           style: TextStyle(
                                               fontSize: 14.sp,
@@ -313,33 +320,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       itemCount: controller.upcomingLocations.length,
                                       itemBuilder: (context, index) {
                                         final upcomingLocation = controller.upcomingLocations[index];
-                                        return ListTile(
-                                          title: Text(
-                                            formatDate(upcomingLocation.date),
-                                            style: TextStyle(
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: AppColors.textPrimary,
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.textSecondary,
-                                            ),
-                                          ),
-                                          trailing: Container(
-                                            width: 100, // Set a fixed width for the trailing widget
-                                            child: Text(
-                                              upcomingLocation.location,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // Handle event click by passing the selected event to the Book Now screen
+                                            controller.handleUpcomingEventClick(controller.upcomingLocations[index]);
+                                          },
+                                          child: ListTile(
+                                            title: Text(
+                                              formatDate(upcomingLocation.date),
                                               style: TextStyle(
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600,
                                                 color: AppColors.textPrimary,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),
+                                              style: TextStyle(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.textSecondary,
+                                              ),
+                                            ),
+                                            trailing: Container(
+                                              width: 100, // Set a fixed width for the trailing widget
+                                              child: Text(
+                                                upcomingLocation.location,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.textPrimary,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -354,19 +368,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             return SizedBox.shrink();
                           }
                         }),
-                      ),
-
-                      // Add a refresh button to manually refresh markers
-                      Positioned(
-                        bottom: 16.h,
-                        left: 16.w,
-                        child: FloatingActionButton.small(
-                          backgroundColor: Colors.white.withOpacity(0.8),
-                          child: Icon(Icons.refresh, color: AppColors.primary),
-                          onPressed: () {
-                            controller.refreshCurrentLocation();
-                          },
-                        ),
                       ),
                     ],
                   ),
@@ -405,7 +406,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   // Check if a location is selected
                   if (controller.currentLatitude.value == 0.0 || controller.currentLongitude.value == 0.0) {
-                    // You can show an alert or a snack bar to notify the user
                     Get.snackbar(
                       "Location not selected",
                       "Please select your location before proceeding.",
@@ -420,7 +420,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 text: 'Book Now',
               )
                   : buildDisabledButton()),
-
             ],
           ),
         ),
@@ -428,3 +427,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
+

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,6 +17,7 @@ class HomeScreenController extends GetxController {
   RxList<dynamic> nearbyLocations = <dynamic>[].obs; // Observing locations
   RxSet<Marker> markers = <Marker>{}.obs; // Observable markers
   var isLoading = true.obs;
+  var isRefreshing = false.obs;
   // Add a variable to track if we're in service zone
   var isInServiceZone = false.obs;
   // Add a variable to track the selected location
@@ -47,6 +49,22 @@ class HomeScreenController extends GetxController {
   void toggleUpcoming() {
     showUpcoming.value = !showUpcoming.value;
   }
+  void handleUpcomingEventClick(UpcomingLocation upcomingEvent) {
+    // Get the userID from the selected upcoming event
+    final userId = upcomingEvent.userId; // Assuming userID is part of UpcomingLocation
+
+    // Now navigate to the SelectServiceView with userID
+    if (userId != null) {
+      Get.to(() => SelectServiceView(userID: userId));
+    } else {
+      // Handle case if userID is not found
+      Get.snackbar(
+        'No Event Selected',
+        'Please select a location/Upcoming event from the map',
+      );
+    }
+  }
+
 
   // Add this method to get current location
   Future<void> getCurrentLocation() async {
@@ -306,7 +324,7 @@ class HomeScreenController extends GetxController {
       // You could show a snackbar or toast here to inform the user
       Get.snackbar(
         'No Location Selected',
-        'Please select a location on the map first',
+        'Please select a location/Upcoming event from the map',
       );
     }
   }
