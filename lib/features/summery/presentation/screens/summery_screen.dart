@@ -73,7 +73,7 @@ class SummaryScreen extends StatelessWidget {
                       ));
                 },
                 text: "Next"),
-            SizedBox(height: 40.h),
+            SizedBox(height: 50.h),
           ],
         ),
       ),

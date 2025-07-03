@@ -86,7 +86,7 @@ class SelectServiceView extends StatelessWidget {
             ),
 
             // Spacer to push the button to the bottom
-            Spacer(),
+            // Spacer(),
             CustomButton(
               onPressed: () {
                 // Pass the locationId to the next screen if needed
@@ -95,7 +95,7 @@ class SelectServiceView extends StatelessWidget {
               },
               text: 'Next',
             ),
-            SizedBox(height: 40.h), // Add the 40 SizedBox below the button
+            SizedBox(height: 50.h), // Add the 40 SizedBox below the button
           ],
         ),
       ),
