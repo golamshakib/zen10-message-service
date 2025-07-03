@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';  // Import the loading animation widget
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
@@ -44,29 +45,48 @@ class SelectServiceView extends StatelessWidget {
                   color: AppColors.textPrimary),
             ),
             SizedBox(height: 24.h),
-            // Use Obx to reactively display the service categories
-            Obx(() {
-              if (controller.isLoading.value) {
-                return Center(child: CircularProgressIndicator(color: AppColors.primary));
-              }
-              return Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Two items per row
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
-                    childAspectRatio: 2 / 1, // Adjust the aspect ratio as needed
-                  ),
-                  itemCount: controller.serviceTypes.length,
-                  itemBuilder: (context, index) {
-                    final serviceType = controller.serviceTypes[index];
-                    return serviceContainer(serviceType, controller);
-                  },
-                ),
-              );
-            }),
-            // SizedBox(height: 40.h),
-            // Spacer(),
+            // Use a Stack to layer the content and the loading animation
+            Expanded(
+              child: Stack(
+                children: [
+                  // The GridView displaying the services
+                  Obx(() {
+                    if (controller.isLoading.value) {
+                      return SizedBox.shrink();  // Do not display the list when loading
+                    }
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Two items per row
+                        crossAxisSpacing: 16.w,
+                        mainAxisSpacing: 16.h,
+                        childAspectRatio: 2 / 1, // Adjust the aspect ratio as needed
+                      ),
+                      itemCount: controller.serviceTypes.length,
+                      itemBuilder: (context, index) {
+                        final serviceType = controller.serviceTypes[index];
+                        return serviceContainer(serviceType, controller);
+                      },
+                    );
+                  }),
+
+                  // The loading animation centered on top of the GridView
+                  Obx(() {
+                    if (!controller.isLoading.value) {
+                      return SizedBox.shrink();  // Hide loading animation when not loading
+                    }
+                    return Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.primary,
+                        size: 30.sp, // Adjust the size of the loading animation
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+
+            // Spacer to push the button to the bottom
+            Spacer(),
             CustomButton(
               onPressed: () {
                 // Pass the locationId to the next screen if needed
@@ -75,7 +95,7 @@ class SelectServiceView extends StatelessWidget {
               },
               text: 'Next',
             ),
-            SizedBox(height: 40.h),
+            SizedBox(height: 40.h), // Add the 40 SizedBox below the button
           ],
         ),
       ),
@@ -88,7 +108,7 @@ class SelectServiceView extends StatelessWidget {
       child: Obx(
             () => Container(
           height: 100.h,
-              padding: EdgeInsets.all(12.h),
+          padding: EdgeInsets.all(12.h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: controller.selectedCategory.value == serviceType

@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? controller.currentLongitude.value
                             : (controller.userProfile.value?.data.locationLongitude ?? -74.0060);
 
-                        if (controller.isLoading.value || controller.isLocationLoading.value) {
+                        if (controller.isLoading.value || controller.isLocationLoading.value || controller.isRefreshing.value) {
                           return Center(
                             child: LoadingAnimationWidget.staggeredDotsWave(
                               color: AppColors.primary,
@@ -234,9 +234,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 : Icon(Icons.refresh, color: AppColors.primary);
                           }),
                           onPressed: () async {
-                            controller.isRefreshing.value = true; // Set to true to show loading
-                            await controller.refreshCurrentLocation();
-                            controller.isRefreshing.value = false; // Hide loading after refresh
+                            await controller.refreshLocation();
+
+                            // Force the map to rebuild with updated markers
+                            setState(() {});
                           },
                         ),
                       ),
@@ -427,6 +428,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
@@ -53,26 +54,26 @@ class BookServiceView extends StatelessWidget {
             SizedBox(height: 24.h),
             Expanded(
               child: Obx(() {
-                // Check if serviceData is null or empty
-                if (controller.serviceData.value == null ||
-                    controller.serviceData.value!.data.isEmpty) {
+                // Show loading animation while fetching data
+                if (controller.isLoading.value) {
                   return Center(
-                    child: CircularProgressIndicator(color: AppColors.primary),
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: AppColors.primary,
+                      size: 30.sp, // Adjust the size of the loading animation
+                    ),
                   );
                 }
 
-                // Check if the connected service is empty
-                if (controller.serviceData.value!.data[0].connectedService == null ||
-                    controller
-                        .serviceData.value!.data[0].connectedService.isEmpty) {
+                // Check if serviceData is null or empty
+                if (controller.serviceData.value == null ||
+                    controller.serviceData.value!.data.isEmpty) {
                   return Center(
                     child: Text("No service available at this time"),
                   );
                 }
 
                 // Now that we know the data is available, we can safely access it
-                final services =
-                    controller.serviceData.value!.data[0].connectedService;
+                final services = controller.serviceData.value!.data[0].connectedService;
 
                 return ListView.builder(
                   itemCount: services.length,
@@ -82,7 +83,7 @@ class BookServiceView extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 10),
                       child: Obx(() => serviceCard(
                           title: service.type,
-                          description: service.offer,
+                          additionalOffer: service.additionalOffer,
                           duration: service.duration,
                           price: service.price.toString(),
                           isSelected: controller.selectedService.value == index,
@@ -94,6 +95,7 @@ class BookServiceView extends StatelessWidget {
                 );
               }),
             ),
+
             CustomButton(
               onPressed: () async {
                 if (controller.selectedService.value < 0) {
@@ -140,7 +142,7 @@ class BookServiceView extends StatelessWidget {
   /// Service card widget
   Widget serviceCard({
     required String title,
-    required String description,
+    required String additionalOffer,
     required String price,
     required String duration,
     required bool isSelected,
@@ -169,15 +171,6 @@ class BookServiceView extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 8.h),
-            Text(
-              description,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: isSelected ? Color(0xffD5D3FD) : AppColors.textSecondary,
-              ),
-            ),
             SizedBox(height: 5.h),
             Text(
               duration,
@@ -193,6 +186,15 @@ class BookServiceView extends StatelessWidget {
               style: TextStyle(
                 color: isSelected ? Color(0xffD5D3FD) : Color(0xff808080),
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              additionalOffer,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isSelected ? Color(0xffD5D3FD) : AppColors.textSecondary,
               ),
             ),
           ],

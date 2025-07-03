@@ -127,10 +127,12 @@ class HomeScreenController extends GetxController {
   }
 
   // Add method to refresh current location
-  Future<void> refreshCurrentLocation() async {
+  Future<void> refreshLocation() async {
     // await getCurrentLocation();
     // Optionally refresh nearby locations based on new position
+    isRefreshing.value = true;
     await fetchNearbyLocations();
+    isRefreshing.value = false;
     await fetchUpcomingLocations();
   }
 
