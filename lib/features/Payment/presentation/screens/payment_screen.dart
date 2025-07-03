@@ -14,6 +14,7 @@ class PaymentMethodScreen extends StatefulWidget {
       required this.connectedServiceId,
       required this.ownerId,
       required this.amount});
+
   final String connectedServiceId;
   final String ownerId;
   final int amount;
@@ -98,7 +99,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       //     approvalUrl:
                       //        ));
                     },
-                    text: "Pay & Book Now"))
+                    text: "Pay & Book Now")),
+            SizedBox(height: 40.h),
           ],
         ),
       ),

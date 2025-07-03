@@ -72,7 +72,8 @@ class SummaryScreen extends StatelessWidget {
                         amount: selectedService.price,
                       ));
                 },
-                text: "Next")
+                text: "Next"),
+            SizedBox(height: 40.h),
           ],
         ),
       ),

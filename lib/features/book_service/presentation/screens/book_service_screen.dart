@@ -130,6 +130,7 @@ class BookServiceView extends StatelessWidget {
               },
               text: "Next",
             ),
+            SizedBox(height: 40.h),
           ],
         ),
       ),
