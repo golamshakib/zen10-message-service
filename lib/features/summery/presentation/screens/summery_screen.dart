@@ -17,64 +17,66 @@ class SummaryScreen extends StatelessWidget {
     // final BookServiceController controller = Get.find<BookServiceController>();
 
     return Scaffold(
-      body: Padding(
-        padding:
-            const EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(
-              onTap: () {
-                Get.back();
-              },
-              text: "Summary",
-            ),
-            SizedBox(
-              height: 40.h,
-            ),
-            _buildServiceItem(
-              title: selectedService.type,
-              subtitle: selectedService.offer,
-              price: selectedService.price.toString(),
-              duration: selectedService.duration.toString(),
-            ),
-            const Divider(
-              color: Color(0xffE9E9F3),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Total",
-                    style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary),
-                  ),
-                  Text(
-                    "\$${selectedService.price}",
-                    style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary),
-                  ),
-                ],
-              ),
-            ),
-            const Spacer(),
-            CustomButton(
-                onPressed: () {
-                  Get.to(() => PaymentMethodScreen(
-                        connectedServiceId: selectedService.id,
-                        ownerId: selectedService.userId,
-                        amount: selectedService.price,
-                      ));
+      body: SafeArea(
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 16, right: 16, top: 55, bottom: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(
+                onTap: () {
+                  Get.back();
                 },
-                text: "Next"),
-            SizedBox(height: 50.h),
-          ],
+                text: "Summary",
+              ),
+              SizedBox(
+                height: 40.h,
+              ),
+              _buildServiceItem(
+                title: selectedService.type,
+                subtitle: selectedService.offer,
+                price: selectedService.price.toString(),
+                duration: selectedService.duration.toString(),
+              ),
+              const Divider(
+                color: Color(0xffE9E9F3),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total",
+                      style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary),
+                    ),
+                    Text(
+                      "\$${selectedService.price}",
+                      style: TextStyle(
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              CustomButton(
+                  onPressed: () {
+                    Get.to(() => PaymentMethodScreen(
+                          connectedServiceId: selectedService.id,
+                          ownerId: selectedService.userId,
+                          amount: selectedService.price,
+                        ));
+                  },
+                  text: "Next"),
+              SizedBox(height: 50.h),
+            ],
+          ),
         ),
       ),
     );

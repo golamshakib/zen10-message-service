@@ -30,78 +30,80 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(left: 16, right: 16, top: 72, bottom: 30.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(
-              onTap: () {
-                Get.back();
-              },
-              text: "payment Method",
-            ),
-            SizedBox(
-              height: 50.h,
-            ),
-            paymentOption(
-              title: "Paypal",
-              assetImage: IconPath.payPal,
-              lastDigits: "43",
-              selected: selectedPayment == "PayPal",
-              onSelect: () {
-                setState(() {
-                  selectedPayment = "PayPal";
-                });
-              },
-            ),
-            SizedBox(height: 16.h),
-            // Container(
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(8),
-            //     border: Border.all(
-            //       color: Color(0xffE9E9F3),
-            //       width: 1,
-            //     ),
-            //     color: Color(0xffFFFFFF),
-            //   ),
-            //   padding: EdgeInsets.all(12),
-            //   child: Row(
-            //     children: [
-            //       Image.asset(IconPath.zelle, width: 44, height: 44),
-            //       SizedBox(width: 8),
-            //       Expanded(
-            //         child: Text(
-            //           "Zelle",
-            //           style: TextStyle(
-            //               fontSize: 20.sp,
-            //               fontWeight: FontWeight.w600,
-            //               color: AppColors.textPrimary),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Spacer(),
-            Obx(() => controller.isPaymentLoading.value
-                ? Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: AppColors.primary, size: 35.sp),
-                  )
-                : CustomButton(
-                    onPressed: () {
-                      controller.crateBooking(
-                        connectedServiceId: widget.connectedServiceId,
-                        ownerId: widget.ownerId,
-                        amount: widget.amount,
-                      );
-                      // Get.to(() => PayPalWebView(
-                      //     approvalUrl:
-                      //        ));
-                    },
-                    text: "Pay & Book Now")),
-            SizedBox(height: 40.h),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(left: 16, right: 16, top: 55, bottom: 30.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(
+                onTap: () {
+                  Get.back();
+                },
+                text: "payment Method",
+              ),
+              SizedBox(
+                height: 50.h,
+              ),
+              paymentOption(
+                title: "Paypal",
+                assetImage: IconPath.payPal,
+                lastDigits: "43",
+                selected: selectedPayment == "PayPal",
+                onSelect: () {
+                  setState(() {
+                    selectedPayment = "PayPal";
+                  });
+                },
+              ),
+              SizedBox(height: 16.h),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     border: Border.all(
+              //       color: Color(0xffE9E9F3),
+              //       width: 1,
+              //     ),
+              //     color: Color(0xffFFFFFF),
+              //   ),
+              //   padding: EdgeInsets.all(12),
+              //   child: Row(
+              //     children: [
+              //       Image.asset(IconPath.zelle, width: 44, height: 44),
+              //       SizedBox(width: 8),
+              //       Expanded(
+              //         child: Text(
+              //           "Zelle",
+              //           style: TextStyle(
+              //               fontSize: 20.sp,
+              //               fontWeight: FontWeight.w600,
+              //               color: AppColors.textPrimary),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              Spacer(),
+              Obx(() => controller.isPaymentLoading.value
+                  ? Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: AppColors.primary, size: 35.sp),
+                    )
+                  : CustomButton(
+                      onPressed: () {
+                        controller.crateBooking(
+                          connectedServiceId: widget.connectedServiceId,
+                          ownerId: widget.ownerId,
+                          amount: widget.amount,
+                        );
+                        // Get.to(() => PayPalWebView(
+                        //     approvalUrl:
+                        //        ));
+                      },
+                      text: "Pay & Book Now")),
+              SizedBox(height: 50.h),
+            ],
+          ),
         ),
       ),
     );

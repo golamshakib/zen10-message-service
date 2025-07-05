@@ -25,78 +25,80 @@ class SelectServiceView extends StatelessWidget {
     controller.fetchServiceTypes();
 
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(
-              onTap: () {
-                Get.back();
-              },
-              text: 'Select a service',
-            ),
-            SizedBox(height: 40.h),
-            Text(
-              'Choose Your Service Type',
-              style: TextStyle(
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.textPrimary),
-            ),
-            SizedBox(height: 24.h),
-            // Use a Stack to layer the content and the loading animation
-            Expanded(
-              child: Stack(
-                children: [
-                  // The GridView displaying the services
-                  Obx(() {
-                    if (controller.isLoading.value) {
-                      return SizedBox.shrink();  // Do not display the list when loading
-                    }
-                    return GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Two items per row
-                        crossAxisSpacing: 16.w,
-                        mainAxisSpacing: 16.h,
-                        childAspectRatio: 2 / 1, // Adjust the aspect ratio as needed
-                      ),
-                      itemCount: controller.serviceTypes.length,
-                      itemBuilder: (context, index) {
-                        final serviceType = controller.serviceTypes[index];
-                        return serviceContainer(serviceType, controller);
-                      },
-                    );
-                  }),
-
-                  // The loading animation centered on top of the GridView
-                  Obx(() {
-                    if (!controller.isLoading.value) {
-                      return SizedBox.shrink();  // Hide loading animation when not loading
-                    }
-                    return Center(
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: AppColors.primary,
-                        size: 30.sp, // Adjust the size of the loading animation
-                      ),
-                    );
-                  }),
-                ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(top: 55.h, left: 16.w, right: 16.w, bottom: 25.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(
+                onTap: () {
+                  Get.back();
+                },
+                text: 'Select a service',
               ),
-            ),
-
-            // Spacer to push the button to the bottom
-            // Spacer(),
-            CustomButton(
-              onPressed: () {
-                // Pass the locationId to the next screen if needed
-                Get.to(() => BookServiceView(),
-                    arguments: {'userID': userID});
-              },
-              text: 'Next',
-            ),
-            SizedBox(height: 50.h), // Add the 40 SizedBox below the button
-          ],
+              SizedBox(height: 40.h),
+              Text(
+                'Choose Your Service Type',
+                style: TextStyle(
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 24.h),
+              // Use a Stack to layer the content and the loading animation
+              Expanded(
+                child: Stack(
+                  children: [
+                    // The GridView displaying the services
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return SizedBox.shrink();  // Do not display the list when loading
+                      }
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Two items per row
+                          crossAxisSpacing: 16.w,
+                          mainAxisSpacing: 16.h,
+                          childAspectRatio: 2 / 1, // Adjust the aspect ratio as needed
+                        ),
+                        itemCount: controller.serviceTypes.length,
+                        itemBuilder: (context, index) {
+                          final serviceType = controller.serviceTypes[index];
+                          return serviceContainer(serviceType, controller);
+                        },
+                      );
+                    }),
+        
+                    // The loading animation centered on top of the GridView
+                    Obx(() {
+                      if (!controller.isLoading.value) {
+                        return SizedBox.shrink();  // Hide loading animation when not loading
+                      }
+                      return Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: AppColors.primary,
+                          size: 30.sp, // Adjust the size of the loading animation
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+        
+              // Spacer to push the button to the bottom
+              // Spacer(),
+              CustomButton(
+                onPressed: () {
+                  // Pass the locationId to the next screen if needed
+                  Get.to(() => BookServiceView(),
+                      arguments: {'userID': userID});
+                },
+                text: 'Next',
+              ),
+              SizedBox(height: 50.h), // Add the 40 SizedBox below the button
+            ],
+          ),
         ),
       ),
     );

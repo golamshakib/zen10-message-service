@@ -26,114 +26,116 @@ class BookServiceView extends StatelessWidget {
     });
 
     return Scaffold(
-      body: Padding(
-        padding:
-            EdgeInsets.only(top: 72.h, left: 16.w, right: 16.w, bottom: 25.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(
-              onTap: () {
-                Get.back();
-              },
-              text: 'Book a service',
-            ),
-            SizedBox(height: 40.h),
-            Text(
-              'Choose Your Service',
-              style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Select the care you need today.',
-              style: TextStyle(fontSize: 16.sp, color: AppColors.textSecondary),
-            ),
-            SizedBox(height: 24.h),
-            Expanded(
-              child: Obx(() {
-                // Show loading animation while fetching data
-                if (controller.isLoading.value) {
-                  return Center(
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: AppColors.primary,
-                      size: 30.sp, // Adjust the size of the loading animation
-                    ),
-                  );
-                }
-
-                // Check if serviceData is null or empty
-                if (controller.serviceData.value == null ||
-                    controller.serviceData.value!.data.isEmpty) {
-                  return Center(
-                    child: Text("No service available at this time"),
-                  );
-                }
-
-                // Now that we know the data is available, we can safely access it
-                final services = controller.serviceData.value!.data[0].connectedService;
-
-                return ListView.builder(
-                  itemCount: services.length,
-                  itemBuilder: (context, index) {
-                    final service = services[index];
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 10),
-                      child: Obx(() => serviceCard(
-                          title: service.type,
-                          additionalOffer: service.additionalOffer,
-                          duration: service.duration,
-                          price: service.price.toString(),
-                          isSelected: controller.selectedService.value == index,
-                          onTap: () {
-                            controller.changeService(index, service);
-                          })),
+      body: SafeArea(
+        child: Padding(
+          padding:
+              EdgeInsets.only(top: 55.h, left: 16.w, right: 16.w, bottom: 25.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(
+                onTap: () {
+                  Get.back();
+                },
+                text: 'Book a service',
+              ),
+              SizedBox(height: 40.h),
+              Text(
+                'Choose Your Service',
+                style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Select the care you need today.',
+                style: TextStyle(fontSize: 16.sp, color: AppColors.textSecondary),
+              ),
+              SizedBox(height: 24.h),
+              Expanded(
+                child: Obx(() {
+                  // Show loading animation while fetching data
+                  if (controller.isLoading.value) {
+                    return Center(
+                      child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: AppColors.primary,
+                        size: 30.sp, // Adjust the size of the loading animation
+                      ),
                     );
-                  },
-                );
-              }),
-            ),
-
-            CustomButton(
-              onPressed: () async {
-                if (controller.selectedService.value < 0) {
-                  // Show snackbar if no service is selected
-                  Get.snackbar(
-                    'Selection Required',
-                    'Please select a service type',
-                    backgroundColor: Colors.red[100],
-                    colorText: Colors.red[800],
-                    margin: EdgeInsets.all(16),
-                    duration: Duration(seconds: 2),
-                    borderRadius: 8,
-                    icon: Icon(Icons.warning_amber_rounded,
-                        color: Colors.red[800]),
+                  }
+        
+                  // Check if serviceData is null or empty
+                  if (controller.serviceData.value == null ||
+                      controller.serviceData.value!.data.isEmpty) {
+                    return Center(
+                      child: Text("No service available at this time"),
+                    );
+                  }
+        
+                  // Now that we know the data is available, we can safely access it
+                  final services = controller.serviceData.value!.data[0].connectedService;
+        
+                  return ListView.builder(
+                    itemCount: services.length,
+                    itemBuilder: (context, index) {
+                      final service = services[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Obx(() => serviceCard(
+                            title: service.type,
+                            additionalOffer: service.additionalOffer,
+                            duration: service.duration,
+                            price: service.price.toString(),
+                            isSelected: controller.selectedService.value == index,
+                            onTap: () {
+                              controller.changeService(index, service);
+                            })),
+                      );
+                    },
                   );
-                } else {
-                  // Navigate to summary screen if service is selected
-                  Get.to(() => SummaryScreen(
-                        selectedService: controller.selectedServiceCard.value ??
-                            ConnectedService(
-                              id: '',
-                              userId: userID,
-                              serviceId: '',
-                              type: '',
-                              offer: '',
-                              additionalOffer: '',
-                              duration: '',
-                              price: 0,
-                              createdAt: "",
-                              updatedAt: "",
-                            ),
-                      ));
-                }
-              },
-              text: "Next",
-            ),
-            SizedBox(height: 50.h),
-          ],
+                }),
+              ),
+        
+              CustomButton(
+                onPressed: () async {
+                  if (controller.selectedService.value < 0) {
+                    // Show snackbar if no service is selected
+                    Get.snackbar(
+                      'Selection Required',
+                      'Please select a service type',
+                      backgroundColor: Colors.red[100],
+                      colorText: Colors.red[800],
+                      margin: EdgeInsets.all(16),
+                      duration: Duration(seconds: 2),
+                      borderRadius: 8,
+                      icon: Icon(Icons.warning_amber_rounded,
+                          color: Colors.red[800]),
+                    );
+                  } else {
+                    // Navigate to summary screen if service is selected
+                    Get.to(() => SummaryScreen(
+                          selectedService: controller.selectedServiceCard.value ??
+                              ConnectedService(
+                                id: '',
+                                userId: userID,
+                                serviceId: '',
+                                type: '',
+                                offer: '',
+                                additionalOffer: '',
+                                duration: '',
+                                price: 0,
+                                createdAt: "",
+                                updatedAt: "",
+                              ),
+                        ));
+                  }
+                },
+                text: "Next",
+              ),
+              SizedBox(height: 50.h),
+            ],
+          ),
         ),
       ),
     );
