@@ -1,14 +1,22 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app.dart';
 import 'core/services/Auth_service.dart';
 import 'core/utils/logging/loggerformain.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await initializeFCM();
   await AuthService.init();
   log('Main Token: ${AuthService.token}');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
@@ -18,4 +26,27 @@ void main() async {
     },
   );
 }
-//
+Future<void> initializeFCM() async {
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  if (Platform.isIOS) {
+    String? apnsToken;
+    int attempts = 0;
+    const int maxAttempts = 10;
+
+    do {
+      apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      await Future.delayed(const Duration(milliseconds: 300));
+      attempts++;
+    } while (apnsToken == null && attempts < maxAttempts);
+
+    log("APNS Token: $apnsToken");
+  }
+
+  String? token = await FirebaseMessaging.instance.getToken();
+  log("FCM Token: $token");
+}

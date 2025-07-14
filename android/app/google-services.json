@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "688514171612",
+    "project_id": "travelling-brandr-art",
+    "storage_bucket": "travelling-brandr-art.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688514171612:android:1a07e47485083e9beaaa19",
+        "android_client_info": {
+          "package_name": "com.therapy.traveling.traveling"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoWE58i_8tKAQZP5vXuSV-GA7QjcWgsAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

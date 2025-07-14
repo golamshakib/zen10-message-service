@@ -10,20 +10,25 @@ class CustomNotificationCard extends StatelessWidget {
       required this.title,
       required this.bookingID,
       required this.body,
-      required this.createdAT, required this.username});
+      required this.createdAT,
+      required this.username});
+
   final String bookingID;
   final String title;
   final String body;
   final String createdAT;
   final String username;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Get.to(() => ThankYouPage(
-                bookingId: bookingID,
-                userName: username,
-              ));
+          if (title.contains('Completed')) {
+            Get.to(() => ThankYouPage(
+                  bookingId: bookingID,
+                  userName: username,
+                ));
+          }
         },
         child: Container(
           decoration:

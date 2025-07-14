@@ -49,6 +49,9 @@ dependencies:
   location:
   loading_animation_widget:
   flutter_easyloading: ^3.0.5
+  firebase_core:
+  firebase_messaging:
+  flutter_local_notifications: ^18.0.1
 
   #Web view flutter 
   webview_flutter: ^4.11.0

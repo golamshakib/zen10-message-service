@@ -1,5 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +15,7 @@ import '../presentation/widgets/showSnacker.dart';
 class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  var fcmToken = '';
 
   // Remember Me Checkbox state
   var isRememberMeChecked = false.obs;
@@ -23,6 +26,40 @@ class LoginController extends GetxController {
 
   RxBool isLoading = false.obs;
 
+  @override
+  void onInit() {
+    initializeFCM();
+    // TODO: implement onInit
+    super.onInit();
+
+  }
+
+  Future<void> initializeFCM() async {
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (Platform.isIOS) {
+      String? apnsToken;
+      int attempts = 0;
+      const int maxAttempts = 10;
+
+      do {
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        await Future.delayed(const Duration(milliseconds: 300));
+        attempts++;
+      } while (apnsToken == null && attempts < maxAttempts);
+
+      log("APNS Token: $apnsToken");
+    }
+
+    String? token = await FirebaseMessaging.instance.getToken();
+
+    fcmToken = token ?? "";
+    log("FCM Token: $fcmToken");
+  }
   void login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -30,7 +67,7 @@ class LoginController extends GetxController {
     final Map<String, String> requestBody = {
       'email': email,
       "password": password,
-      "fcmToken": "",
+      "fcmToken": fcmToken,
     };
 
     try {
