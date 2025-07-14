@@ -1,109 +1,129 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
+import 'dart:io';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../features/notification/presentation/view/notification_screen.dart';
-
-class NotificationService extends GetxController {
+class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
+  static final GlobalKey<NavigatorState> navigatorKey =
+  GlobalKey<NavigatorState>();
+
+  static String? _fcmToken;
+  static String? get fcmToken => _fcmToken;
+
   int _badgeCount = 0;
 
+  /// Initialize Push Notification Service
   Future<void> initialize() async {
-    final settings = await _firebaseMessaging.requestPermission(
+    // Request permission for notifications
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
 
-    log('Notification permission: ${settings.authorizationStatus}');
+    log("Notification permission status: ${settings.authorizationStatus}");
 
-    const initSettings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
+    // Set foreground presentation options
+    await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // Handle iOS specific setup
+    if (Platform.isIOS) {
+      await _setupIOSNotifications();
+    }
+
+    // Get FCM Token
+    _fcmToken = await _firebaseMessaging.getToken();
+    log("FCM Token: $_fcmToken");
+
+    // Token refresh listener
+    FirebaseMessaging.instance.onTokenRefresh.listen((token) {
+      _fcmToken = token;
+      log("FCM Token refreshed: $token");
+    });
+
+    // Initialize Local Notification Settings
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final iosInit = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    final initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: iosInit,
     );
 
     await _flutterLocalNotificationsPlugin.initialize(
       initSettings,
-      onDidReceiveNotificationResponse: (response) async {
-        final payload = response.payload;
-        log("Tapped from local notification with payload: $payload");
-
-        if (payload != null && payload.isNotEmpty) {
-          final data = jsonDecode(payload);
-          Get.to(() =>  NotificationScreen(), arguments: data);
-        } else {
-          Get.to(() =>  NotificationScreen());
-        }
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        log("Notification clicked with payload: ${response.payload}");
+        _handleNotificationTap(response.payload);
       },
     );
 
-    await setupIOSNotifications();
+    // Create Android notification channel
+    if (Platform.isAndroid) {
+      await _createAndroidNotificationChannel();
+    }
 
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    _firebaseMessaging.getToken().then((token) => log("FCM Token: $token"));
-
+    // Handle Foreground Notifications
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("Foreground message: ${message.notification?.title}");
-        _showLocalNotification(message);
+      _showLocalNotification(message);
     });
 
+    // Handle Background Notification Tap
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      log("Tapped background notification: ${message.notification?.title}");
-      //clearBadge();
-      Get.to(() =>  NotificationScreen, arguments: {
-        "title": message.notification?.title,
-        "body": message.notification?.body,
-      });
+      log("Tapped notification while app was in background.");
+      _handleFirebaseMessageTap(message);
     });
 
-    final RemoteMessage? initialMessage =
-    await _firebaseMessaging.getInitialMessage();
-    if (initialMessage != null) {
-      log("Tapped from terminated state: ${initialMessage.notification?.title}");
-      //clearBadge();
-      Get.to(() =>  NotificationScreen(), arguments: {
-        "title": initialMessage.notification?.title,
-        "body": initialMessage.notification?.body,
-      });
-    }
+    // Handle Notification Tap From Terminated State
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        log("Tapped notification from terminated state.");
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _handleFirebaseMessageTap(message);
+        });
+      }
+    });
   }
 
-  Future<void> setupIOSNotifications() async {
+  /// Setup iOS specific notifications
+  Future<void> _setupIOSNotifications() async {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
-      await _firebaseMessaging.setForegroundNotificationPresentationOptions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+      // Get APNS token
+      String? apnsToken;
+      int attempts = 0;
+      const int maxAttempts = 10;
+
+      do {
+        apnsToken = await _firebaseMessaging.getAPNSToken();
+        await Future.delayed(const Duration(milliseconds: 300));
+        attempts++;
+      } while (apnsToken == null && attempts < maxAttempts);
+
+      log("APNS Token: $apnsToken");
     }
   }
 
-
-
-  Future<void> _showLocalNotification(RemoteMessage message) async {
-    _badgeCount++;
-
-    final notification = {
-      "title": message.notification?.title ?? "No Title",
-      "body": message.notification?.body ?? "No Body",
-      "timestamp": DateTime.now().toIso8601String(),
-    };
-
-    // Store to SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
-    final List<String> existing = prefs.getStringList('notifications') ?? [];
-    existing.insert(0, jsonEncode(notification)); // latest on top
-    await prefs.setStringList('notifications', existing);
-
-    // Show system notification
+  /// Create Android notification channel
+  Future<void> _createAndroidNotificationChannel() async {
     const channel = AndroidNotificationChannel(
       'high_importance_channel',
       'High Importance Notifications',
@@ -115,42 +135,139 @@ class NotificationService extends GetxController {
         .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+  }
 
+  /// Show Local Notification
+  Future<void> _showLocalNotification(RemoteMessage message) async {
+    _badgeCount++;
+
+    final notification = {
+      "title": message.notification?.title ?? "No Title",
+      "body": message.notification?.body ?? "No Body",
+      "timestamp": DateTime.now().toIso8601String(),
+      "data": message.data,
+    };
+
+    // Store to SharedPreferences
+    await _storeNotification(notification);
+
+    // Show system notification
     final details = NotificationDetails(
       android: AndroidNotificationDetails(
-        channel.id,
-        channel.name,
-        channelDescription: channel.description,
+        'high_importance_channel',
+        'High Importance Notifications',
+        channelDescription: 'Used for important notifications.',
         importance: Importance.max,
         priority: Priority.high,
       ),
-      iOS: DarwinNotificationDetails(badgeNumber: _badgeCount),
+      iOS: DarwinNotificationDetails(
+        badgeNumber: _badgeCount,
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      ),
     );
 
     await _flutterLocalNotificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      notification['title'],
-      notification['body'],
+      notification['title'] as String,
+      notification['body'] as String,
       details,
       payload: jsonEncode(notification),
     );
   }
 
+  /// Store notification to SharedPreferences
+  Future<void> _storeNotification(Map<String, dynamic> notification) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final List<String> existing = prefs.getStringList('notifications') ?? [];
+      existing.insert(0, jsonEncode(notification)); // latest on top
 
-  /* Future<void> clearBadge() async {
+      // Keep only last 50 notifications
+      if (existing.length > 50) {
+        existing.removeRange(50, existing.length);
+      }
+
+      await prefs.setStringList('notifications', existing);
+    } catch (e) {
+      log("Error storing notification: $e");
+    }
+  }
+
+  /// Handle local notification tap
+  void _handleNotificationTap(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      try {
+        final data = jsonDecode(payload);
+        // Navigate to your notification screen with data
+        // Keep your existing navigation logic here
+        _navigateToNotificationScreen(data);
+      } catch (e) {
+        log("Error parsing notification payload: $e");
+        _navigateToNotificationScreen(null);
+      }
+    } else {
+      _navigateToNotificationScreen(null);
+    }
+  }
+
+  /// Handle Firebase message tap
+  void _handleFirebaseMessageTap(RemoteMessage message) {
+    final data = {
+      "title": message.notification?.title,
+      "body": message.notification?.body,
+      "data": message.data,
+    };
+    _navigateToNotificationScreen(data);
+  }
+
+  /// Navigate to notification screen (keep your existing navigation logic)
+  void _navigateToNotificationScreen(Map<String, dynamic>? data) {
+    // TODO: Replace this with your actual navigation logic
+    // Example:
+    // navigatorKey.currentState?.push(
+    //   MaterialPageRoute(
+    //     builder: (context) => YourNotificationScreen(data: data),
+    //   ),
+    // );
+    log("Navigating to notification screen with data: $data");
+  }
+
+  /// Clear notification badge (iOS)
+  Future<void> clearBadge() async {
     _badgeCount = 0;
-    await _flutterLocalNotificationsPlugin.show(
-      0,
-      null,
-      null,
-      const NotificationDetails(
-        iOS: DarwinNotificationDetails(badgeNumber: 0),
-      ),
-    );
-  }*/
+    if (Platform.isIOS) {
+      await _flutterLocalNotificationsPlugin.show(
+        0,
+        null,
+        null,
+        const NotificationDetails(
+          iOS: DarwinNotificationDetails(badgeNumber: 0),
+        ),
+      );
+    }
+  }
 
-  static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    log('Background message received: ${message.notification?.title}');
+  /// Get stored notifications
+  Future<List<Map<String, dynamic>>> getStoredNotifications() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final List<String> notifications = prefs.getStringList('notifications') ?? [];
+      return notifications.map((n) => jsonDecode(n) as Map<String, dynamic>).toList();
+    } catch (e) {
+      log("Error getting stored notifications: $e");
+      return [];
+    }
+  }
+
+  /// Clear all stored notifications
+  Future<void> clearStoredNotifications() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('notifications');
+    } catch (e) {
+      log("Error clearing stored notifications: $e");
+    }
   }
 }
