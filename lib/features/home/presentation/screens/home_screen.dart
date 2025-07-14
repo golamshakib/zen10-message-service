@@ -7,6 +7,7 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/notification/presentation/view/notification_screen.dart';
 
 import '../../../../core/common/widgets/custom_button.dart';
+import '../../../../core/services/notification_services.dart';
 import '../../../../core/utils/constants/app_colors.dart';
 import '../../../../core/utils/constants/icon_path.dart';
 import '../../controllers/home_controller.dart';
@@ -76,12 +77,38 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () async {
                 Get.to(() => NotificationScreen());
               },
-              child: Image.asset(
-                IconPath.notification,
-                height: 24.h,
-                width: 24.w,
-                color: Colors.red.shade300,
-              ),
+              child: Obx(() {
+                return Stack(
+                  children: [
+                    Image.asset(
+                      IconPath.notification,
+                      height: 24.h,
+                      width: 24.w,
+                      color: Colors.red.shade300,
+                    ),
+                    if (NotificationService().unreadNotificationCount.value > 0)
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            NotificationService().unreadNotificationCount.value.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              }),
             ),
             SizedBox(width: 13.w),
             InkWell(

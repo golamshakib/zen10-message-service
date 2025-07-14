@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationService {
@@ -21,6 +22,7 @@ class NotificationService {
   static String? get fcmToken => _fcmToken;
 
   int _badgeCount = 0;
+  RxInt unreadNotificationCount = 0.obs;  // Reactive variable to track unread count
 
   /// Initialize Push Notification Service
   Future<void> initialize() async {
@@ -85,6 +87,7 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("Foreground message: ${message.notification?.title}");
       _showLocalNotification(message);
+      unreadNotificationCount++;  // Increment unread notification count
     });
 
     // Handle Background Notification Tap
