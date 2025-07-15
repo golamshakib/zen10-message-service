@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../features/notification/presentation/view/notification_screen.dart';
 
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -87,7 +90,8 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       log("Foreground message: ${message.notification?.title}");
       _showLocalNotification(message);
-      unreadNotificationCount++;  // Increment unread notification count
+      unreadNotificationCount++;
+      // Increment unread notification count
     });
 
     // Handle Background Notification Tap
@@ -228,12 +232,14 @@ class NotificationService {
   /// Navigate to notification screen (keep your existing navigation logic)
   void _navigateToNotificationScreen(Map<String, dynamic>? data) {
     // TODO: Replace this with your actual navigation logic
-    // Example:
-    // navigatorKey.currentState?.push(
-    //   MaterialPageRoute(
-    //     builder: (context) => YourNotificationScreen(data: data),
-    //   ),
-    // );
+    // Use GetX's navigation method
+    if (data != null) {
+      // Navigate to NotificationScreen with data
+      Get.to(() => NotificationScreen());
+    } else {
+      // Navigate to NotificationScreen without data
+      Get.to(() => NotificationScreen());
+    }
     log("Navigating to notification screen with data: $data");
   }
 
