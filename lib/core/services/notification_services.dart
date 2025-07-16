@@ -25,7 +25,7 @@ class NotificationService {
   static String? get fcmToken => _fcmToken;
 
   int _badgeCount = 0;
-  RxInt unreadNotificationCount = 0.obs;  // Reactive variable to track unread count
+  RxInt unreadNotificationCount = 0.obs; // Reactive variable to track unread count
 
   /// Initialize Push Notification Service
   Future<void> initialize() async {
@@ -109,6 +109,26 @@ class NotificationService {
         });
       }
     });
+
+    // Add the background message handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  /// Handle Firebase background message when the app is killed
+  static Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
+    log("Handling a background message: ${message.messageId}");
+
+    // You can perform the navigation logic here
+    if (message.data.isNotEmpty) {
+      final data = {
+        "title": message.notification?.title,
+        "body": message.notification?.body,
+        "data": message.data,
+      };
+      // Initialize and navigate to the notification screen
+      NotificationService()._navigateToNotificationScreen(data);
+    }
   }
 
   /// Setup iOS specific notifications
@@ -231,15 +251,12 @@ class NotificationService {
 
   /// Navigate to notification screen (keep your existing navigation logic)
   void _navigateToNotificationScreen(Map<String, dynamic>? data) {
-    // TODO: Replace this with your actual navigation logic
-    // Use GetX's navigation method
-    if (data != null) {
-      // Navigate to NotificationScreen with data
-      Get.to(() => NotificationScreen());
-    } else {
-      // Navigate to NotificationScreen without data
-      Get.to(() => NotificationScreen());
+    // Ensure the navigation is done in a valid context
+    if (navigatorKey.currentState?.canPop() ?? false) {
+      navigatorKey.currentState?.pop();
     }
+    // Navigate to the notification screen
+    Get.to(() => NotificationScreen(), arguments: data);
     log("Navigating to notification screen with data: $data");
   }
 
