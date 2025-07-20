@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/services/location.dart';
+import 'package:traveling/core/services/notification_services.dart';
 import '../../../core/services/Auth_service.dart';
 import '../../../routes/app_routes.dart';
 
@@ -14,6 +15,12 @@ class SplashController extends GetxController {
 
   void navigateToHomeScreen() {
     log('Splash Token: ${AuthService.hasToken()}');
+
+    if(NotificationService.isOpenedFromNotification) {
+      NotificationService.isOpenedFromNotification = false;
+      return;
+    }
+
     if (AuthService.hasToken()) {
       Get.offAllNamed(AppRoute.homeScreen); // Navigate to home screen if logged in
     } else {

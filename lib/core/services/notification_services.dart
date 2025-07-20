@@ -24,6 +24,7 @@ class NotificationService {
   static String? _fcmToken;
   static String? get fcmToken => _fcmToken;
 
+  static bool isOpenedFromNotification = false;
   int _badgeCount = 0;
   RxInt unreadNotificationCount = 0.obs; // Reactive variable to track unread count
 
@@ -97,6 +98,7 @@ class NotificationService {
     // Handle Background Notification Tap
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       log("Tapped notification while app was in background.");
+      // _showLocalNotification(message);
       _handleFirebaseMessageTap(message);
     });
 
@@ -104,6 +106,7 @@ class NotificationService {
     FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
       if (message != null) {
         log("Tapped notification from terminated state.");
+        // _showLocalNotification(message);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _handleFirebaseMessageTap(message);
         });
@@ -246,6 +249,7 @@ class NotificationService {
       "body": message.notification?.body,
       "data": message.data,
     };
+    isOpenedFromNotification = true;
     _navigateToNotificationScreen(data);
   }
 

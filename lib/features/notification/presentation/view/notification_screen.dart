@@ -5,6 +5,9 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/notification/controller/notification_controller.dart';
 import 'package:traveling/features/notification/presentation/components/custom_notification_card.dart';
 
+import '../../../../core/services/notification_services.dart';
+import '../../../../routes/app_routes.dart';
+
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
   final NotificationController controller = Get.put(NotificationController());
@@ -13,6 +16,13 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Notifications"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate to the home screen when back button is pressed
+            Get.offAllNamed(AppRoute.homeScreen); // Replace with your home screen route
+          },
+        ),
       ),
       body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0.w),
