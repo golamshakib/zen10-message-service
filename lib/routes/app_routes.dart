@@ -1,5 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
+import 'package:traveling/features/Payment/presentation/screens/receipt_screen.dart';
 import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import '../features/authentication/presentation/screens/login_screen.dart';
 import '../features/authentication/presentation/screens/sing_up_screen.dart';
@@ -10,6 +11,7 @@ class AppRoute {
   static String signUpScreen = "/signUpScreen";
   static String init = "/";
   static String homeScreen = "/homeScreen";
+  static String receiptScreen = "/receiptScreen";
 
 
 
@@ -23,6 +25,7 @@ class AppRoute {
     GetPage(name: init, page: () => SplashScreen()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: homeScreen, page: () => HomeScreen()),
+    GetPage(name: receiptScreen, page: () => ReceiptScreen()),
 
   ];
 }
