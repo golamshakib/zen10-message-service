@@ -15,6 +15,7 @@ class OtpVerificationController extends GetxController {
   var isResendEnabled = false.obs;
   var start = 60.obs;
   Timer? _timer;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -39,6 +40,7 @@ class OtpVerificationController extends GetxController {
 
   // Method to verify OTP
   Future<void> verifyOtp(String userId, String otpCode) async {
+    isLoading.value = true;
     final Map<String, String> requestBody = {
       'userId': userId,
       'otpCode': otpCode,
@@ -50,7 +52,7 @@ class OtpVerificationController extends GetxController {
         body: requestBody,
       );
 
-      if (response.isSuccess) {
+      if (response.isSuccess || response.statusCode == 200) {
         // Handle successful OTP verification
         Get.snackbar(
           'Success',
@@ -77,11 +79,14 @@ class OtpVerificationController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.redAccent,
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
   // Resend OTP function
   Future<void> resendOtp(String email) async {
+    isLoading.value= true;
     startTimer(); // Restart the timer
     final Map<String, String> requestBody = {
       'email': email,
@@ -105,5 +110,6 @@ class OtpVerificationController extends GetxController {
           backgroundColor: Colors.redAccent
       );
     }
+    isLoading.value = false;
   }
 }

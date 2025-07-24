@@ -23,12 +23,12 @@ class CustomWebViewController extends GetxController {
           log("url is $url");
         },
         onNavigationRequest: (request) async {
-          if (request.url.contains("http://10.0.20.36:8013/success")) {
+          if (request.url.contains("success")) {
             Get.back();
 
             await controller.capturePayment(orderId: controller.orderId.value);
             return NavigationDecision.prevent;
-          } else if (request.url.contains("http://10.0.20.36:8013/cancel")) {
+          } else if (request.url.contains("cancel")) {
             Get.back();
             Get.snackbar("Error", "Somethng went wrong, please try again");
             return NavigationDecision.prevent;

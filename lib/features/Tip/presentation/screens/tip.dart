@@ -50,27 +50,27 @@ class _ThankYouPageState extends State<ThankYouPage> {
               ),
             ),
             SizedBox(height: 40.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Your masseuse was: ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  " ${widget.userName}",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       "Your masseuse was: ",
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: AppColors.textSecondary,
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //     Text(
+            //       " ${widget.userName}",
+            //       style: TextStyle(
+            //         fontSize: 16,
+            //         color: AppColors.textPrimary,
+            //         fontWeight: FontWeight.w600,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             SizedBox(height: 16.h),
             Wrap(
               spacing: 10,
