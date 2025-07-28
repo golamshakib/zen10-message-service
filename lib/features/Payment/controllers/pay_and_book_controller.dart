@@ -8,6 +8,7 @@ import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/core/utils/logging/logger.dart';
 import 'package:traveling/features/Payment/presentation/screens/pay_pal_web_view.dart';
+import 'package:traveling/features/Payment/presentation/screens/receipt_screen.dart';
 import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:traveling/routes/app_routes.dart';
@@ -15,6 +16,18 @@ import 'package:traveling/routes/app_routes.dart';
 class PayAndBookController extends GetxController {
   RxBool isPaymentLoading = false.obs;
   RxString orderId = "".obs;
+  RxString userID = "".obs;
+  RxString eventDate = "".obs;
+  RxString eventStartTime = "".obs;
+  RxString eventEndTime = "".obs;
+
+  void setEventData(
+      String userId, String date, String startTime, String endTime) {
+    userID.value = userId;
+    eventDate.value = date;
+    eventStartTime.value = startTime;
+    eventEndTime.value = endTime;
+  }
 
   Future<void> crateBooking({
     required String connectedServiceId,
@@ -37,6 +50,13 @@ class PayAndBookController extends GetxController {
       log(response.responseData.toString());
       if (response.isSuccess) {
         final String? bookingId = response.responseData["data"]["id"];
+
+        setEventData(
+          Get.arguments['userID'].toString(),
+          Get.arguments['eventDate'].toString(),
+          Get.arguments['eventStartTime'].toString(),
+          Get.arguments['eventEndTime'].toString(),
+        );
         // Proceed with paypal web view
         createPayment(amount: amount, bookingId: bookingId ?? "");
       } else {
@@ -71,9 +91,15 @@ class PayAndBookController extends GetxController {
           isPaymentLoading.value = false;
           log("OrderID : $orderID");
           orderId.value = orderID;
-          Get.to(() => PayPalWebView(
-                approvalUrl: payPalUrl,
-              ));
+          Get.to(
+            () => PayPalWebView(
+              approvalUrl: payPalUrl,
+              userID: userID.value,
+              eventDate: eventDate.value,
+              eventStartTime: eventStartTime.value,
+              eventEndTime: eventEndTime.value,
+            ),
+          );
         }
       } else {
         isPaymentLoading.value = false;
@@ -96,8 +122,15 @@ class PayAndBookController extends GetxController {
       log("Capture payment: ${response.body}");
       if (response.statusCode == 200) {
         // show payment succes message
-
-        Get.toNamed(AppRoute.receiptScreen);
+        Get.to(
+          () => ReceiptScreen(
+            userID: userID.value,
+            eventDate: eventDate.value,
+            eventStartTime: eventStartTime.value,
+            eventEndTime: eventEndTime.value,
+          ),
+        );
+        // Get.toNamed(AppRoute.receiptScreen);
         log("Payment successfull");
         Get.snackbar(
             "Success", "Payment successful! Thank you for your purchase.",

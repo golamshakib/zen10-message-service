@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -9,7 +11,7 @@ import 'package:traveling/core/utils/constants/icon_path.dart';
 import 'package:traveling/features/Payment/controllers/pay_and_book_controller.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  const PaymentMethodScreen(
+  PaymentMethodScreen(
       {super.key,
       required this.connectedServiceId,
       required this.ownerId,
@@ -18,6 +20,10 @@ class PaymentMethodScreen extends StatefulWidget {
   final String connectedServiceId;
   final String ownerId;
   final int amount;
+  final userId = Get.arguments['userID'].toString();
+  final eventDate = Get.arguments['eventDate'].toString();
+  final eventStartTime = Get.arguments['eventStartTime'].toString();
+  final eventEndTime = Get.arguments['eventEndTime'].toString();
 
   @override
   _PaymentMethodScreenState createState() => _PaymentMethodScreenState();
@@ -29,6 +35,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('User Id : ${widget.userId}');
+    log('Event Date : ${widget.eventDate}');
+    log('Start Time : ${widget.eventStartTime}');
+    log('End Time : ${widget.eventEndTime}');
     return Scaffold(
       body: SafeArea(
         child: Padding(

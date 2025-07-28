@@ -11,15 +11,20 @@ import 'package:traveling/features/book_service/presentation/screens/book_servic
 
 class SelectServiceView extends StatelessWidget {
   final dynamic userID;
-
-  const SelectServiceView({super.key, required this.userID});
+  final dynamic eventDate;
+  final dynamic eventStartTime;
+  final dynamic eventEndTime;
+  const SelectServiceView({super.key, required this.userID, this.eventDate, this.eventStartTime, this.eventEndTime});
 
   @override
   Widget build(BuildContext context) {
     final BookServiceController controller = Get.put(BookServiceController());
 
     // Log the locationId when the screen is built
-    log('SelectServiceView opened with user ID: $userID');
+    log('User ID: $userID');
+    log('Event Date: $eventDate');
+    log('Start Time: $eventStartTime');
+    log('End Time: $eventEndTime');
 
     // Fetch the service types when the screen is built
     controller.fetchServiceTypes();
@@ -92,7 +97,7 @@ class SelectServiceView extends StatelessWidget {
                 onPressed: () {
                   // Pass the locationId to the next screen if needed
                   Get.to(() => BookServiceView(),
-                      arguments: {'userID': userID});
+                      arguments: {'userID': userID, 'eventDate': eventDate, 'eventStartTime': eventStartTime, 'eventEndTime': eventEndTime});
                 },
                 text: 'Next',
               ),

@@ -4,10 +4,25 @@ import 'package:traveling/features/Payment/controllers/web_view_controller.dart'
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PayPalWebView extends StatelessWidget {
-  PayPalWebView({super.key, required this.approvalUrl}) {
+  PayPalWebView(
+      {super.key,
+      required this.approvalUrl,
+        required this.userID,
+      required this.eventDate,
+      required this.eventStartTime,
+      required this.eventEndTime,
+      }) {
     controller.webUrl.value = approvalUrl;
   }
+
   final String approvalUrl;
+    final String userID;
+  final String eventDate;
+  final String eventStartTime;
+  final String eventEndTime;
+
+
+
   final CustomWebViewController controller = Get.put(CustomWebViewController());
 
   @override

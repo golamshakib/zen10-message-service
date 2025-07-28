@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -9,10 +11,17 @@ import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
 class ReceiptScreen extends StatelessWidget {
-  const ReceiptScreen({super.key});
-
+  const ReceiptScreen({super.key, required this.userID, required this.eventDate, required this.eventStartTime, required this.eventEndTime});
+  final String userID;
+  final String eventDate;
+  final String eventStartTime;
+  final String eventEndTime;
   @override
   Widget build(BuildContext context) {
+    log('User Id : $userID');
+    log('Event Date : $eventDate');
+    log('Start Time: $eventStartTime');
+    log('End Time : $eventEndTime');
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -123,7 +132,31 @@ class ReceiptScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.h),
-
+                // Service Date
+                Row(
+                  children: [
+                    Text(
+                      "Service Date: ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        eventDate, // Replace with dynamic time
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16.h),
                 // Service Time
                 Row(
                   children: [
@@ -137,7 +170,7 @@ class ReceiptScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "1:00 PM, July 15, 2025", // Replace with dynamic time
+                        "$eventStartTime to $eventEndTime", // Replace with dynamic time
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary,

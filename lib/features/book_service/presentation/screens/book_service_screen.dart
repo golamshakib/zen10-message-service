@@ -14,11 +14,19 @@ import '../../data/models/service_data_mode.dart';
 
 class BookServiceView extends StatelessWidget {
   final String userID = Get.arguments["userID"].toString();
+  final String eventDate = Get.arguments["eventDate"].toString();
+  final String eventStartTime = Get.arguments["eventStartTime"].toString();
+  final String eventEndTime = Get.arguments["eventEndTime"].toString();
   final BookServiceController controller = Get.put(BookServiceController());
+
+  BookServiceView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    log("Passed user id is: $userID");
+    log("User ID: $userID");
+    log("Event Date: $eventDate");
+    log("Start Time: $eventStartTime");
+    log("End Time: $eventEndTime");
 
     // Use Future.delayed to fetch data after the widget is built
     Future.delayed(Duration.zero, () {
@@ -128,7 +136,12 @@ class BookServiceView extends StatelessWidget {
                                 createdAt: "",
                                 updatedAt: "",
                               ),
-                        ));
+                        ), arguments: {
+                          'userID': userID,
+                          'eventDate': eventDate,
+                          'eventStartTime': eventStartTime,
+                          'eventEndTime': eventEndTime,
+                    });
                   }
                 },
                 text: "Next",

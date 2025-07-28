@@ -11,7 +11,7 @@ class AppRoute {
   static String signUpScreen = "/signUpScreen";
   static String init = "/";
   static String homeScreen = "/homeScreen";
-  static String receiptScreen = "/receiptScreen";
+  // static String receiptScreen = "/receiptScreen";
 
 
 
@@ -25,7 +25,7 @@ class AppRoute {
     GetPage(name: init, page: () => SplashScreen()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: homeScreen, page: () => HomeScreen()),
-    GetPage(name: receiptScreen, page: () => ReceiptScreen()),
+    // GetPage(name: receiptScreen, page: () => ReceiptScreen()),
 
   ];
 }

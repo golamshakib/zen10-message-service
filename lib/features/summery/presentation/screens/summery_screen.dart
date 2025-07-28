@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/common/widgets/custom_app_bar.dart';
@@ -10,12 +12,20 @@ import 'package:traveling/features/book_service/data/models/service_data_mode.da
 import '../../../Payment/presentation/screens/payment_screen.dart';
 
 class SummaryScreen extends StatelessWidget {
-  const SummaryScreen({super.key, required this.selectedService});
+  SummaryScreen({super.key, required this.selectedService});
   final ConnectedService selectedService;
+  final String userID = Get.arguments["userID"].toString();
+  final String eventDate = Get.arguments["eventDate"].toString();
+  final String eventStartTime = Get.arguments["eventStartTime"].toString();
+  final String eventEndTime = Get.arguments["eventEndTime"].toString();
+
   @override
   Widget build(BuildContext context) {
     // final BookServiceController controller = Get.find<BookServiceController>();
-
+    log('User Id : $userID');
+    log('Event Date : $eventDate');
+    log('Start Time: $eventStartTime');
+    log('End Time : $eventEndTime');
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -38,6 +48,7 @@ class SummaryScreen extends StatelessWidget {
                 subtitle: selectedService.offer,
                 price: selectedService.price.toString(),
                 duration: selectedService.duration.toString(),
+                additionalOffer: selectedService.additionalOffer.toString(),
               ),
               const Divider(
                 color: Color(0xffE9E9F3),
@@ -71,7 +82,13 @@ class SummaryScreen extends StatelessWidget {
                           connectedServiceId: selectedService.id,
                           ownerId: selectedService.userId,
                           amount: selectedService.price,
-                        ));
+                        ),
+                    arguments: {
+                      "userID": userID,
+                      "eventDate": eventDate,
+                      "eventStartTime": eventStartTime,
+                      "eventEndTime": eventEndTime,
+                    });
                   },
                   text: "Next"),
               SizedBox(height: 50.h),
@@ -87,6 +104,7 @@ class SummaryScreen extends StatelessWidget {
     required String subtitle,
     required String price,
     required String duration,
+    required String additionalOffer,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -115,6 +133,13 @@ class SummaryScreen extends StatelessWidget {
                 ),
                 Text(
                   duration,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                Text(
+                  additionalOffer,
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondary,
