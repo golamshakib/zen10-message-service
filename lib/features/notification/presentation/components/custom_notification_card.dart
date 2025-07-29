@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +28,7 @@ class CustomNotificationCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (title.contains('Completed')) {
+          log('booking Id: $bookingID');
           Get.to(() => TipsScreen(
             bookingId: bookingID,
             userName: username,

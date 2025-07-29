@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/routes/app_routes.dart';
@@ -11,11 +10,19 @@ import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/image_path.dart';
 
 class ReceiptScreen extends StatelessWidget {
-  const ReceiptScreen({super.key, required this.userID, required this.eventDate, required this.eventStartTime, required this.eventEndTime});
+  const ReceiptScreen({
+    super.key,
+    required this.userID,
+    required this.eventDate,
+    required this.eventStartTime,
+    required this.eventEndTime,
+  });
+
   final String userID;
   final String eventDate;
   final String eventStartTime;
   final String eventEndTime;
+
   @override
   Widget build(BuildContext context) {
     log('User Id : $userID');
@@ -41,14 +48,17 @@ class ReceiptScreen extends StatelessWidget {
                 //   ),
                 // ),
                 SizedBox(height: 8.h),
-                Text(
-                  "Thank you for your purchase.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.textSecondary,
+
+                  Text(
+                    eventDate.isEmpty
+                    ? "Thank you for your Tips."
+                    : "Thank you for using our service!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
-                ),
                 SizedBox(height: 40.h),
                 Text(
                   "Contact Information",
@@ -132,61 +142,67 @@ class ReceiptScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                // Service Date
-                Row(
-                  children: [
-                    Text(
-                      "Service Date: ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        eventDate, // Replace with dynamic time
+                if (eventDate.isNotEmpty) ...[
+                  // Service Date
+                  Row(
+                    children: [
+                      Text(
+                        "Service Date: ",
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textPrimary,
+                          color: AppColors.textSecondary,
                           fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Expanded(
+                        child: Text(
+                          eventDate, // Replace with dynamic time
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 SizedBox(height: 16.h),
-                // Service Time
-                Row(
-                  children: [
-                    Text(
-                      "Service Time: ",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "$eventStartTime to $eventEndTime", // Replace with dynamic time
+                if (eventStartTime.isNotEmpty && eventEndTime.isNotEmpty) ...[
+                  // Service Time
+                  Row(
+                    children: [
+                      Text(
+                        "Service Time: ",
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.textPrimary,
+                          color: AppColors.textSecondary,
                           fontWeight: FontWeight.w600,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                      Expanded(
+                        child: Text(
+                          "$eventStartTime to $eventEndTime",
+                          // Replace with dynamic time
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 SizedBox(height: 40.h),
 
                 // Back button
                 CustomButton(
                   onPressed: () {
-                    Get.offAllNamed(AppRoute.homeScreen); // Navigate to home screen
+                    Get.offAllNamed(
+                        AppRoute.homeScreen); // Navigate to home screen
                   },
                   text: 'Back',
                 ),

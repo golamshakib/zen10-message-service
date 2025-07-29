@@ -121,7 +121,7 @@ class PayAndBookController extends GetxController {
       isPaymentLoading.value = false;
       log("Capture payment: ${response.body}");
       if (response.statusCode == 200) {
-        // show payment succes message
+        // show payment success message
         Get.to(
           () => ReceiptScreen(
             userID: userID.value,

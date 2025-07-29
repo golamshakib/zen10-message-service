@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
@@ -50,6 +52,7 @@ class NotificationScreen extends StatelessWidget {
                   itemCount: notifications.length,
                   itemBuilder: (context, index) {
                     final notification = notifications[index];
+                    log('ID: ${notification.bookingId}');
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: CustomNotificationCard(

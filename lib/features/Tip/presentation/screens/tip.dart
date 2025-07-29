@@ -22,6 +22,7 @@ class _TipsScreenState extends State<TipsScreen> {
   int selectedTip = 2;
   final TextEditingController customTipController = TextEditingController();
   final PayAndBookController controller = Get.put(PayAndBookController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
