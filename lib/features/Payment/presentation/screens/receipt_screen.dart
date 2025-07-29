@@ -73,7 +73,7 @@ class ReceiptScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "customer@example.com", // Replace with dynamic email
+                        "Zen10mobilemassage@outlook.com",
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary,
@@ -88,7 +88,7 @@ class ReceiptScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Contact: ",
+                      "Phone: ",
                       style: TextStyle(
                         fontSize: 16,
                         color: AppColors.textSecondary,
@@ -97,7 +97,7 @@ class ReceiptScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "+1234567890", // Replace with dynamic contact
+                        "(407) 602-4065",
                         style: TextStyle(
                             fontSize: 16,
                             color: AppColors.textPrimary,
@@ -120,7 +120,7 @@ class ReceiptScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "www.example.com", // Replace with dynamic website
+                        "zen10mobilemassage.com",
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.textPrimary,

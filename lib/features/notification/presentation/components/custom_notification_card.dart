@@ -26,7 +26,7 @@ class CustomNotificationCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (title.contains('Completed')) {
-          Get.to(() => ThankYouPage(
+          Get.to(() => TipsScreen(
             bookingId: bookingID,
             userName: username,
           ));
@@ -54,7 +54,7 @@ class CustomNotificationCard extends StatelessWidget {
                   if (title.contains('Completed'))
                     TextButton(
                       onPressed: () {
-                        Get.to(() => ThankYouPage(
+                        Get.to(() => TipsScreen(
                           bookingId: bookingID,
                           userName: username,
                         ));

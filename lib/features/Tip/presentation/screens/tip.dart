@@ -8,17 +8,17 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/image_path.dart';
 import 'package:traveling/features/Payment/controllers/pay_and_book_controller.dart';
 
-class ThankYouPage extends StatefulWidget {
-  const ThankYouPage(
+class TipsScreen extends StatefulWidget {
+  const TipsScreen(
       {super.key, required this.bookingId, required this.userName});
 
   final String bookingId;
   final String userName;
   @override
-  _ThankYouPageState createState() => _ThankYouPageState();
+  _TipsScreenState createState() => _TipsScreenState();
 }
 
-class _ThankYouPageState extends State<ThankYouPage> {
+class _TipsScreenState extends State<TipsScreen> {
   int selectedTip = 2;
   final TextEditingController customTipController = TextEditingController();
   final PayAndBookController controller = Get.put(PayAndBookController());
