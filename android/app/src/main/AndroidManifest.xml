@@ -9,7 +9,7 @@
 
 
     <application
-        android:label="traveling"
+        android:label="Zen 10"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
