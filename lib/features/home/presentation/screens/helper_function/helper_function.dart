@@ -16,7 +16,6 @@ String formatDate(String startDate, String endDate) {
   }
 }
 
-
 String getDayRange(String startTime, String endTime) {
   return '$startTime to $endTime';
 }
