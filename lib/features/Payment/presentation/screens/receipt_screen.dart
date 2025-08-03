@@ -13,20 +13,23 @@ class ReceiptScreen extends StatelessWidget {
   const ReceiptScreen({
     super.key,
     required this.userID,
-    required this.eventDate,
+    required this.eventStartDate,
+    required this.eventEndDate,
     required this.eventStartTime,
     required this.eventEndTime,
   });
 
   final String userID;
-  final String eventDate;
+  final String eventStartDate;
+  final String eventEndDate;
   final String eventStartTime;
   final String eventEndTime;
 
   @override
   Widget build(BuildContext context) {
     log('User Id : $userID');
-    log('Event Date : $eventDate');
+    log('Event Date : $eventStartDate');
+    log('Event Date : $eventEndDate');
     log('Start Time: $eventStartTime');
     log('End Time : $eventEndTime');
     return Scaffold(
@@ -50,7 +53,7 @@ class ReceiptScreen extends StatelessWidget {
                 SizedBox(height: 8.h),
 
                   Text(
-                    eventDate.isEmpty
+                    eventEndDate.isEmpty
                     ? "Thank you for your Tips."
                     : "Thank you for using our service!",
                     textAlign: TextAlign.center,
@@ -142,7 +145,7 @@ class ReceiptScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16.h),
-                if (eventDate.isNotEmpty) ...[
+                if (eventEndDate.isNotEmpty) ...[
                   // Service Date
                   Row(
                     children: [
@@ -156,7 +159,7 @@ class ReceiptScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          eventDate, // Replace with dynamic time
+                          "$eventStartDate to $eventEndDate", // Replace with dynamic time
                           style: TextStyle(
                             fontSize: 16,
                             color: AppColors.textPrimary,

@@ -356,13 +356,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                               controller.handleUpcomingEventClick(controller.upcomingLocations[index]);
                                             },
                                             child: ListTile(
-                                              title: Text(
-                                                formatDate(upcomingLocation.date),
-                                                style: TextStyle(
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.textPrimary,
-                                                ),
+                                              title: Column(
+                                               crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    formatDate(upcomingLocation.startDate, upcomingLocation.endDate),
+                                                    style: TextStyle(
+                                                      fontSize: 16.sp,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.textPrimary,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                               subtitle: Text(
                                                 getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),

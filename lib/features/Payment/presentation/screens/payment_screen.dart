@@ -21,7 +21,8 @@ class PaymentMethodScreen extends StatefulWidget {
   final String ownerId;
   final int amount;
   final userId = Get.arguments['userID'].toString();
-  final eventDate = Get.arguments['eventDate'].toString();
+  final eventStartDate = Get.arguments['eventStartDate'].toString();
+  final eventEndDate = Get.arguments['eventEndDate'].toString();
   final eventStartTime = Get.arguments['eventStartTime'].toString();
   final eventEndTime = Get.arguments['eventEndTime'].toString();
 
@@ -36,7 +37,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   @override
   Widget build(BuildContext context) {
     log('User Id : ${widget.userId}');
-    log('Event Date : ${widget.eventDate}');
+    log('Event Date : ${widget.eventStartDate}');
+    log('Event Date : ${widget.eventEndDate}');
     log('Start Time : ${widget.eventStartTime}');
     log('End Time : ${widget.eventEndTime}');
     return Scaffold(

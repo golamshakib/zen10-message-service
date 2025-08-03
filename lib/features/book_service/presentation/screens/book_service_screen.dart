@@ -14,7 +14,8 @@ import '../../data/models/service_data_mode.dart';
 
 class BookServiceView extends StatelessWidget {
   final String userID = Get.arguments["userID"].toString();
-  final String eventDate = Get.arguments["eventDate"].toString();
+  final String eventStartDate = Get.arguments["eventStartDate"].toString();
+  final String eventEndDate = Get.arguments["eventEndDate"].toString();
   final String eventStartTime = Get.arguments["eventStartTime"].toString();
   final String eventEndTime = Get.arguments["eventEndTime"].toString();
   final BookServiceController controller = Get.put(BookServiceController());
@@ -24,7 +25,8 @@ class BookServiceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log("User ID: $userID");
-    log("Event Date: $eventDate");
+    log("Event Date: $eventStartDate");
+    log("Event Date: $eventEndDate");
     log("Start Time: $eventStartTime");
     log("End Time: $eventEndTime");
 
@@ -138,7 +140,8 @@ class BookServiceView extends StatelessWidget {
                               ),
                         ), arguments: {
                           'userID': userID,
-                          'eventDate': eventDate,
+                          'eventStartDate': eventStartDate,
+                          'eventEndDate': eventEndDate,
                           'eventStartTime': eventStartTime,
                           'eventEndTime': eventEndTime,
                     });

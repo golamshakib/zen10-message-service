@@ -52,13 +52,14 @@ class HomeScreenController extends GetxController {
   void handleUpcomingEventClick(UpcomingLocation upcomingEvent) {
     // Get the userID from the selected upcoming event
     final userId = upcomingEvent.userId;
-    final eventDate = upcomingEvent.date;
+    final eventStartDate = upcomingEvent.startDate;
+    final eventEndDate = upcomingEvent.endDate;
     final eventStartTime = upcomingEvent.startTime;
     final eventEndTime = upcomingEvent.endTime;
 
     // Now navigate to the SelectServiceView with userID
     if (userId != null) {
-      Get.to(() => SelectServiceView(userID: userId, eventDate: eventDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
+      Get.to(() => SelectServiceView(userID: userId, eventStartDate: eventStartDate, eventEndDate: eventEndDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
     } else {
       // Handle case if userID is not found
       Get.snackbar(
@@ -322,11 +323,12 @@ class HomeScreenController extends GetxController {
   void navigateToSelectService() {
     if (selectedLocation.value != null) {
       final userID = selectedLocation.value['userId'];
-      final eventDate = selectedLocation.value['startDate'];
+      final eventStartDate = selectedLocation.value['eventStartDate'];
+      final eventEndDate = selectedLocation.value['eventEndDate'];
       final eventStartTime = selectedLocation.value['startTime'];
       final eventEndTime = selectedLocation.value['endTime'];
       log('Navigating to SelectServiceView with User ID: $userID');
-      Get.to(() => SelectServiceView(userID: userID, eventDate: eventDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
+      Get.to(() => SelectServiceView(userID: userID, eventStartDate: eventStartDate, eventEndDate: eventEndDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
     } else {
       log('No location selected. Please select a location marker first.');
       // You could show a snackbar or toast here to inform the user

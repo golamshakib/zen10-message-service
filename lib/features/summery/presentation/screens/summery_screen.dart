@@ -15,7 +15,8 @@ class SummaryScreen extends StatelessWidget {
   SummaryScreen({super.key, required this.selectedService});
   final ConnectedService selectedService;
   final String userID = Get.arguments["userID"].toString();
-  final String eventDate = Get.arguments["eventDate"].toString();
+  final String eventStartDate = Get.arguments["eventStartDate"].toString();
+  final String eventEndDate = Get.arguments["eventEndDate"].toString();
   final String eventStartTime = Get.arguments["eventStartTime"].toString();
   final String eventEndTime = Get.arguments["eventEndTime"].toString();
 
@@ -23,7 +24,8 @@ class SummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // final BookServiceController controller = Get.find<BookServiceController>();
     log('User Id : $userID');
-    log('Event Date : $eventDate');
+    log('Event Date : $eventStartDate');
+    log('Event Date : $eventEndDate');
     log('Start Time: $eventStartTime');
     log('End Time : $eventEndTime');
     return Scaffold(
@@ -85,7 +87,8 @@ class SummaryScreen extends StatelessWidget {
                         ),
                     arguments: {
                       "userID": userID,
-                      "eventDate": eventDate,
+                      "eventStartDate": eventStartDate,
+                      "eventEndDate": eventEndDate,
                       "eventStartTime": eventStartTime,
                       "eventEndTime": eventEndTime,
                     });

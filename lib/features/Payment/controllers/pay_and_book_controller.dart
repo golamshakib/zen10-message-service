@@ -17,14 +17,16 @@ class PayAndBookController extends GetxController {
   RxBool isPaymentLoading = false.obs;
   RxString orderId = "".obs;
   RxString userID = "".obs;
-  RxString eventDate = "".obs;
+  RxString eventStartDate = "".obs;
+  RxString eventEndDate = "".obs;
   RxString eventStartTime = "".obs;
   RxString eventEndTime = "".obs;
 
   void setEventData(
-      String userId, String date, String startTime, String endTime) {
+      String userId, String startDate, String endDate, String startTime, String endTime) {
     userID.value = userId;
-    eventDate.value = date;
+    eventStartDate.value = startDate;
+    eventEndDate.value = endDate;
     eventStartTime.value = startTime;
     eventEndTime.value = endTime;
   }
@@ -53,7 +55,8 @@ class PayAndBookController extends GetxController {
 
         setEventData(
           Get.arguments['userID'].toString(),
-          Get.arguments['eventDate'].toString(),
+          Get.arguments['eventStartDate'].toString(),
+          Get.arguments['eventEndDate'].toString(),
           Get.arguments['eventStartTime'].toString(),
           Get.arguments['eventEndTime'].toString(),
         );
@@ -95,7 +98,8 @@ class PayAndBookController extends GetxController {
             () => PayPalWebView(
               approvalUrl: payPalUrl,
               userID: userID.value,
-              eventDate: eventDate.value,
+              eventStartDate: eventStartDate.value,
+              eventEndDate: eventEndDate.value,
               eventStartTime: eventStartTime.value,
               eventEndTime: eventEndTime.value,
             ),
@@ -125,7 +129,8 @@ class PayAndBookController extends GetxController {
         Get.to(
           () => ReceiptScreen(
             userID: userID.value,
-            eventDate: eventDate.value,
+            eventStartDate: eventStartDate.value,
+            eventEndDate: eventEndDate.value,
             eventStartTime: eventStartTime.value,
             eventEndTime: eventEndTime.value,
           ),

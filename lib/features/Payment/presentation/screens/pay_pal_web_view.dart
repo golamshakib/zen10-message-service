@@ -8,7 +8,8 @@ class PayPalWebView extends StatelessWidget {
       {super.key,
       required this.approvalUrl,
         required this.userID,
-      required this.eventDate,
+      required this.eventStartDate,
+      required this.eventEndDate,
       required this.eventStartTime,
       required this.eventEndTime,
       }) {
@@ -17,7 +18,8 @@ class PayPalWebView extends StatelessWidget {
 
   final String approvalUrl;
     final String userID;
-  final String eventDate;
+  final String eventStartDate;
+  final String eventEndDate;
   final String eventStartTime;
   final String eventEndTime;
 
