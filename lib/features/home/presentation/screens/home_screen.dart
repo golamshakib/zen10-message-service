@@ -140,17 +140,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 Obx(() {
                   // Check if the upcoming locations list has been fetched
                   if (controller.nearbyLocations.isNotEmpty) {
-                    final locationsToShow = controller.nearbyLocations.take(2).toList();
-        
+                    // Assuming the user's current location is stored in controller.currentLatitude and controller.currentLongitude
+                    final userLatitude = controller.currentLatitude.value;
+                    final userLongitude = controller.currentLongitude.value;
+
+                    // Sort the nearby locations by distance from the user's current location
+                    final locationsToShow = controller.nearbyLocations
+                        .map((location) {
+                      final lat = location['latitude'] ?? 0.0;
+                      final lon = location['longitude'] ?? 0.0;
+                      final distance = calculateDistance(userLatitude, userLongitude, lat, lon);
+                      return {
+                        'location': location['location'],
+                        'latitude': lat,
+                        'longitude': lon,
+                        'distance': distance,
+                      };
+                    })
+                        .toList();
+
+                    // Sort by distance (ascending order)
+                    locationsToShow.sort((a, b) => a['distance'].compareTo(b['distance']));
+
+                    // Remove duplicates based on location name
+                    final uniqueLocations = <String, Map<String, dynamic>>{};
+                    for (var location in locationsToShow) {
+                      uniqueLocations[location['location']] = location;
+                    }
+
+                    // Take only the nearest two unique locations
+                    final locationsToShowFiltered = uniqueLocations.values.take(2).toList();
+
                     return Wrap(
-                      alignment: WrapAlignment.start,  // Align children to the start
-                      spacing: 8.0,                    // Space between locations
-                      runSpacing: 4.0,                 // Space between wrapped lines
-                      children: locationsToShow.asMap().entries.map((entry) {
+                      alignment: WrapAlignment.start, // Align children to the start
+                      spacing: 8.0, // Space between locations
+                      runSpacing: 4.0, // Space between wrapped lines
+                      children: locationsToShowFiltered.asMap().entries.map((entry) {
                         int index = entry.key;
                         var location = entry.value;
                         String locationName = location['location'] ?? 'Unknown Location';
-        
+
                         List<Widget> widgets = [
                           Flexible(
                             child: Text(
@@ -159,14 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontSize: 16.sp, // Responsive font size
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w600,
-                                overflow: TextOverflow.ellipsis,  // Handle long text gracefully
+                                overflow: TextOverflow.ellipsis, // Handle long text gracefully
                               ),
-                              maxLines: 1,  // Ensure that text doesn't exceed 1 line if possible
+                              maxLines: 1, // Ensure that text doesn't exceed 1 line if possible
                             ),
                           ),
                         ];
-        
-                        if (index < locationsToShow.length - 1) {
+
+                        if (index < locationsToShowFiltered.length - 1) {
                           widgets.add(
                             Flexible(
                               child: Text(
@@ -182,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         }
-        
+
                         return Row(
                           mainAxisSize: MainAxisSize.min,
                           children: widgets,
