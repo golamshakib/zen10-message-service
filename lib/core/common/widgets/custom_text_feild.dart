@@ -4,6 +4,7 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
+  final bool obscureText;
   final FormFieldValidator<String>? validator;
   final Widget? suffixIcon;
   final bool readOnly;
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.suffixIcon,
     this.readOnly = false,
     this.keyboardType,
+    this.obscureText = false,
   });
 
   @override
@@ -28,6 +30,7 @@ class CustomTextField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
+        obscureText: obscureText,
         validator: validator,
         readOnly: readOnly,
         keyboardType: keyboardType,

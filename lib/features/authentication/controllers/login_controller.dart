@@ -16,12 +16,17 @@ class LoginController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   var fcmToken = '';
+  var obscureText = true.obs;
 
   // Remember Me Checkbox state
   var isRememberMeChecked = false.obs;
 
   void toggleRememberMe() {
     isRememberMeChecked.value = !isRememberMeChecked.value;
+  }
+
+  void togglePasswordVisibility() {
+    obscureText.value = !obscureText.value;
   }
 
   RxBool isLoading = false.obs;

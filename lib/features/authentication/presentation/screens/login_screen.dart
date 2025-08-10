@@ -75,10 +75,23 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                CustomTextField(
-                  controller: loginController.passwordController,
-                  hintText: 'Enter your password',
-                  validator: AppValidator.validatePassword,
+                Obx(
+                  () => CustomTextField(
+                    controller: loginController.passwordController,
+                    obscureText: loginController.obscureText.value,
+                    hintText: 'Enter your password',
+                    validator: AppValidator.validatePassword,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        loginController.togglePasswordVisibility();
+                      },
+                      child: Icon(loginController.obscureText.value
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                        color: Color(0xFF333333),
+                      ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 Row(
