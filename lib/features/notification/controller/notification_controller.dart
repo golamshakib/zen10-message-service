@@ -11,6 +11,8 @@ import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/core/utils/logging/logger.dart';
 import 'package:traveling/features/notification/data/model/notification_data_mode.dart';
 
+import '../../authentication/presentation/widgets/showSnacker.dart';
+
 class NotificationController extends GetxController {
   RxBool isLoading = false.obs;
   Rx<NotificationDataModel?> notifications = Rx(null);
@@ -72,8 +74,13 @@ class NotificationController extends GetxController {
         update(); // Update the UI to show the notification again
 
         // Show an error snackbar
-        Get.snackbar("Error", response.errorMessage,
-            backgroundColor: AppColors.error, colorText: Colors.white);
+
+        showSnackBar(
+          title: 'Error',
+          message: response.errorMessage,
+          icon: Icons.error_outlined,
+          color: Colors.redAccent,
+        );
       }
 
       // Remove from local storage if deletion was successful

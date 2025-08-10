@@ -265,7 +265,7 @@ class HomeScreenController extends GetxController {
             title: 'Service Zone',
             message: 'You are currently out of service zone. Please try again later.',
             icon: Icons.error_outlined,
-            color: AppColors.primary,
+            color: Colors.redAccent,
           );
         } else {
           // We have nearby locations, we're in service zone
@@ -339,7 +339,7 @@ class HomeScreenController extends GetxController {
         title: 'No Location Selected',
         message: 'Please select a location/Upcoming event from the map',
         icon: Icons.error_outlined,
-        color: AppColors.primary,
+        color: Colors.redAccent,
       );
     }
   }

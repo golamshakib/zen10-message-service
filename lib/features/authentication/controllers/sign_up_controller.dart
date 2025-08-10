@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../core/services/Auth_service.dart';
@@ -15,7 +16,7 @@ import '../../splash_screen/controllers/splash_controller.dart';
 import '../presentation/widgets/showSnacker.dart';
 import 'location_controller.dart';
 
-class SingUpController extends GetxController {
+class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();
@@ -111,8 +112,8 @@ class SingUpController extends GetxController {
         showSnackBar(
           title: 'Success',
           message: 'User registered successfully',
-          icon: Icons.check_circle,
-          color: Colors.green,
+          icon: Icons.check_circle_outline,
+          color: AppColors.primary,
         );
         log('Signup Response: ${response.responseData}');
         // Redirect to login page or dashboard

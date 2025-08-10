@@ -13,6 +13,8 @@ import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:traveling/routes/app_routes.dart';
 
+import '../../authentication/presentation/widgets/showSnacker.dart';
+
 class PayAndBookController extends GetxController {
   RxBool isPaymentLoading = false.obs;
   RxString orderId = "".obs;
@@ -137,9 +139,13 @@ class PayAndBookController extends GetxController {
         );
         // Get.toNamed(AppRoute.receiptScreen);
         log("Payment successfull");
-        Get.snackbar(
-            "Success", "Payment successful! Thank you for your purchase.",
-            backgroundColor: AppColors.success, colorText: Colors.white);
+        showSnackBar(
+          title: 'Success',
+          message: 'Payment successful! Thank you for your purchase.',
+          icon: Icons.check_circle_outline,
+          color: AppColors.primary,
+        );
+
         // Payment successfull
       } else {
         isPaymentLoading.value = false;

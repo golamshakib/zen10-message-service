@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/services/network_caller.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/core/utils/logging/logger.dart';
 import 'package:traveling/features/authentication/presentation/widgets/showSnacker.dart';
@@ -30,7 +31,7 @@ class ChangePasswordController extends GetxController {
           title: 'Success',
           message: response.responseData['message'] ?? 'Password reset successfully.',
           icon: Icons.check_circle_outline,
-          color: Colors.greenAccent,
+          color: AppColors.primary,
         );
 
 

@@ -6,7 +6,9 @@ import 'package:traveling/core/utils/constants/app_urls.dart'; // Your API URLs
 import 'package:traveling/core/utils/logging/logger.dart'; // For logging errors
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/features/authentication/presentation/screens/change_password_screen.dart';
-import 'package:traveling/routes/app_routes.dart'; // App Colors for UI
+import 'package:traveling/routes/app_routes.dart';
+
+import '../presentation/widgets/showSnacker.dart'; // App Colors for UI
 
 class OtpVerificationController extends GetxController {
   final TextEditingController otpController = TextEditingController();
@@ -54,30 +56,30 @@ class OtpVerificationController extends GetxController {
 
       if (response.isSuccess || response.statusCode == 200) {
         // Handle successful OTP verification
-        Get.snackbar(
-          'Success',
-          'OTP verified successfully, please reset your password.',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.greenAccent,
+        showSnackBar(
+          title: 'Success',
+          message: 'OTP verified successfully, please reset your password.',
+          icon: Icons.check_circle_outline,
+          color: AppColors.primary,
         );
         String accessToken = response.responseData['data']['accessToken'];
         Get.off(() => ChangePasswordScreen(accessToken: accessToken));
       } else {
         // Handle failed OTP verification
-        Get.snackbar(
-          'OTP Verification Failed',
-          response.errorMessage ?? 'Invalid OTP.',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.redAccent,
+        showSnackBar(
+          title: 'OTP Verification Failed',
+          message: response.errorMessage ?? 'Invalid OTP.',
+          icon: Icons.error_outlined,
+          color: Colors.redAccent,
         );
       }
     } catch (e) {
       AppLoggerHelper.error('Error during OTP verification: $e');
-      Get.snackbar(
-        'Error',
-        'Something went wrong. Please try again later.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.redAccent,
+      showSnackBar(
+        title: 'Error',
+        message: 'Something went wrong. Please try again later.',
+        icon: Icons.error_outlined,
+        color: Colors.redAccent,
       );
     } finally {
       isLoading.value = false;
@@ -94,20 +96,20 @@ class OtpVerificationController extends GetxController {
     final response = await NetworkCaller().postRequest(AppUrls.forgotPassword, body: requestBody);
 
     if (response.isSuccess) {
-      Get.snackbar(
-        'Success',
-        'Please check your email for the new OTP.',
-        snackPosition: SnackPosition.TOP,
-       backgroundColor: Colors.greenAccent
+      showSnackBar(
+        title: 'Success',
+        message: 'Please check your email for the new OTP.',
+        icon: Icons.check_circle_outline,
+        color: AppColors.primary,
       );
       String accessToken = response.responseData['data']['accessToken'];
       Get.off(() => ChangePasswordScreen(accessToken: accessToken));
     } else {
-      Get.snackbar(
-        'Error',
-        'Failed to send reset OTP. Please try again.',
-        snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.redAccent
+      showSnackBar(
+        title: 'Error',
+        message: 'Failed to send reset OTP. Please try again.',
+        icon: Icons.error_outlined,
+        color: Colors.redAccent,
       );
     }
     isLoading.value = false;

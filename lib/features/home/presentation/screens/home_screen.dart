@@ -282,14 +282,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           left: 16.w,
                           child: FloatingActionButton(
                             backgroundColor: Colors.white.withOpacity(0.8),
-                            child: Obx(() {
-                              return controller.isRefreshing.value
-                                  ? LoadingAnimationWidget.staggeredDotsWave(
-                                color: AppColors.primary,
-                                size: 20.sp, // Adjust size of the loading animation
-                              )
-                                  : Icon(Icons.refresh, color: AppColors.primary);
-                            }),
+                            child: Icon(
+                              Icons.refresh,
+                              color: AppColors.primary,
+                            ),
+                            // child: Obx(() {
+                            //   return controller.isRefreshing.value
+                            //       ? LoadingAnimationWidget.staggeredDotsWave(
+                            //     color: AppColors.primary,
+                            //     size: 20.sp, // Adjust size of the loading animation
+                            //   )
+                            //       : Icon(Icons.refresh, color: AppColors.primary);
+                            // }),
                             onPressed: () async {
                               await controller.refreshLocation();
         

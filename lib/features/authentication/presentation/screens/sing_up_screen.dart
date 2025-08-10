@@ -9,14 +9,14 @@ import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/core/utils/constants/logo_path.dart';
 import 'package:traveling/core/utils/validators/app_validator.dart';
 import 'package:get/get.dart';
-import 'package:traveling/features/authentication/controllers/sing_up_controller.dart';
+import 'package:traveling/features/authentication/controllers/sign_up_controller.dart';
 import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/utils/constants/app_colors.dart';
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
-  final singUpController = Get.find<SingUpController>();
+  final signUpController = Get.find<SignUpController>();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -66,7 +66,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 CustomTextField(
-                  controller: singUpController.userNameController,
+                  controller: signUpController.userNameController,
                   hintText: 'Enter your username',
                 ),
                 SizedBox(height: 16.h),
@@ -80,7 +80,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 CustomTextField(
-                  controller: singUpController.emailController,
+                  controller: signUpController.emailController,
                   hintText: 'Enter your email',
                   validator: AppValidator.validateEmail,
                 ),
@@ -101,7 +101,7 @@ class SignUpScreen extends StatelessWidget {
                 //   ),
                 //   child: TextFormField(
                 //     readOnly: true,
-                //     controller: singUpController.addressController,
+                //     controller: signUpController.addressController,
                 //     validator: AppValidator.validateInputField,
                 //     decoration: InputDecoration(
                 //       suffixIcon: IconButton(
@@ -127,9 +127,9 @@ class SignUpScreen extends StatelessWidget {
                 //                   '${place.name}, ${place.locality}, ${place.country}';
                 //
                 //               // Set the selected address in the controller
-                //               singUpController.addressController.text = address;
+                //               signUpController.addressController.text = address;
                 //             } else {
-                //               singUpController.addressController.text =
+                //               signUpController.addressController.text =
                 //                   'Address not found';
                 //             }
                 //           }
@@ -159,7 +159,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 CustomTextField(
-                  controller: singUpController.passwordController,
+                  controller: signUpController.passwordController,
                   hintText: 'Enter your password',
                   validator: AppValidator.validatePassword,
                 ),
@@ -174,20 +174,20 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 CustomTextField(
-                  controller: singUpController.confirmPassController,
+                  controller: signUpController.confirmPassController,
                   hintText: 'Enter your password again',
                   validator: AppValidator.validatePassword,
                 ),
                 SizedBox(height: 16.h),
                 Obx(
                   () => Center(
-                    child: singUpController.isLoading.value
+                    child: signUpController.isLoading.value
                         ? LoadingAnimationWidget.staggeredDotsWave(
                             color: AppColors.primary, size: 25.sp)
                         : CustomButton(
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                singUpController.signUp();
+                                signUpController.signUp();
                               }
                             },
                             text: 'Sign Up',

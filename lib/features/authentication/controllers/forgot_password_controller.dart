@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/features/authentication/presentation/screens/otp_verification_screen.dart';
 import 'package:traveling/core/services/network_caller.dart';
 import 'package:traveling/core/utils/constants/app_urls.dart';
@@ -41,7 +42,7 @@ class ForgotPasswordController extends GetxController {
           title: 'Success',
           message: 'OTP Send Successfully',
           icon: Icons.check_circle_outline,
-          color: Colors.greenAccent,
+          color: AppColors.primary,
         );
 
         // Get the userId from the response or your user data
