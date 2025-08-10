@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:traveling/core/utils/constants/app_colors.dart';
 
 import '../../../core/services/Auth_service.dart';
 import '../../../core/services/network_caller.dart';
@@ -17,7 +19,7 @@ class LoginController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   var fcmToken = '';
   var obscureText = true.obs;
-
+  RxBool isLoading = false.obs;
   // Remember Me Checkbox state
   var isRememberMeChecked = false.obs;
 
@@ -29,12 +31,12 @@ class LoginController extends GetxController {
     obscureText.value = !obscureText.value;
   }
 
-  RxBool isLoading = false.obs;
+
 
   @override
   void onInit() {
     initializeFCM();
-    // TODO: implement onInit
+    saveRememberMeCredentials();
     super.onInit();
 
   }
@@ -84,11 +86,25 @@ class LoginController extends GetxController {
 
         if (token != null) {
           await AuthService.saveToken(token);
+
+          if (isRememberMeChecked.value) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setBool('rememberMe', true);
+            await prefs.setString('email', email);
+            await prefs.setString('password', password);
+          } else {
+            // Clear the saved credentials if "Remember Me" is not checked
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.remove('rememberMe');
+            await prefs.remove('email');
+            await prefs.remove('password');
+          }
+
           showSnackBar(
             title: 'Success',
             message: 'Logged in successfully',
             icon: Icons.check_circle_outline,
-            color: Colors.greenAccent,
+            color: AppColors.primary,
           );
           log("Saved token is: ${AuthService.token}");
           Get.offAll(() => HomeScreen());
@@ -116,6 +132,30 @@ class LoginController extends GetxController {
       AppLoggerHelper.error('Error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  static Future<void> saveRememberMeCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? rememberMe = prefs.getBool('rememberMe');
+
+    if (rememberMe == true) {
+
+      // Auto fill the email and password fields if "Remember Me" is enabled
+      String? email = prefs.getString('email');
+      String? password = prefs.getString('password');
+      if (email != null && password != null) {
+        final LoginController loginController = Get.find<LoginController>();
+        loginController.emailController.text = email;
+        loginController.passwordController.text = password;
+        loginController.isRememberMeChecked.value = true;
+      }
+    } else {
+      // If "Remember Me" is not enabled, ensure the fields are empty
+      final LoginController loginController = Get.find<LoginController>();
+      loginController.emailController.clear();
+      loginController.passwordController.clear();
+      loginController.isRememberMeChecked.value = false;
     }
   }
 }

@@ -9,6 +9,8 @@ import '../utils/logging/logger.dart';
 class AuthService {
   static const String _tokenKey = 'token';
   static const String _userIdKey = 'userId';  // Add key for userId
+  static const String _rememberMeKey = 'rememberMe'; // Key for "Remember Me" functionality
+
   static late SharedPreferences _preferences;
   static String? _token;
   static String? _userId;
@@ -45,7 +47,19 @@ class AuthService {
 
   static Future<void> logoutUser() async {
     try {
-      await _preferences.clear();
+      bool? rememberMe = _preferences.getBool('rememberMe');
+
+      // If "Remember Me" is NOT enabled, clear email and password from SharedPreferences
+      if (rememberMe != true) {
+        await _preferences.remove('email');
+        await _preferences.remove('password');
+      }
+
+      // Clear other auth-related data
+      await _preferences.remove(_tokenKey);
+      await _preferences.remove(_userIdKey);  // Clear userId
+
+      // Reset the private variables
       _token = null;
       _userId = null;  // Clear userId as well
       await goToLogin();

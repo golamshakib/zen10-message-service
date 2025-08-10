@@ -13,7 +13,7 @@ import 'package:traveling/routes/app_routes.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
-  final loginController = Get.find<LoginController>();
+  final loginController = Get.put(LoginController());
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

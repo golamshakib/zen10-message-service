@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:traveling/core/services/auth_service.dart';
 import '../../../core/services/network_caller.dart';
+import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
+import '../../authentication/presentation/widgets/showSnacker.dart';
 import '../../book_service/presentation/screens/selete_servicer.dart';
 import '../data/model/upcoming_event_model.dart';
 import '../data/model/user_profile_model.dart';
@@ -259,10 +261,11 @@ class HomeScreenController extends GetxController {
           // No nearby locations found, we're out of service zone
           isInServiceZone.value = false;
           log('No nearby locations found - Out of service zone');
-          Get.snackbar(
-            'Service Zone',
-            'You are currently out of service zone. Please try again later.',
-            snackPosition: SnackPosition.TOP,
+          showSnackBar(
+            title: 'Service Zone',
+            message: 'You are currently out of service zone. Please try again later.',
+            icon: Icons.error_outlined,
+            color: AppColors.primary,
           );
         } else {
           // We have nearby locations, we're in service zone
@@ -332,9 +335,11 @@ class HomeScreenController extends GetxController {
     } else {
       log('No location selected. Please select a location marker first.');
       // You could show a snackbar or toast here to inform the user
-      Get.snackbar(
-        'No Location Selected',
-        'Please select a location/Upcoming event from the map',
+      showSnackBar(
+        title: 'No Location Selected',
+        message: 'Please select a location/Upcoming event from the map',
+        icon: Icons.error_outlined,
+        color: AppColors.primary,
       );
     }
   }
