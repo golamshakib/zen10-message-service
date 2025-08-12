@@ -114,7 +114,7 @@ class NetworkCaller {
             statusCode: response.statusCode,
             errorMessage: decodedResponse['error'] ??
                 'There was an issue with your request. Please try again.',
-            responseData: null,
+            responseData: decodedResponse,
           );
         case 401:
           await AuthService.logoutUser();

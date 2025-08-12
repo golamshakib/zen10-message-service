@@ -80,9 +80,10 @@ class LoginController extends GetxController {
     try {
       final response =
           await NetworkCaller().postRequest(AppUrls.login, body: requestBody);
-
+      log('Error: ${response.responseData}');
       if (response.isSuccess) {
         String? token = response.responseData['data']['accessToken'];
+
 
         if (token != null) {
           await AuthService.saveToken(token);
@@ -111,9 +112,10 @@ class LoginController extends GetxController {
         }
       } else {
         if (response.statusCode == 400) {
+          String errorMessage = response.responseData['message']  ?? 'Invalid Email or Password';
           showSnackBar(
             title: 'Error',
-            message: 'Please check your email and password.',
+            message: errorMessage,
             icon: Icons.error_outline_rounded,
             color: Colors.redAccent,
           );

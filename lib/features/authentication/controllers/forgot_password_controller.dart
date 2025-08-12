@@ -51,8 +51,24 @@ class ForgotPasswordController extends GetxController {
         // Navigate to OTP Verification screen with email and userId
         Get.off(() => OtpVerificationScreen(email: email, userId: userId));
       } else {
-        // If there was an error (e.g., email not found), show error
-        errorMessage.value = response.errorMessage ?? 'Failed to send OTP. Please try again.';
+        if (response.statusCode == 400) {
+          String errorMessage = response.responseData['message']  ?? 'Invalid Email address';
+          showSnackBar(
+            title: 'Error',
+            message: errorMessage,
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        } else {
+          // Handle other errors from the API
+          showSnackBar(
+            title: 'Error',
+            message: response.errorMessage ??
+                'An error occurred. Please try again later.',
+            icon: Icons.error_outline_rounded,
+            color: Colors.redAccent,
+          );
+        }
       }
     } catch (e) {
       // Handle network errors or other exceptions

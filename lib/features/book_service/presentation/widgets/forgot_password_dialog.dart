@@ -19,7 +19,7 @@ void showForgotPasswordDialog(BuildContext context) {
         contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
         content: SizedBox(
           width: 320.w,
-          height: 300.h,
+          height: 320.h,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
