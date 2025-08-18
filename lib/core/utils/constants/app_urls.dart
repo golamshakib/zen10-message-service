@@ -12,6 +12,7 @@ class AppUrls {
   static const String verifyOtp = '$_baseUrl/auth/verify-reset-password-otp';
   static const String changePassword = '$_baseUrl/auth/reset-password';
   static const String fetchProfile = '$_baseUrl/users/me';
+  static const String deleteProfile = '$_baseUrl/users/delete-profile';
   static const String getNearByLocations =
       '$_baseUrl/locations/get-nearby-locations';
   static const String getUpcomingLocations =

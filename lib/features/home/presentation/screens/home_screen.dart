@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:traveling/core/services/Auth_service.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/notification/presentation/view/notification_screen.dart';
+import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/services/notification_services.dart';
@@ -40,17 +41,20 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Obx(() => Text(
-                    controller.userProfile.value == null
-                        ? 'Loading...'
-                        : controller.userProfile.value!.data.userName,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xff333333)),
-                  )),
+                  GestureDetector(
+                    onTap: () {Get.toNamed(AppRoute.profileDeleteScreen);},
+                    child: Obx(() => Text(
+                      controller.userProfile.value == null
+                          ? 'Loading...'
+                          : controller.userProfile.value!.data.userName,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xff333333)),
+                    )),
+                  ),
                   Row(
                     children: [
                       Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
