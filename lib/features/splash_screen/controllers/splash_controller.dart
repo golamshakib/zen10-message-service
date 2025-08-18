@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:traveling/core/services/location.dart';
 import 'package:traveling/core/services/notification_services.dart';
 import '../../../core/services/Auth_service.dart';
+import '../../../core/services/network_caller.dart';
+import '../../../core/utils/constants/app_urls.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashController extends GetxController {
@@ -27,6 +29,22 @@ class SplashController extends GetxController {
       Get.offAllNamed(AppRoute.loginScreen); // Otherwise, navigate to the login screen
     }
   }
+
+  // Future<void> checkUserExistence() async {
+  //   try {
+  //     final response = await NetworkCaller().getRequest(
+  //       AppUrls.fetchProfile,
+  //       token: "Bearer ${AuthService.token}",
+  //     );
+  //     if (response.statusCode == 404){
+  //       log("User does not exist, navigating to login screen");
+  //       await AuthService.logoutUser();
+  //       Get.offAllNamed(AppRoute.loginScreen);
+  //     }
+  //   }catch (e) {
+  //     log("Error checking user existence: $e");
+  //   }
+  // }
 
   Future<void> fetchLocationForIOS() async {
     await _fetchLocation();
@@ -197,5 +215,6 @@ class SplashController extends GetxController {
     } else if (Platform.isAndroid) {
       fetchLocationForAndroid();
     }
+    // checkUserExistence();
   }
 }

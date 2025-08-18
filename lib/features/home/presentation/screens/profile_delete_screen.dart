@@ -16,13 +16,14 @@ class ProfileDeleteScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               height: 50.h,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 30),
+              padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 40.0),
               child: CustomButton(
                 onPressed: () {
                   controller.deleteAccount();

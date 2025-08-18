@@ -16,18 +16,24 @@ class ProfileDeleteController extends GetxController {
           .deleteRequest(AppUrls.deleteProfile, "Bearer ${AuthService.token}");
       log("Status Code: ${response.statusCode}");
       if (response.isSuccess) {
+        log("Status Code: ${response.statusCode}");
         showSnackBar(
             title: "Success",
             message: "Your account has been deleted successfully",
             icon: Icons.check_circle_outline,
             color: AppColors.primary);
+        Get.offAllNamed(AppRoute.loginScreen);
       } else {
-
-        showSnackBar(
-            title: "Error",
-            message: response.errorMessage,
-            icon: Icons.error_outlined,
-            color: Colors.redAccent);
+        if (response.statusCode == 404) {
+          String errorMessage = response.responseData['message'] ?? 'User not found';
+          await AuthService.logoutUser();
+          Get.offAllNamed(AppRoute.loginScreen);
+          showSnackBar(
+              title: "Error",
+              message: errorMessage,
+              icon: Icons.error_outlined,
+              color: Colors.redAccent);
+        }
       }
     } catch (e) {
       showSnackBar(
