@@ -36,14 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Row(
           children: [
-            SizedBox(width: 8.w),
+            // SizedBox(width: 8.w),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {Get.toNamed(AppRoute.profileDeleteScreen);},
-                    child: Obx(() => Text(
+              child: GestureDetector(
+                onTap: () {Get.toNamed(AppRoute.profileDeleteScreen);},
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(() => Text(
                       controller.userProfile.value == null
                           ? 'Loading...'
                           : controller.userProfile.value!.data.userName,
@@ -54,27 +55,27 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.w600,
                           color: Color(0xff333333)),
                     )),
-                  ),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
-                      SizedBox(width: 2.w),
-                      Expanded(
-                        child: Obx(() => Text(
-                          controller.userProfile.value == null
-                              ? 'Loading...'
-                              : controller.userProfile.value!.data.location,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        )),
-                      ),
-                    ],
-                  ),
-                ],
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, size: 16.sp, color: Colors.grey),
+                        SizedBox(width: 2.w),
+                        Expanded(
+                          child: Obx(() => Text(
+                            controller.userProfile.value == null
+                                ? 'Loading...'
+                                : controller.userProfile.value!.data.location,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          )),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             InkWell(
@@ -233,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
                 }),
-        
+
                 SizedBox(height: 16.h),
                 SizedBox(
                   height: 370.h,
@@ -245,11 +246,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           final userLatitude = controller.currentLatitude.value != 0.0
                               ? controller.currentLatitude.value
                               : (controller.userProfile.value?.data.locationLatitude ?? 40.7128);
-        
+
                           final userLongitude = controller.currentLongitude.value != 0.0
                               ? controller.currentLongitude.value
                               : (controller.userProfile.value?.data.locationLongitude ?? -74.0060);
-        
+
                           if (controller.isLoading.value || controller.isLocationLoading.value || controller.isRefreshing.value) {
                             return Center(
                               child: LoadingAnimationWidget.staggeredDotsWave(
@@ -258,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           }
-        
+
                           return GoogleMap(
                             initialCameraPosition: CameraPosition(
                               target: LatLng(userLatitude, userLongitude),
@@ -279,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             zoomControlsEnabled: true,
                           );
                         }),
-        
+
                         // Refresh Button to trigger the refresh and loading animation
                         Positioned(
                           bottom: 16.h,
@@ -300,13 +301,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             // }),
                             onPressed: () async {
                               await controller.refreshLocation();
-        
+
                               // Force the map to rebuild with updated markers
                               setState(() {});
                             },
                           ),
                         ),
-        
+
                         // Upcoming Button
                         Positioned(
                           top: 10.h,
@@ -336,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-        
+
                         // Upcoming Events List
                         Positioned(
                           top: 60.h,
@@ -386,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         itemCount: controller.upcomingLocations.length,
                                         itemBuilder: (context, index) {
                                           final upcomingLocation = controller.upcomingLocations[index];
-        
+
                                           return GestureDetector(
                                             onTap: () {
                                               // Handle event click by passing the selected event to the Book Now screen
