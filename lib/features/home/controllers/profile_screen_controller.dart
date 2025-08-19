@@ -9,7 +9,7 @@ import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/features/authentication/presentation/widgets/showSnacker.dart';
 import 'package:traveling/routes/app_routes.dart';
 
-class ProfileDeleteController extends GetxController {
+class ProfileScreenController extends GetxController {
   Future<void> deleteAccount() async {
     try {
       final response = await NetworkCaller()

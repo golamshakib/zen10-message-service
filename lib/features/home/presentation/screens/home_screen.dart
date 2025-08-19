@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // SizedBox(width: 8.w),
             Expanded(
               child: GestureDetector(
-                onTap: () {Get.toNamed(AppRoute.profileDeleteScreen);},
+                onTap: () {Get.toNamed(AppRoute.profileScreen);},
 
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

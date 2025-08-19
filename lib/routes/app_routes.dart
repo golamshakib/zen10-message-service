@@ -4,7 +4,7 @@ import 'package:traveling/features/Payment/presentation/screens/receipt_screen.d
 import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import '../features/authentication/presentation/screens/login_screen.dart';
 import '../features/authentication/presentation/screens/sing_up_screen.dart';
-import '../features/home/presentation/screens/profile_delete_screen.dart';
+import '../features/home/presentation/screens/profile_screen.dart';
 import '../features/splash_screen/presentation/screens/splash_screen.dart';
 
 class AppRoute {
@@ -12,7 +12,7 @@ class AppRoute {
   static String signUpScreen = "/signUpScreen";
   static String init = "/";
   static String homeScreen = "/homeScreen";
-  static String profileDeleteScreen = "/profileDeleteScreen";
+  static String profileScreen = "/profileScreen";
   // static String receiptScreen = "/receiptScreen";
 
 
@@ -27,7 +27,7 @@ class AppRoute {
     GetPage(name: init, page: () => SplashScreen()),
     GetPage(name: signUpScreen, page: () => SignUpScreen()),
     GetPage(name: homeScreen, page: () => HomeScreen()),
-    GetPage(name: profileDeleteScreen, page: () => ProfileDeleteScreen()),
+    GetPage(name: profileScreen, page: () => ProfileScreen()),
     // GetPage(name: receiptScreen, page: () => ReceiptScreen()),
 
   ];

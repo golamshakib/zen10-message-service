@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:traveling/core/common/widgets/custom_button.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
-import 'package:traveling/features/home/controllers/profile_delete_controller.dart';
+import 'package:traveling/features/home/controllers/profile_screen_controller.dart';
 
-class ProfileDeleteScreen extends StatelessWidget {
-  const ProfileDeleteScreen({super.key});
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ProfileDeleteController controller = ProfileDeleteController();
+    final ProfileScreenController controller = ProfileScreenController();
     return Scaffold(
       appBar: AppBar(
         title: Text('Delete Account',
