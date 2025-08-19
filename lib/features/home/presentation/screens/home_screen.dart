@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       IconPath.notification,
                       height: 24.h,
                       width: 24.w,
-                      color: Colors.red.shade300,
+                      color: AppColors.primary,
                     ),
                     if (NotificationService().unreadNotificationCount.value > 0)
                       Positioned(
