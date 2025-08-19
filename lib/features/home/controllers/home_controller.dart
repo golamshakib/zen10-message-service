@@ -8,6 +8,7 @@ import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
+import '../../../routes/app_routes.dart';
 import '../../authentication/presentation/widgets/showSnacker.dart';
 import '../../book_service/presentation/screens/selete_servicer.dart';
 import '../data/model/upcoming_event_model.dart';
@@ -164,10 +165,14 @@ class HomeScreenController extends GetxController {
         AppLoggerHelper.info('User profile fetched successfully');
         // After fetching the user profile, fetch nearby locations
         await fetchNearbyLocations();
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == 404) {
+        String errorMessage ='User not found. Please Log in again.';
         // User not found
         AppLoggerHelper.error('User not found: ${response.errorMessage}');
+        showSnackBar(title: 'Error', message: errorMessage, icon: Icons.error_outlined, color: Colors.redAccent);
+        Get.offAllNamed(AppRoute.loginScreen);
       }
+
       else {
         AppLoggerHelper.error('Failed to load user profile: ${response.errorMessage}');
 
