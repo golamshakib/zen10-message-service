@@ -390,6 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                           return GestureDetector(
                                             onTap: () {
+
                                               // Handle event click by passing the selected event to the Book Now screen
                                               controller.handleUpcomingEventClick(controller.upcomingLocations[index]);
                                             },
@@ -402,6 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   color: AppColors.textPrimary,
                                                 ),
                                               ),
+
                                               subtitle: Text(
                                                 getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),
                                                 style: TextStyle(
