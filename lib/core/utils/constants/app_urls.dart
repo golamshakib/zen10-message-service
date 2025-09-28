@@ -1,7 +1,6 @@
 class AppUrls {
   AppUrls._();
 
-  // static const String _baseUrl = 'https://employee-beryl.vercel.app/api/v1';
   // static const String _baseUrl = 'http://69.62.112.177:8013/api/v1';
   static const String _baseUrl = 'https://api.zen10mobilemassage.com/api/v1';
 
