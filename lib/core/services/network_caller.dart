@@ -85,6 +85,23 @@ class NetworkCaller {
     }
   }
 
+  // Handle Token Expiration and Unauthorized Access
+  Future<dynamic> tokenExpireCheckRequest(String url, {Map<String, String>? headers}) async {
+    try {
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 401 ||response.statusCode == 500 ) {
+        // Token expired or invalid
+        return 'jwt expired'; // Return a special value to indicate token expiration
+      }
+
+      return response;
+    } catch (e) {
+      log('Network error: $e');
+      return null;
+    }
+  }
+
   // Handle the response from the server
   Future<ResponseData> _handleResponse(http.Response response) async {
     AppLoggerHelper.info('Response Status: ${response.statusCode}');

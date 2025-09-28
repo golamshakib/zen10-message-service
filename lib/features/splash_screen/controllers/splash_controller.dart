@@ -15,6 +15,17 @@ class SplashController extends GetxController {
   // Remove global variables, and use LocationService instead
   final LocationService _locationService = LocationService();
 
+  @override
+  void onInit() {
+    super.onInit();
+    if (Platform.isIOS) {
+      fetchLocationForIOS();
+    } else if (Platform.isAndroid) {
+      fetchLocationForAndroid();
+    }
+    checkTokenValidity();
+  }
+
   void navigateToHomeScreen() {
     log('Splash Token: ${AuthService.hasToken()}');
 
@@ -22,29 +33,29 @@ class SplashController extends GetxController {
       NotificationService.isOpenedFromNotification = false;
       return;
     }
-
-    if (AuthService.hasToken()) {
-      Get.offAllNamed(AppRoute.homeScreen); // Navigate to home screen if logged in
-    } else {
-      Get.offAllNamed(AppRoute.loginScreen); // Otherwise, navigate to the login screen
-    }
   }
 
-  // Future<void> checkUserExistence() async {
-  //   try {
-  //     final response = await NetworkCaller().getRequest(
-  //       AppUrls.fetchProfile,
-  //       token: "Bearer ${AuthService.token}",
-  //     );
-  //     if (response.statusCode == 404){
-  //       log("User does not exist, navigating to login screen");
-  //       await AuthService.logoutUser();
-  //       Get.offAllNamed(AppRoute.loginScreen);
-  //     }
-  //   }catch (e) {
-  //     log("Error checking user existence: $e");
-  //   }
-  // }
+  Future<void> checkTokenValidity() async {
+    final response = await NetworkCaller().tokenExpireCheckRequest(
+      AppUrls.fetchProfile,
+      headers: {
+        'Authorization': 'Bearer ${AuthService.token}'
+      }, // Pass the token in the headers
+    );
+
+    if (response == null) {
+      // Network error or invalid response
+      Get.offAllNamed(
+          AppRoute.loginScreen); // Redirect to login screen in case of error
+    } else if (response == 'jwt expired') {
+      // Token expired or invalid
+      await AuthService.logoutUser();
+      Get.offAllNamed(AppRoute.loginScreen); // Redirect to login screen
+    } else {
+      // Token is valid, navigate to home screen
+      Get.offAllNamed(AppRoute.homeScreen);
+    }
+  }
 
   Future<void> fetchLocationForIOS() async {
     await _fetchLocation();
@@ -205,16 +216,5 @@ class SplashController extends GetxController {
       ),
       barrierDismissible: false,
     );
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    if (Platform.isIOS) {
-      fetchLocationForIOS();
-    } else if (Platform.isAndroid) {
-      fetchLocationForAndroid();
-    }
-    // checkUserExistence();
   }
 }
