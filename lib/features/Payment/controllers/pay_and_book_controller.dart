@@ -66,11 +66,23 @@ class PayAndBookController extends GetxController {
         createPayment(amount: amount, bookingId: bookingId ?? "");
       } else {
         // Show snakbar
+        showSnackBar(
+          title: 'Error',
+          message: 'Failed to create booking. Please try again.',
+          icon: Icons.error,
+          color: Colors.red,
+        );
         isPaymentLoading.value = false;
       }
     } catch (error) {
       AppLoggerHelper.error(error.toString());
       isPaymentLoading.value = false;
+      showSnackBar(
+        title: 'Error',
+        message: 'An error occurred. Please try again later.',
+        icon: Icons.error,
+        color: Colors.red,
+      );
     }
   }
 
@@ -89,8 +101,8 @@ class PayAndBookController extends GetxController {
       isPaymentLoading.value = false;
       if (request.isSuccess) {
         // Save the order id,
-        final String? orderID = request.responseData["data"]["orderId"];
-        final String? payPalUrl = request.responseData["data"]["approvalUrl"];
+        final String? orderID = request.responseData["data"]?["orderId"];
+        final String? payPalUrl = request.responseData["data"]?["approvalUrl"];
 
         if (orderID != null && payPalUrl != null) {
           isPaymentLoading.value = false;
@@ -109,11 +121,28 @@ class PayAndBookController extends GetxController {
         }
       } else {
         isPaymentLoading.value = false;
+        // Capture error status code and message
+        log("Error Status Code: ${request.statusCode}");
+        log("Error Message: ${request.responseData["message"]}");
+        log("Error Details: ${request.responseData["errorMessages"]}");
+
         // Error snakbar
+        showSnackBar(
+          title: 'Error',
+          message: 'Failed to retrieve PayPal payment details. Please try again.',
+          icon: Icons.error,
+          color: Colors.red,
+        );
       }
     } catch (error) {
       AppLoggerHelper.error(error.toString());
       isPaymentLoading.value = false;
+      showSnackBar(
+        title: 'Error',
+        message: 'An error occurred during the payment process. Please try again.',
+        icon: Icons.error,
+        color: Colors.red,
+      );
     }
   }
 

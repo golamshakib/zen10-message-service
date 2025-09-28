@@ -8,6 +8,7 @@ import 'package:traveling/routes/app_routes.dart';
 
 import '../../../../core/common/widgets/custom_button.dart';
 import '../../../../core/utils/constants/image_path.dart';
+import '../../../home/presentation/screens/helper_function/helper_function.dart';
 
 class ReceiptScreen extends StatelessWidget {
   const ReceiptScreen({
@@ -159,7 +160,9 @@ class ReceiptScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          "$eventStartDate to $eventEndDate", // Replace with dynamic time
+                          formatDate("$eventStartDate to", eventEndDate),
+                          // "$eventStartDate to $eventEndDate", // Replace with dynamic time
+                          maxLines: 2,
                           style: TextStyle(
                             fontSize: 16,
                             color: AppColors.textPrimary,

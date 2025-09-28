@@ -398,7 +398,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               title: Text(
                                                 formatDate(upcomingLocation.startDate, upcomingLocation.endDate),
                                                 style: TextStyle(
-                                                  fontSize: 16.sp,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w600,
                                                   color: AppColors.textPrimary,
                                                 ),
@@ -407,19 +407,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                               subtitle: Text(
                                                 getDayRange(upcomingLocation.startTime, upcomingLocation.endTime),
                                                 style: TextStyle(
-                                                  fontSize: 14.sp,
+                                                  fontSize: 13.sp,
                                                   fontWeight: FontWeight.w500,
                                                   color: AppColors.textSecondary,
                                                 ),
                                               ),
                                               trailing: Container(
-                                                width: 100, // Set a fixed width for the trailing widget
+                                                width: 120.w, // Set a fixed width for the trailing widget
                                                 child: Text(
                                                   upcomingLocation.location,
                                                   overflow: TextOverflow.ellipsis,
                                                   maxLines: 2,
                                                   style: TextStyle(
-                                                    fontSize: 16.sp,
+                                                    fontSize: 13.sp,
                                                     fontWeight: FontWeight.w600,
                                                     color: AppColors.textPrimary,
                                                   ),
