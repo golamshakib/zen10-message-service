@@ -41,9 +41,7 @@
 import 'package:flutter/material.dart';
 import 'package:traveling/core/utils/constants/app_sizer.dart';
 
-import '../../../../core/common/widgets/custom_text.dart';
 import '../../../../core/utils/constants/icon_path.dart';
-import '../../../../routes/app_routes.dart';
 import '../widgets/profile_option_widget.dart';
 
 class ProfileScreen extends StatelessWidget {

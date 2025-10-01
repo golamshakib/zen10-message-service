@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:traveling/features/authentication/controllers/location_controller.dart';
 import 'package:traveling/features/authentication/controllers/login_controller.dart';
 import 'package:traveling/features/authentication/controllers/otp_verification_controller.dart';
 import 'package:traveling/features/authentication/controllers/sign_up_controller.dart';

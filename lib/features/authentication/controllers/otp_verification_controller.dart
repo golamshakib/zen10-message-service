@@ -6,7 +6,6 @@ import 'package:traveling/core/utils/constants/app_urls.dart'; // Your API URLs
 import 'package:traveling/core/utils/logging/logger.dart'; // For logging errors
 import 'package:traveling/core/utils/constants/app_colors.dart';
 import 'package:traveling/features/authentication/presentation/screens/change_password_screen.dart';
-import 'package:traveling/routes/app_routes.dart';
 
 import '../presentation/widgets/showSnacker.dart'; // App Colors for UI
 
