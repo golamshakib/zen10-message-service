@@ -7,7 +7,6 @@ import '../../../../core/common/widgets/custom_outline_button.dart';
 import '../../../../core/common/widgets/custom_submit_button.dart';
 import '../../../../core/common/widgets/custom_text.dart';
 import '../../../../core/utils/constants/app_colors.dart';
-import '../../../../routes/app_routes.dart';
 import '../../controllers/profile_screen_controller.dart';
 
 final ProfileScreenController controller = Get.put(ProfileScreenController());

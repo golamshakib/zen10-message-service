@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:traveling/core/services/auth_service.dart';
 import '../../../core/services/network_caller.dart';
-import '../../../core/utils/constants/app_colors.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
 import '../../../routes/app_routes.dart';
@@ -61,16 +60,8 @@ class HomeScreenController extends GetxController {
     final eventEndTime = upcomingEvent.endTime;
 
     // Now navigate to the SelectServiceView with userID
-    if (userId != null) {
-      Get.to(() => SelectServiceView(userID: userId, eventStartDate: eventStartDate, eventEndDate: eventEndDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
-    } else {
-      // Handle case if userID is not found
-      Get.snackbar(
-        'No Event Selected',
-        'Please select a location/Upcoming event from the map',
-      );
+    Get.to(() => SelectServiceView(userID: userId, eventStartDate: eventStartDate, eventEndDate: eventEndDate, eventStartTime: eventStartTime, eventEndTime: eventEndTime));
     }
-  }
 
 
   // Add this method to get current location

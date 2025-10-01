@@ -12,9 +12,7 @@ import '../../../core/services/location.dart';
 import '../../../core/services/network_caller.dart';
 import '../../../core/utils/constants/app_urls.dart';
 import '../../../core/utils/logging/logger.dart';
-import '../../splash_screen/controllers/splash_controller.dart';
 import '../presentation/widgets/showSnacker.dart';
-import 'location_controller.dart';
 
 class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -64,12 +62,12 @@ class SignUpController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
     final confirmPassword = confirmPassController.text.trim();
-    final LocationService _locationService = LocationService();
+    final LocationService locationService = LocationService();
 
     // Retrieve the location data from LocationService
-    final latitude = _locationService.gLatitude;
-    final longitude = _locationService.gLongitude;
-    final address = _locationService.gAddress;
+    final latitude = locationService.gLatitude;
+    final longitude = locationService.gLongitude;
+    final address = locationService.gAddress;
     log('Latitude: $latitude, Longitude: $longitude, Address: $address');  // Log the location data
 
     // Check if passwords match

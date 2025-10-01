@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   # Utility Packages
   http: ^1.1.0
-  intl: ^0.18.1
+  intl: ^0.20.2
   logger: ^2.0.1
   url_launcher: ^6.1.12
 #  uni_links: ^0.5.1
@@ -44,14 +44,14 @@ dependencies:
   shared_preferences: ^2.3.2
   pin_code_fields: ^8.0.1
   google_maps_flutter:
-  geocoding: ^3.0.0
-  geolocator: ^13.0.1
+  geocoding: ^4.0.0
+  geolocator: ^14.0.2
   location:
   loading_animation_widget:
   flutter_easyloading: ^3.0.5
   firebase_core:
   firebase_messaging:
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^19.4.2
 
   #Web view flutter 
   webview_flutter: ^4.11.0
@@ -67,7 +67,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

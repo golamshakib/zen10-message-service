@@ -59,7 +59,7 @@ class PayPalWebView extends StatelessWidget {
   }
 }
 
-animatedColors(int value) {
+ColorSwatch<int> animatedColors(int value) {
   switch (value) {
     case 20:
       return Colors.amber;

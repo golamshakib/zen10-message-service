@@ -412,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   color: AppColors.textSecondary,
                                                 ),
                                               ),
-                                              trailing: Container(
+                                              trailing: SizedBox(
                                                 width: 120.w, // Set a fixed width for the trailing widget
                                                 child: Text(
                                                   upcomingLocation.location,

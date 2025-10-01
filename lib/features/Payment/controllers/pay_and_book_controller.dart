@@ -9,9 +9,7 @@ import 'package:traveling/core/utils/constants/app_urls.dart';
 import 'package:traveling/core/utils/logging/logger.dart';
 import 'package:traveling/features/Payment/presentation/screens/pay_pal_web_view.dart';
 import 'package:traveling/features/Payment/presentation/screens/receipt_screen.dart';
-import 'package:traveling/features/home/presentation/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
-import 'package:traveling/routes/app_routes.dart';
 
 import '../../authentication/presentation/widgets/showSnacker.dart';
 

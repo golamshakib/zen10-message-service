@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:traveling/core/utils/constants/app_colors.dart';
-import 'package:traveling/core/utils/constants/app_sizer.dart';
 import 'package:traveling/features/notification/controller/notification_controller.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:traveling/features/notification/presentation/components/custom_notification_card.dart';
